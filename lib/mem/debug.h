@@ -35,5 +35,6 @@ bool list_memory();
 
 list_body_p list_body_create(handler_p h, list_body_p lb_next);
 list_head_p list_head_create(string_t str, list_head_p lh_next);
+list_head_p list_head_find(list_head_p lh, string_t str);
 
 #endif

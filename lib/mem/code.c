@@ -17,6 +17,13 @@ bool list_memory()
 
 #endif
 
+int string_len(string_t str)
+{
+    int len = strlen(str);
+    assert(len < STR_SIZE);
+    return len;
+}
+
 list_body_p list_body_create(handler_p h, list_body_p lb_next)
 {
     list_body_p lb = malloc(sizeof(list_body_t));
@@ -35,10 +42,17 @@ list_head_p list_head_create(string_t str, list_head_p lh_next)
 
     lh->lh = lh_next;
 
-    int len = strlen(str);
-    assert(len < STR_SIZE);
+    int len = string_len(str);
     
     memcpy(lh->str, str, len);
     return lh;
 }
 
+list_head_p list_head_find(list_head_p lh, string_t str)
+{
+    for(; lh; lh = lh->lh)
+        if(strcmp(lh->str, str) == 0)
+            break;
+
+    return lh;
+}

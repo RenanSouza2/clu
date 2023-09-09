@@ -36,12 +36,29 @@ void test_create_head()
     assert(list_memory());
 }
 
+void test_find()
+{
+    printf("\n\ttest find\t\t");
+
+    list_head_p lh = NULL;
+
+    list_head_p lh_res = list_head_find(lh, "test");
+    assert(lh_res == NULL);
+
+    lh = list_head_create("test", NULL);
+    lh_res = list_head_find(lh, "test");
+    assert(lh = lh_res);
+
+    free(lh, list_head);
+}
+
 void test_mem()
 {
     printf("\ntest mem library\t\t");
 
     test_create_body();
     test_create_head();
+    test_find();
 
     assert(list_memory());
 }

@@ -56,3 +56,14 @@ list_head_p list_head_find(list_head_p lh, string_t str)
 
     return lh;
 }
+
+list_head_p list_insert(list_head_p lh, handler_p h, string_t str)
+{
+    list_head_p lh_aux = list_head_find(lh, str);
+
+    if(lh_aux == NULL)
+        lh_aux = lh = list_head_create(str, lh);
+    
+    lh->lb = list_body_create(h, lh->lb);
+    return lh;
+}

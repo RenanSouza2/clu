@@ -22,8 +22,6 @@ void free_head(list_head_p lh)
     }
 }
 
-
-
 list_head_p list_head_create_test(char str_s[], list_head_p lh_next)
 {
     string_p str;
@@ -37,10 +35,6 @@ list_head_p list_head_find_test(list_head_p lh, char str_s[])
     string_convert(str, str_s);
     return list_head_find(lh, str);
 }
-
-
-
-void string_convert(string_p str, char str_s[]);
 
 
 

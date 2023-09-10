@@ -92,8 +92,9 @@ list_head_p list_head_find(list_head_p lh, string_p str)
 
 
 
-list_head_p list_insert(list_head_p lh, handler_p h, string_p str)
+list_head_p list_insert(list_head_p lh, handler_p h, char str[])
 {
+    string_len(str);
     list_head_p lh_aux = list_head_find(lh, str);
 
     if(lh_aux == NULL)

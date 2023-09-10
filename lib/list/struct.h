@@ -1,10 +1,10 @@
-#ifndef __MEM_STRUCT_H__
-#define __MEM_STRUCT_H__
+#ifndef __LIST_STRUCT_H__
+#define __LIST_STRUCT_H__
 
 #include "header.h"
 
 #define STR_SIZE 50
-typedef char string_t[STR_SIZE];
+typedef char string_p[STR_SIZE];
 
 STRUCT(list_body)
 {
@@ -15,7 +15,7 @@ STRUCT(list_body)
 STRUCT(list_head)
 {
     list_body_p lb;
-    string_t str;
+    string_p str;
     list_head_p lh;
 };
 

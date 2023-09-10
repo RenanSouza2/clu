@@ -17,12 +17,16 @@ bool list_memory()
 
 #endif
 
-int string_len(string_t str)
+
+
+int string_len(string_p str)
 {
     int len = strlen(str);
     assert(len < STR_SIZE);
     return len;
 }
+
+
 
 list_body_p list_body_create(handler_p h, list_body_p lb_next)
 {
@@ -34,7 +38,16 @@ list_body_p list_body_create(handler_p h, list_body_p lb_next)
     return lb;
 }
 
-list_head_p list_head_create(string_t str, list_head_p lh_next)
+list_body_p list_body_pop(list_body_p lb)
+{
+    list_body_p lb_aux = lb->lb;
+    free(lb, list_body);
+    return lb_aux;
+}
+
+
+
+list_head_p list_head_create(string_p str, list_head_p lh_next)
 {
     list_head_p lh = calloc(1, sizeof(list_head_t));
     assert(lh);
@@ -48,7 +61,16 @@ list_head_p list_head_create(string_t str, list_head_p lh_next)
     return lh;
 }
 
-list_head_p list_head_find(list_head_p lh, string_t str)
+list_head_p list_head_pop(list_head_p lh)
+{
+    list_head_p lh_aux = lh->lh;
+    free(lh, list_head);
+    return lh_aux;
+}
+
+
+
+list_head_p list_head_find(list_head_p lh, string_p str)
 {
     for(; lh; lh = lh->lh)
         if(strcmp(lh->str, str) == 0)
@@ -57,7 +79,7 @@ list_head_p list_head_find(list_head_p lh, string_t str)
     return lh;
 }
 
-list_head_p list_insert(list_head_p lh, handler_p h, string_t str)
+list_head_p list_insert(list_head_p lh, handler_p h, string_p str)
 {
     list_head_p lh_aux = list_head_find(lh, str);
 

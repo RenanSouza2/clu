@@ -1,5 +1,5 @@
-#ifndef __MEM_DEBUG_H__
-#define __MEM_DEBUG_H__
+#ifndef __LIST_DEBUG_H__
+#define __LIST_DEBUG_H__
 
 #include "struct.h"
 
@@ -34,7 +34,11 @@ bool list_memory();
 #endif
 
 list_body_p list_body_create(handler_p h, list_body_p lb_next);
-list_head_p list_head_create(string_t str, list_head_p lh_next);
-list_head_p list_head_find(list_head_p lh, string_t str);
+list_body_p list_body_pop(list_body_p lb);
+
+list_head_p list_head_create(string_p str, list_head_p lh_next);
+list_head_p list_head_pop(list_head_p lh);
+
+list_head_p list_head_find(list_head_p lh, string_p str);
 
 #endif

@@ -20,7 +20,7 @@ bool list_memory()
 
 
 
-int string_len(string_p str)
+int string_len(char str[])
 {
     int len = strlen(str);
     assert(len < STR_SIZE);
@@ -60,7 +60,7 @@ bool list_body_remove(list_body_p lb, handler_p h)
 
 
 
-list_head_p list_head_create(string_p str, list_head_p lh_next)
+list_head_p list_head_create(char str[], list_head_p lh_next)
 {
     list_head_p lh = calloc(1, sizeof(list_head_t));
     assert(lh);

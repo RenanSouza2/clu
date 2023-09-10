@@ -24,7 +24,24 @@ void free_head(list_head_p lh)
 
 
 
+list_head_p list_head_create_test(char str_s[], list_head_p lh_next)
+{
+    string_p str;
+    string_convert(str, str_s);
+    return list_head_create(str, lh_next);
+}
+
+list_head_p list_head_find_test(list_head_p lh, char str_s[])
+{
+    string_p str;
+    string_convert(str, str_s);
+    return list_head_find(lh, str);
+}
+
+
+
 void string_convert(string_p str, char str_s[]);
+
 
 
 void test_string_convert()
@@ -101,17 +118,17 @@ void test_list_head_create()
 {
     printf("\n\t\ttest list head create\t\t");
 
-    list_head_p lh = list_head_create("test", LH(1));
+    list_head_p lh = list_head_create_test("test", LH(1));
     assert(lh->lh == LH(1));
     assert(lh->lb == NULL);
     assert(strcmp(lh->str, "test") == 0);
     free(lh, list_head);
 
-    lh = list_head_create("", NULL);
+    lh = list_head_create_test("", NULL);
     assert(strcmp(lh->str, "") == 0);
     free(lh, list_head);
 
-    lh = list_head_create("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi", NULL);
+    lh = list_head_create_test("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi", NULL);
     assert(strcmp(lh->str, "abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi") == 0);
     free(lh, list_head);
 
@@ -135,11 +152,11 @@ void test_list_head_find()
 
     list_head_p lh = NULL;
 
-    list_head_p lh_res = list_head_find(lh, "test");
+    list_head_p lh_res = list_head_find_test(lh, "test");
     assert(lh_res == NULL);
 
     lh = list_head_create("test", NULL);
-    lh_res = list_head_find(lh, "test");
+    lh_res = list_head_find_test(lh, "test");
     assert(lh == lh_res);
 
     free(lh, list_head);

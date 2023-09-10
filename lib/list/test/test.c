@@ -124,10 +124,9 @@ void test_list_head_find()
 
     lh = list_head_create("test", NULL);
     lh_res = list_head_find(lh, "test");
-    assert(lh = lh_res);
+    assert(lh == lh_res);
 
     free(lh, list_head);
-
     assert(list_memory());
 }
 

@@ -14,9 +14,9 @@ STRUCT(list_body)
 
 STRUCT(list_head)
 {
+    list_head_p lh;
     list_body_p lb;
     string_p str;
-    list_head_p lh;
 };
 
 #endif

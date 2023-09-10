@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 
@@ -45,6 +46,18 @@ list_body_p list_body_pop(list_body_p lb)
     return lb_aux;
 }
 
+bool list_body_remove(list_body_p lb, handler_p h)
+{
+    for(; lb->lb; lb = lb->lb)
+    if(lb->lb->h == h)
+    {
+        lb->lb = list_body_pop(lb->lb);
+        return true;
+    }
+
+    return false;
+}
+
 
 
 list_head_p list_head_create(string_p str, list_head_p lh_next)
@@ -68,8 +81,6 @@ list_head_p list_head_pop(list_head_p lh)
     return lh_aux;
 }
 
-
-
 list_head_p list_head_find(list_head_p lh, string_p str)
 {
     for(; lh; lh = lh->lh)
@@ -78,6 +89,8 @@ list_head_p list_head_find(list_head_p lh, string_p str)
 
     return lh;
 }
+
+
 
 list_head_p list_insert(list_head_p lh, handler_p h, string_p str)
 {
@@ -88,4 +101,19 @@ list_head_p list_insert(list_head_p lh, handler_p h, string_p str)
     
     lh->lb = list_body_create(h, lh->lb);
     return lh;
+}
+
+void list_remove(list_head_p lh, handler_p h)
+{
+    for(; lh->lh; lh = lh->lh)
+    {
+        if(!list_body_remove(LB(lh->lh), h)) continue;
+
+        if(lh->lh->lb) return;
+
+        lh->lh = list_head_pop(lh->lh);
+        return;
+    }
+
+    assert(false);
 }

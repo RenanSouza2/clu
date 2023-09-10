@@ -27,6 +27,13 @@ int string_len(char str[])
     return len;
 }
 
+void string_convert(string_p str, char str_s[])
+{
+    int len = string_len(str_s);
+    memset(str, 0, STR_SIZE);
+    memcpy(str, str_s, len);
+}
+
 
 
 list_body_p list_body_create(handler_p h, list_body_p lb_next)
@@ -60,7 +67,7 @@ bool list_body_remove(list_body_p lb, handler_p h)
 
 
 
-list_head_p list_head_create(char str[], list_head_p lh_next)
+list_head_p list_head_create(string_p str, list_head_p lh_next)
 {
     list_head_p lh = calloc(1, sizeof(list_head_t));
     assert(lh);
@@ -92,9 +99,10 @@ list_head_p list_head_find(list_head_p lh, string_p str)
 
 
 
-list_head_p list_insert(list_head_p lh, handler_p h, char str[])
+list_head_p list_insert(list_head_p lh, handler_p h, char str_s[])
 {
-    string_len(str);
+    string_p str;
+    string_convert(str, str_s);
     list_head_p lh_aux = list_head_find(lh, str);
 
     if(lh_aux == NULL)

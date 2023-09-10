@@ -36,6 +36,8 @@ bool list_memory();
 #define LB(POINTER) ((list_body_p)(POINTER))
 #define LH(POINTER) ((list_head_p)(POINTER))
 
+void string_convert(string_p str, char str_s[]);
+
 list_body_p list_body_create(handler_p h, list_body_p lb_next);
 list_body_p list_body_pop(list_body_p lb);
 bool list_body_remove(list_body_p lb, handler_p h);

@@ -24,6 +24,22 @@ void free_head(list_head_p lh)
 
 
 
+void string_convert(string_p str, char str_s[]);
+
+
+void test_string_convert()
+{
+    printf("\n\ttest string convert\t\t");
+
+    string_p str;
+    string_convert(str, "test");
+    assert(strcmp(str, "test") == 0);
+
+    assert(list_memory());
+}
+
+
+
 void test_list_body_create()
 {
     printf("\n\t\ttest list body create\t\t");
@@ -201,6 +217,7 @@ void test_mem()
 {
     printf("\ntest mem library\t\t");
 
+    test_string_convert();
     test_list_body_operations();
     test_list_head_operations();
     test_insert();

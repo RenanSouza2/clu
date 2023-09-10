@@ -92,7 +92,7 @@ void test_list_body_remove()
     assert(list_body_remove(lb, (handler_p)1) == false);
     free_body(lb);
 
-    list_head_p lh = list_head_create("test", NULL);
+    list_head_p lh = list_head_create_test("test", NULL);
     lh->lb = list_body_create((handler_p)1, NULL);
     assert(list_body_remove(LB(lh), (handler_p)1));
     assert(lh->lb == NULL);
@@ -139,7 +139,7 @@ void test_list_head_pop()
 {
     printf("\n\t\ttest list head pop\t\t");
 
-    list_head_p lh = list_head_create("test", LH(1));
+    list_head_p lh = list_head_create_test("test", LH(1));
     lh = list_head_pop(lh);
     assert(lh == LH(1));
 
@@ -155,7 +155,7 @@ void test_list_head_find()
     list_head_p lh_res = list_head_find_test(lh, "test");
     assert(lh_res == NULL);
 
-    lh = list_head_create("test", NULL);
+    lh = list_head_create_test("test", NULL);
     lh_res = list_head_find_test(lh, "test");
     assert(lh == lh_res);
 

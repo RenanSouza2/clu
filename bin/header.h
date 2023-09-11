@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-typedef void * handler_p;
+#include "../../static_utils/struct.h"
 
 handler_p mem_handler_alloc(size_t size, char const func[]);
 void mem_handler_free(handler_p h);

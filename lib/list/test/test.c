@@ -10,7 +10,7 @@
 
 void free_body(list_body_p lb)
 {
-    while(lb) lb = list_body_pop(lb);
+    while(lb) lb = mem_list_body_pop(lb);
 }
 
 void free_head(list_head_p lh)
@@ -18,7 +18,7 @@ void free_head(list_head_p lh)
     while(lh)
     {
         free_body(lh->lb);
-        lh = list_head_pop(lh);
+        lh = mem_list_head_pop(lh);
     }
 }
 
@@ -26,14 +26,14 @@ list_head_p list_head_create_test(char str_s[], list_head_p lh_next)
 {
     string_p str;
     string_convert(str, str_s);
-    return list_head_create(str, lh_next);
+    return mem_list_head_create(str, lh_next);
 }
 
 list_head_p list_head_find_test(list_head_p lh, char str_s[])
 {
     string_p str;
     string_convert(str, str_s);
-    return list_head_find(lh, str);
+    return mem_list_head_find(lh, str);
 }
 
 
@@ -55,7 +55,7 @@ void test_list_body_create()
 {
     printf("\n\t\ttest list body create\t\t");
     
-    list_body_p lb = list_body_create((handler_p)1, LB(2));
+    list_body_p lb = mem_list_body_create((handler_p)1, LB(2));
     assert(lb->h  == (handler_p)1);
     assert(lb->lb == LB(2));
     free(lb, list_body);
@@ -67,8 +67,8 @@ void test_list_body_pop()
 {
     printf("\n\t\ttest list body pop\t\t");
 
-    list_body_p lb = list_body_create(NULL, LB(1));
-    lb = list_body_pop(lb);
+    list_body_p lb = mem_list_body_create(NULL, LB(1));
+    lb = mem_list_body_pop(lb);
     assert(lb == LB(1));
 
     assert(list_memory());
@@ -78,17 +78,17 @@ void test_list_body_remove()
 {
     printf("\n\t\ttest list body remove\t\t");
 
-    list_body_p lb = list_body_create((handler_p)1, NULL);
-    lb = list_body_create(NULL, lb);
-    assert(list_body_remove(lb, (handler_p)1));
+    list_body_p lb = mem_list_body_create((handler_p)1, NULL);
+    lb = mem_list_body_create(NULL, lb);
+    assert(mem_list_body_remove(lb, (handler_p)1));
     assert(lb->lb == NULL);
 
-    assert(list_body_remove(lb, (handler_p)1) == false);
+    assert(mem_list_body_remove(lb, (handler_p)1) == false);
     free_body(lb);
 
     list_head_p lh = list_head_create_test("test", NULL);
-    lh->lb = list_body_create((handler_p)1, NULL);
-    assert(list_body_remove(LB(lh), (handler_p)1));
+    lh->lb = mem_list_body_create((handler_p)1, NULL);
+    assert(mem_list_body_remove(LB(lh), (handler_p)1));
     assert(lh->lb == NULL);
     free_head(lh);
 
@@ -134,7 +134,7 @@ void test_list_head_pop()
     printf("\n\t\ttest list head pop\t\t");
 
     list_head_p lh = list_head_create_test("test", LH(1));
-    lh = list_head_pop(lh);
+    lh = mem_list_head_pop(lh);
     assert(lh == LH(1));
 
     assert(list_memory());
@@ -175,21 +175,21 @@ void test_insert()
     printf("\n\ttest insert\t\t");
 
     list_head_p lh = NULL;
-    lh = list_insert(lh, (handler_p)1, "test 1");
+    lh = mem_list_insert(lh, (handler_p)1, "test 1");
     assert(lh);
     assert(strcmp(lh->str, "test 1") == 0);
     assert(lh->lh == NULL);
     assert(lh->lb);
     assert(lh->lb->h == (handler_p)1);
 
-    lh = list_insert(lh, (handler_p)2, "test 1");
+    lh = mem_list_insert(lh, (handler_p)2, "test 1");
     assert(lh);
     assert(strcmp(lh->str, "test 1") == 0);
     assert(lh->lh == NULL);
     assert(lh->lb);
     assert(lh->lb->h == (handler_p)2);
 
-    lh = list_insert(lh, (handler_p)3, "test 2");
+    lh = mem_list_insert(lh, (handler_p)3, "test 2");
     assert(strcmp(lh->str, "test 2") == 0);
     assert(lh->lb);
     assert(lh->lb->h == (handler_p)3);
@@ -205,18 +205,18 @@ void test_remove()
     printf("\n\ttest remove\t\t");
 
     list_head_p lh = NULL;
-    lh = list_insert(lh, (handler_p)1, "test 1");
-    lh = list_insert(lh, (handler_p)2, "test 1");
-    lh = list_insert(lh, (handler_p)3, "test 2");
+    lh = mem_list_insert(lh, (handler_p)1, "test 1");
+    lh = mem_list_insert(lh, (handler_p)2, "test 1");
+    lh = mem_list_insert(lh, (handler_p)3, "test 2");
 
-    list_remove(LH(&lh), (handler_p)2);
+    mem_list_remove(LH(&lh), (handler_p)2);
     assert(lh->lh);
     assert(lh->lh->lb->h == (handler_p)1);
 
-    list_remove(LH(&lh), (handler_p)1);
+    mem_list_remove(LH(&lh), (handler_p)1);
     assert(lh->lh == NULL);
 
-    list_remove(LH(&lh), (handler_p)3);
+    mem_list_remove(LH(&lh), (handler_p)3);
     assert(lh == NULL);
 
     assert(list_memory());

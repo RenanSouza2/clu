@@ -5,7 +5,10 @@
 
 PLACEHOLDER(list_head);
 
-list_head_p list_insert(list_head_p lh, handler_p h, char str[]);
-void list_remove(list_head_p lh, handler_p h);
+#define LH(POINTER) ((list_head_p)(POINTER))
+
+list_head_p mem_list_insert(list_head_p lh, handler_p h, char const str[]);
+void mem_list_remove(list_head_p lh, handler_p h);
+void mem_list_report(list_head_p lh);
 
 #endif

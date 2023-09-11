@@ -1,14 +1,18 @@
-SRC = src
 LIB = lib
+BIN = $(LIB)/lib.o
+TGT = bin/lib.o
 
-run:
-	$(MAKE) --directory=$(SRC) 
+build: $(TGT)
 
-build:
-	$(MAKE) build --directory=$(SRC)
+$(TGT): $(BIN)
+	cp $(BIN) $(TGT)
+
+.PHONY: $(BIN)
+$(BIN):
+	$(MAKE) --directory=$(LIB)
 	
 clean:
-	$(MAKE) clean --directory=$(SRC)
+	rm -rf $(TGT)
 	$(MAKE) clean --directory=$(LIB)
 	
 test: 

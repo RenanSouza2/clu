@@ -7,16 +7,16 @@
 
 #include <stdbool.h>
 
-extern int list_head_count;
-extern int list_body_count;
+extern int list_head_alive;
+extern int list_body_alive;
 
 bool list_memory();
 
-#define INC(NAME) NAME##_count++;
+#define INC(NAME) NAME##_alive++;
 #define DEC(NAME)               \
     {                           \
-        assert(NAME##_count);   \
-        NAME##_count--;         \
+        assert(NAME##_alive);   \
+        NAME##_alive--;         \
     }
 
 #define free(POINTER, NAME) \
@@ -34,16 +34,15 @@ bool list_memory();
 #endif
 
 #define LB(POINTER) ((list_body_p)(POINTER))
-#define LH(POINTER) ((list_head_p)(POINTER))
 
-void string_convert(string_p str, char str_s[]);
+void string_convert(string_p str, char const str_s[]);
 
-list_body_p list_body_create(handler_p h, list_body_p lb_next);
-list_body_p list_body_pop(list_body_p lb);
-bool list_body_remove(list_body_p lb, handler_p h);
+list_body_p mem_list_body_create(handler_p h, list_body_p lb_next);
+list_body_p mem_list_body_pop(list_body_p lb);
+bool mem_list_body_remove(list_body_p lb, handler_p h);
 
-list_head_p list_head_create(string_p str, list_head_p lh_next);
-list_head_p list_head_pop(list_head_p lh);
-list_head_p list_head_find(list_head_p lh, string_p str);
+list_head_p mem_list_head_create(string_p str, list_head_p lh_next);
+list_head_p mem_list_head_pop(list_head_p lh);
+list_head_p mem_list_head_find(list_head_p lh, string_p str);
 
 #endif

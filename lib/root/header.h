@@ -2,6 +2,7 @@
 #define __ROOT_H__
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "../../static_utils/struct.h"
 

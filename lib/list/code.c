@@ -123,8 +123,6 @@ void mem_list_remove(list_head_p lh, handler_p h)
         lh->lh = mem_list_head_pop(lh->lh);
         return;
     }
-
-    assert(false);
 }
 
 

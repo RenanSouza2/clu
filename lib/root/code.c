@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <assert.h>
 
 #include "debug.h"
@@ -14,12 +15,18 @@
 
 list_head_p lh_root;
 
-handler_p mem_handler_alloc(size_t size, char const func[])
+handler_p mem_handler_alloc(size_t size, char const format[], ...)
 {
     handler_p h = malloc(size);
     assert(h);
 
-    lh_root = mem_list_insert(lh_root, h, func);
+    va_list args;
+    va_start(args, format);
+
+    char tag[50];
+    vsnprintf(tag, 50, format, args);
+
+    lh_root = mem_list_insert(lh_root, h, tag);
     return h;
 }
 

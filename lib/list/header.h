@@ -1,5 +1,5 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __MEM_REPORT_H__
+#define __MEM_REPORT_H__
 
 #include "../../static_utils/struct.h"
 

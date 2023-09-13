@@ -5,7 +5,7 @@
 
 void test_hello()
 {
-    printf("\n\ttest hello\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     hello_debug();
     hello_example();
@@ -13,7 +13,7 @@ void test_hello()
 
 void test_example()
 {
-    printf("\ntest example library\t\t");
+    printf("\n%s\t\t", __func__);
 
     test_hello();
 }

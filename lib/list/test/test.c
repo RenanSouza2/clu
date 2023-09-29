@@ -195,6 +195,14 @@ void test_insert()
     assert(lh->lb->h == (handler_p)3);
     assert(lh->lh);
     assert(strcmp(lh->lh->str, "test 1") == 0);
+    
+    lh = mem_list_insert(lh, (handler_p)4, "test 1");
+    assert(lh);
+    assert(strcmp(lh->str, "test 2") == 0);
+    assert(lh->lh);
+    assert(strcmp(lh->lh->str, "test 1") == 0);
+    assert(lh->lh->lb);
+    assert(lh->lh->lb->h == (handler_p)4);
 
     free_head(lh);
     assert(list_memory());

@@ -48,3 +48,8 @@ bool mem_empty()
     mem_report();
     return false;
 }
+
+handler_p mem_get_pointer(int x, int y)
+{
+    return mem_list_get_pointer(lh_root, x, y);
+}

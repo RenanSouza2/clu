@@ -151,3 +151,16 @@ void mem_list_report(list_head_p lh)
     }
     printf("\n\n");
 }
+
+
+handler_p mem_list_get_pointer(list_head_p lh, int x, int y)
+{
+    for(int i=0; lh && (i < x); lh = lh->lh, i++);
+
+    if(lh == NULL) return NULL;
+
+    list_body_p lb = lh->lb;
+    for(int j=0; lb && (j < x); lb = lb->lb, j++);
+    
+    return lb ? lb->h : NULL;
+}

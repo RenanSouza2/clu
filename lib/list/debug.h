@@ -47,8 +47,10 @@ bool mem_list_head(list_head_p lh, ...);
 tag_t tag_convert(char const tag_s[]);
 bool tag_eq(tag_p tag1, tag_p tag2);
 
-list_body_p mem_list_body_create(handler_p h, list_body_p lb_next);
+list_body_p mem_list_body_create(handler_p h);
 list_body_p mem_list_body_pop(list_body_p lb);
+
+bool mem_list_body_insert(list_body_p *lb_root, handler_p h);
 bool mem_list_body_remove(list_body_p *lb, handler_p h);
 
 list_head_p mem_list_head_create(tag_p tag, handler_p h);

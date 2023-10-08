@@ -134,13 +134,13 @@ bool tag_eq(tag_p tag1, tag_p tag2)
 
 
 
-list_body_p mem_list_body_create(handler_p h, list_body_p lb_next)
+list_body_p mem_list_body_create(handler_p h)
 {
     list_body_p lb = malloc(sizeof(list_body_t));
     assert(lb);
     INC(list_body);
 
-    *lb = (list_body_t){h, lb_next};
+    *lb = (list_body_t){h, NULL};
     return lb;
 }
 
@@ -150,6 +150,23 @@ list_body_p mem_list_body_pop(list_body_p lb)
     list_body_p lb_aux = lb->lb;
     free(lb, list_body);
     return lb_aux;
+}
+
+bool mem_list_body_insert(list_body_p *lb_root, handler_p h)
+{
+    assert(lb_root);
+
+    list_body_p lb = *lb_root;
+    if(lb == NULL)
+    {
+        *lb_root = mem_list_body_create(h);
+        return true;
+    }
+
+    if(lb->h == h)
+        return false;
+
+    return mem_list_body_insert(&lb->lb, h);
 }
 
 bool mem_list_body_remove(list_body_p *lb_root, handler_p h)
@@ -184,7 +201,7 @@ list_head_p mem_list_head_create(tag_p tag, handler_p h)
     assert(lh);
     INC(list_head);
 
-    list_body_p lb = mem_list_body_create(h, NULL);
+    list_body_p lb = mem_list_body_create(h);
     *lh = (list_head_t){NULL, lb, *tag};
     return lh;
 }
@@ -199,7 +216,7 @@ list_head_p mem_list_head_pop(list_head_p lh)
 
 
 
-void mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
+bool mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
 {
     assert(lh_root);
 
@@ -207,36 +224,35 @@ void mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
     if(lh == NULL)
     {
         *lh_root = mem_list_head_create(tag, h);
-        return;
+        return true;
     }
+
+    if(tag_eq(&lh->tag, tag))
+        return mem_list_body_insert(&lh->lb, h);
+
+    return mem_list_head_insert_rec(&lh->lh, h, tag);
 }
 
-void mem_list_head_insert(list_head_p *lh_root, handler_p h, char const tag_s[])
+bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char const tag_s[])
 {
     tag_t tag = tag_convert(tag_s);
-    mem_list_head_insert_rec(lh_root, h, &tag);
+    return mem_list_head_insert_rec(lh_root, h, &tag);
 }
 
-void mem_list_head_remove(list_head_p *lh_root, handler_p h)
+bool mem_list_head_remove(list_head_p *lh_root, handler_p h)
 {
-    printf("\ninside %s", __func__);
     assert(lh_root);
 
     list_head_p lh = *lh_root;
-    if(lh == NULL) return;
+    if(lh == NULL) return false;
 
-    printf("\nTry (%s)", lh->tag.str);
     if(!mem_list_body_remove(&lh->lb, h))
-    {
-        printf("\tNot here\t");
-        mem_list_head_remove(&lh->lh, h);
-        return;
-    }
-
-    printf("\tIS here\t");
+        return mem_list_head_remove(&lh->lh, h);
 
     if(lh->lb == NULL)
         *lh_root = mem_list_head_pop(lh);
+
+    return true;
 }
 
 

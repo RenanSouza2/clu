@@ -37,20 +37,20 @@ bool mem_list_body_variadic(list_body_p lb, va_list *args)
         handler_p h = va_arg(*args, handler_p);
         if(lb->h != h)
         {
-            printf("MEM LIST BODY | ERROR 1 HANDLER MISMATCH | %d %d", i, count_body);
+            printf("\nMEM LIST BODY | ERROR 1 HANDLER MISMATCH | %d %d", i, count_body);
             return false;
         }
     }
 
     if(i<count_body)
     {
-        printf("MEM LIST BODY | ERROR 2 LIST SHORTER | %d %d", i, count_body);
+        printf("\nMEM LIST BODY | ERROR 2 LIST SHORTER | %d %d", i, count_body);
         return false;
     }
 
     if(lb)
     {
-        printf("MEM LIST BODY | ERROR 3 LIST LONGER | %d", count_body);
+        printf("\nMEM LIST BODY | ERROR 3 LIST LONGER | %d", count_body);
         return false;
     }
 
@@ -77,28 +77,29 @@ bool mem_list_head(list_head_p lh, ...)
         tag_t tag = va_arg(args, tag_t);
         if(!tag_eq(&lh->tag, &tag))
         {
-            printf("MEM HEAD BODY | ERROR 1 TAG MISMATCH | %d %d", i, count_head);
+            printf("\nMEM LIST HEAD | ERROR 1 TAG MISMATCH | %d %d", i, count_head);
             printf("\n\t(%s)", lh->tag.str);
             printf("\n\t(%s)", tag.str);
+            printf("\n");
             return false;
         }
 
         if(!mem_list_body_variadic(lh->lb, &args))
         {
-            printf("MEM HEAD BODY | ERROR 2 LIST BODY MISMATCH | %d %d", i, count_head);
+            printf("\nMEM LIST HEAD | ERROR 2 LIST BODY MISMATCH | %d %d", i, count_head);
             return false;
         }
     }
 
     if(i<count_head)
     {
-        printf("MEM LIST HEAD | ERROR 3 LIST SHORTER | %d %d", i, count_head);
+        printf("\nMEM LIST HEAD | ERROR 3 LIST SHORTER | %d %d", i, count_head);
         return false;
     }
 
     if(lh)
     {
-        printf("MEM LIST HEAD | ERROR 4 LIST LONGER | %d", count_head);
+        printf("\nMEM LIST HEAD | ERROR 4 LIST LONGER | %d", count_head);
         return false;
     }
 
@@ -120,7 +121,7 @@ bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[],
 }
 
 #endif
-
+tag_t tag_convert(char const format[], va_list args);
 
 
 int tag_len(char const tag_s[])

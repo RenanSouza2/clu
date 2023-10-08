@@ -230,25 +230,72 @@ void test_list_head_remove()
 {
     printf("\n\t\t%s\t\t", __func__);
 
+    tag_t tag1, tag2, tag3, tag4;
+    tag1 = tag_convert_test("test 1");
+    tag2 = tag_convert_test("test 2");
+    tag3 = tag_convert_test("test 3");
+    tag4 = tag_convert_test("test 4");
+
     list_head_p lh = NULL;
-    mem_list_head_insert(&lh, HD(1), "test 1", NULL);
-    mem_list_head_insert(&lh, HD(2), "test 1", NULL);
-    mem_list_head_insert(&lh, HD(3), "test 2", NULL);
-    mem_list_head_insert(&lh, HD(4), "test 3", NULL);
+    mem_list_head_insert_test(&lh, HD(1), "test 1");
+    mem_list_head_insert_test(&lh, HD(2), "test 1");
+    mem_list_head_insert_test(&lh, HD(3), "test 2");
+    mem_list_head_insert_test(&lh, HD(4), "test 2");
+    mem_list_head_insert_test(&lh, HD(5), "test 3");
+    mem_list_head_insert_test(&lh, HD(6), "test 4");
+    assert(mem_list_head(lh, 4,
+        tag1, 2, HD(1), HD(2),
+        tag2, 2, HD(3), HD(4),
+        tag3, 1, HD(5),
+        tag4, 1, HD(6)
+    ));
 
     printf("\n\t\t\t%s 1\t\t", __func__);
-    mem_list_head_remove(&lh, HD(5));
-    assert(lh->lh);
-    assert(lh->lh->lb->h == HD(1));
+    assert(mem_list_head_remove(&lh, HD(7)) == false);
+    assert(mem_list_head(lh, 4,
+        tag1, 2, HD(1), HD(2),
+        tag2, 2, HD(3), HD(4),
+        tag3, 1, HD(5),
+        tag4, 1, HD(6)
+    ));
 
-    mem_list_head_remove(&lh, HD(2));
-    assert(lh->lh);
-    assert(lh->lh->lb->h == HD(1));
+    printf("\n\t\t\t%s 2\t\t", __func__);
+    assert(mem_list_head_remove(&lh, HD(5)) == true);
+    assert(mem_list_head(lh, 3,
+        tag1, 2, HD(1), HD(2),
+        tag2, 2, HD(3), HD(4),
+        tag4, 1, HD(6)
+    ));
 
-    mem_list_head_remove(&lh, HD(1));
-    assert(lh->lh == NULL);
+    printf("\n\t\t\t%s 3\t\t", __func__);
+    assert(mem_list_head_remove(&lh, HD(6)) == true);
+    assert(mem_list_head(lh, 2,
+        tag1, 2, HD(1), HD(2),
+        tag2, 2, HD(3), HD(4)
+    ));
 
-    mem_list_head_remove(&lh, HD(3));
+    printf("\n\t\t\t%s 4\t\t", __func__);
+    assert(mem_list_head_remove(&lh, HD(4)) == true);
+    assert(mem_list_head(lh, 2,
+        tag1, 2, HD(1), HD(2),
+        tag2, 1, HD(3)
+    ));
+
+    printf("\n\t\t\t%s 5\t\t", __func__);
+    assert(mem_list_head_remove(&lh, HD(2)) == true);
+    assert(mem_list_head(lh, 2,
+        tag1, 1, HD(1),
+        tag2, 1, HD(3)
+    ));
+
+    printf("\n\t\t\t%s 6\t\t", __func__);
+    assert(mem_list_head_remove(&lh, HD(1)) == true);
+    assert(mem_list_head(lh, 1,
+        tag2, 1, HD(3)
+    ));
+
+    printf("\n\t\t\t%s 6\t\t", __func__);
+    assert(mem_list_head_remove(&lh, HD(3)) == true);
     assert(lh == NULL);
 
     assert(list_memory());

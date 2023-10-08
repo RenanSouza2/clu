@@ -57,12 +57,10 @@ list_body_p mem_list_body_pop(list_body_p lb)
 list_body_p mem_list_body_find(list_body_p lb, handler_p h)
 {
     assert(lb);
-    int i=0;
     for(; lb->lb; lb = lb->lb)
-    if(lb->lb->h == h){
-        printf("\n\tposition %d", i);
+    if(lb->lb->h == h)
         return lb;
-}
+
     return NULL;
 }
 
@@ -135,17 +133,9 @@ list_head_p mem_list_head_insert(list_head_p lh, handler_p h, char const str_s[]
 void mem_list_head_remove(list_head_p lh, handler_p h)
 {
     assert(lh);
-    printf("\nTrying to remove %p", h);
     for(; lh->lh; lh = lh->lh)
-    {
-        printf("\nTest %s", lh->str);
         if(mem_list_body_remove(LB(lh->lh), h))
-        {
-            printf("\tSuccess");
             break;
-        }
-        printf("\nFail");
-    }
 
     if(lh->lh)
     if(lh->lh->lb == NULL)
@@ -154,9 +144,9 @@ void mem_list_head_remove(list_head_p lh, handler_p h)
 
 
 
-void mem_list_report(list_head_p lh)
+void mem_list_report(list_head_p lh, char tag[])
 {
-    printf("\n\nMEM REPORT");
+    printf("\n\nMEM REPORT: %s", tag);
     if(lh == NULL)
     {
         printf("\n\nEMPTY LIST\n\n");
@@ -171,9 +161,9 @@ void mem_list_report(list_head_p lh)
     printf("\n\n");
 }
 
-void mem_list_report_full(list_head_p lh)
+void mem_list_report_full(list_head_p lh, char tag[])
 {
-    printf("\n\nMEM REPORT");
+    printf("\n\nMEM REPORT FULL: %s", tag);
     if(lh == NULL)
     {
         printf("\n\nEMPTY LIST\n\n");

@@ -27,37 +27,32 @@ handler_p mem_handler_alloc(size_t size, char const format[], ...)
 
     char tag[50];
     vsnprintf(tag, 50, format, args);
-    printf("\ninserting (%s): %p", tag, h);
     lh_root_inserted = mem_list_head_insert(lh_root_inserted, h, tag);
-    
-    mem_report_full();
     
     return h;
 }
 
 void mem_handler_free(handler_p h)
 {
-    printf("\nRemoving %p", h); // DELETE
     mem_list_head_remove(LH(&lh_root_inserted), h);
-    mem_report_full();
     free(h);
 }
 
-void mem_report()
+void mem_report(char tag[])
 {
-    mem_list_report(lh_root_inserted);
+    mem_list_report(lh_root_inserted, tag);
 }
 
-void mem_report_full()
+void mem_report_full(char tag[])
 {
-    mem_list_report_full(lh_root_inserted);
+    mem_list_report_full(lh_root_inserted, tag);
 }
 
 bool mem_empty()
 {
     if(lh_root_inserted == NULL) return true;
 
-    mem_report();
+    mem_report("ASSERT");
     return false;
 }
 

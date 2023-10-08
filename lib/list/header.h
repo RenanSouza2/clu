@@ -10,8 +10,8 @@ PLACEHOLDER(list_head);
 list_head_p mem_list_head_insert(list_head_p lh, handler_p h, char const str[]);
 void mem_list_head_remove(list_head_p lh, handler_p h);
 
-void mem_list_report(list_head_p lh);
-void mem_list_report_full(list_head_p lh);
+void mem_list_report(list_head_p lh, char tag[]);
+void mem_list_report_full(list_head_p lh, char tag[]);
 handler_p mem_list_get_pointer(list_head_p lh, int x, int y);
 
 #endif

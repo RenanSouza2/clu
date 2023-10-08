@@ -44,7 +44,7 @@ bool mem_list_head(list_head_p lh, ...);
 
 #define LB(POINTER) ((list_body_p)(POINTER))
 
-void tag_convert(tag_p tag, char const tag_s[]);
+tag_t tag_convert(char const tag_s[]);
 bool tag_eq(tag_p tag1, tag_p tag2);
 
 list_body_p mem_list_body_create(handler_p h, list_body_p lb_next);

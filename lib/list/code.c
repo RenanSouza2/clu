@@ -111,18 +111,20 @@ bool mem_list_head(list_head_p lh, ...)
 
 
 
-int tag_len(char const str[])
+int tag_len(char const tag_s[])
 {
-    int len = strlen(str);
+    int len = strlen(tag_s);
     assert(len < TAG_SIZE);
     return len;
 }
 
-void tag_convert(tag_p tag, char const tag_s[])
+tag_t tag_convert(char const tag_s[])
 {
+    tag_t tag;
     int len = tag_len(tag_s);
-    memset(tag, 0, TAG_SIZE);
-    memcpy(tag, tag_s, len);
+    memset(&tag, 0, TAG_SIZE);
+    memcpy(&tag, tag_s, len);
+    return tag;
 }
 
 bool tag_eq(tag_p tag1, tag_p tag2)
@@ -211,8 +213,7 @@ void mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
 
 void mem_list_head_insert(list_head_p *lh_root, handler_p h, char const tag_s[])
 {
-    tag_t tag;
-    tag_convert(&tag, tag_s);
+    tag_t tag = tag_convert(tag_s);
     mem_list_head_insert_rec(lh_root, h, &tag);
 }
 

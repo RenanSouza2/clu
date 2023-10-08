@@ -12,11 +12,10 @@ void test_tag_convert()
 {
     printf("\n\t\t%s\t\t", __func__);
 
-    tag_t tag;
-    tag_convert(&tag, "test");
+    tag_t tag = tag_convert("test");
     assert(strcmp(tag.str, "test") == 0);
     
-    tag_convert(&tag, "0123456789012345678901234567890123456789012345678");
+    tag = tag_convert("0123456789012345678901234567890123456789012345678");
     assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678") == 0);
 
     assert(list_memory());
@@ -27,15 +26,15 @@ void test_tag_eq()
     printf("\n\t\t%s\t\t", __func__);
 
     tag_t tag1, tag2;
-    tag_convert(&tag1, "test");
-    tag_convert(&tag2, "teste");
+    tag1 = tag_convert("test");
+    tag2 = tag_convert("teste");
     assert(tag_eq(&tag1, &tag2) == false);
     
-    tag_convert(&tag2, "test");
+    tag2 = tag_convert("test");
     assert(tag_eq(&tag1, &tag2) == true);
     
-    tag_convert(&tag1, "0123456789012345678901234567890123456789012345678");
-    tag_convert(&tag2, "0123456789012345678901234567890123456789012345678");
+    tag1 = tag_convert("0123456789012345678901234567890123456789012345678");
+    tag2 = tag_convert("0123456789012345678901234567890123456789012345678");
     assert(tag_eq(&tag1, &tag2) == true);
 
     assert(list_memory());
@@ -112,7 +111,7 @@ void test_list_head_create()
 
     printf("\n\t\t\t%s 1\t\t", __func__);
     tag_t tag;
-    tag_convert(&tag, "test");
+    tag = tag_convert("test");
     list_head_p lh = mem_list_head_create(&tag, HD(1));
     assert(mem_list_head(lh, 1,
         tag, 1, HD(1)
@@ -120,7 +119,7 @@ void test_list_head_create()
     mem_list_head_free(lh);
 
     printf("\n\t\t\t%s 2\t\t", __func__);
-    tag_convert(&tag, "");
+    tag = tag_convert("");
     lh = mem_list_head_create(&tag, HD(1));
     assert(mem_list_head(lh, 1,
         tag, 1, HD(1)
@@ -128,7 +127,7 @@ void test_list_head_create()
     mem_list_head_free(lh);
 
     printf("\n\t\t\t%s 3\t\t", __func__);
-    tag_convert(&tag, "abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi");
+    tag = tag_convert("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi");
     lh = mem_list_head_create(&tag, HD(1));
     assert(mem_list_head(lh, 1,
         tag, 1, HD(1)
@@ -143,7 +142,7 @@ void test_list_head_pop()
     printf("\n\t\t%s\t\t", __func__);
 
     tag_t tag;
-    tag_convert(&tag, "test");
+    tag = tag_convert("test");
 
     list_head_p lh = mem_list_head_create(&tag, HD(1));
     free(lh->lb, list_body);

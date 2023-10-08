@@ -5,13 +5,11 @@
 
 PLACEHOLDER(list_head);
 
-#define LH(POINTER) ((list_head_p)(POINTER))
+void mem_list_head_insert(list_head_p *lh, handler_p h, char const tag_s[]);
+void mem_list_head_remove(list_head_p *lh, handler_p h);
 
-list_head_p mem_list_head_insert(list_head_p lh, handler_p h, char const str[]);
-void mem_list_head_remove(list_head_p lh, handler_p h);
-
-void mem_list_report(list_head_p lh, char tag[]);
-void mem_list_report_full(list_head_p lh, char tag[]);
+void mem_list_report(list_head_p lh, char title[]);
+void mem_list_report_full(list_head_p lh, char title[]);
 handler_p mem_list_get_pointer(list_head_p lh, int x, int y);
 
 #endif

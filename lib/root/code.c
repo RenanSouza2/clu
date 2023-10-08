@@ -15,8 +15,6 @@
 
 list_head_p lh_root_inserted = NULL;
 
-void mem_report_full();
-
 handler_p mem_handler_alloc(size_t size, char const format[], ...)
 {
     handler_p h = malloc(size);
@@ -27,16 +25,22 @@ handler_p mem_handler_alloc(size_t size, char const format[], ...)
 
     char tag[50];
     vsnprintf(tag, 50, format, args);
-    lh_root_inserted = mem_list_head_insert(lh_root_inserted, h, tag);
+
+    printf("\ninserting (%s): %p", tag, h);
+
+    mem_list_head_insert(&lh_root_inserted, h, tag);
     
     return h;
 }
 
 void mem_handler_free(handler_p h)
 {
-    mem_list_head_remove(LH(&lh_root_inserted), h);
+    printf("\nremove: %p", h);
+    mem_list_head_remove(&lh_root_inserted, h);
     free(h);
 }
+
+
 
 void mem_report(char tag[])
 {

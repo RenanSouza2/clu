@@ -48,21 +48,40 @@ list_body_p mem_list_body_create(handler_p h, list_body_p lb_next)
 
 list_body_p mem_list_body_pop(list_body_p lb)
 {
+    assert(lb);
     list_body_p lb_aux = lb->lb;
     free(lb, list_body);
     return lb_aux;
 }
 
+list_body_p mem_list_body_find(list_body_p lb, handler_p h)
+{
+    assert(lb);
+    int i=0;
+    for(; lb->lb; lb = lb->lb)
+    if(lb->lb->h == h){
+        printf("\n\tposition %d", i);
+        return lb;
+}
+    return NULL;
+}
+
 bool mem_list_body_remove(list_body_p lb, handler_p h)
 {
-    for(; lb->lb; lb = lb->lb)
-    if(lb->lb->h == h)
-    {
-        lb->lb = mem_list_body_pop(lb->lb);
-        return true;
-    }
+    assert(lb);
+    lb = mem_list_body_find(lb, h);
+    if(lb == NULL) return false;
+    
+    lb->lb = mem_list_body_pop(lb->lb);
+    return true;
+}
 
-    return false;
+int mem_list_body_count(list_body_p lb)
+{
+    int i = 0;
+    for(; lb; i++, lb = lb->lb)
+        printf("\n%d: %p", i, lb);
+    return i;
 }
 
 
@@ -83,6 +102,7 @@ list_head_p mem_list_head_create(string_p str, list_head_p lh_next)
 
 list_head_p mem_list_head_pop(list_head_p lh)
 {
+    assert(lh);
     list_head_p lh_aux = lh->lh;
     free(lh, list_head);
     return lh_aux;
@@ -99,7 +119,7 @@ list_head_p mem_list_head_find(list_head_p lh, string_p str)
 
 
 
-list_head_p mem_list_insert(list_head_p lh, handler_p h, char const str_s[])
+list_head_p mem_list_head_insert(list_head_p lh, handler_p h, char const str_s[])
 {
     string_p str;
     string_convert(str, str_s);
@@ -112,28 +132,27 @@ list_head_p mem_list_insert(list_head_p lh, handler_p h, char const str_s[])
     return lh;
 }
 
-void mem_list_remove(list_head_p lh, handler_p h)
+void mem_list_head_remove(list_head_p lh, handler_p h)
 {
+    assert(lh);
+    printf("\nTrying to remove %p", h);
     for(; lh->lh; lh = lh->lh)
+    {
+        printf("\nTest %s", lh->str);
         if(mem_list_body_remove(LB(lh->lh), h))
+        {
+            printf("\tSuccess");
             break;
+        }
+        printf("\nFail");
+    }
 
-    if(lh->lh == NULL) return;
-
+    if(lh->lh)
     if(lh->lh->lb == NULL)
         lh->lh = mem_list_head_pop(lh->lh);
-
-    return;
 }
 
 
-
-int mem_list_body_count(list_body_p lb)
-{
-    int i = 0;
-    for(; lb; i++, lb = lb->lb);
-    return i;
-}
 
 void mem_list_report(list_head_p lh)
 {
@@ -148,6 +167,24 @@ void mem_list_report(list_head_p lh)
     {
         int count = mem_list_body_count(lh->lb);
         printf("\n%s: %d", lh->str, count);
+    }
+    printf("\n\n");
+}
+
+void mem_list_report_full(list_head_p lh)
+{
+    printf("\n\nMEM REPORT");
+    if(lh == NULL)
+    {
+        printf("\n\nEMPTY LIST\n\n");
+        return;
+    }
+
+    for(; lh; lh = lh->lh)
+    {
+        printf("\n%s", lh->str);
+        for(list_body_p lb = lh->lb; lb; lb = lb->lb)
+            printf("\n\t%p", lb->h);
     }
     printf("\n\n");
 }

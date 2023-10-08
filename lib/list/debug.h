@@ -7,6 +7,9 @@
 
 #include <stdbool.h>
 
+#define LH(POINTER) ((list_head_p)(POINTER))
+#define HD(POINTER) ((handler_p)(POINTER))
+
 extern int list_head_alive;
 extern int list_body_alive;
 
@@ -25,6 +28,14 @@ bool list_memory();
         free(POINTER);      \
     }
 
+void mem_list_body_free(list_body_p lb);
+void mem_list_head_free(list_head_p lh);
+
+bool mem_list_body(list_body_p lb, ...);
+bool mem_list_head(list_head_p lh, ...);
+tag_t tag_convert_test(char const format[], ...);
+bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...);
+
 #else
 
 #define INC(NAME)
@@ -35,14 +46,17 @@ bool list_memory();
 
 #define LB(POINTER) ((list_body_p)(POINTER))
 
-void string_convert(string_p str, char const str_s[]);
+tag_t tag_convert(char const format[], va_list args);
+bool tag_eq(tag_p tag1, tag_p tag2);
 
-list_body_p mem_list_body_create(handler_p h, list_body_p lb_next);
+list_body_p mem_list_body_create(handler_p h);
 list_body_p mem_list_body_pop(list_body_p lb);
-bool mem_list_body_remove(list_body_p lb, handler_p h);
 
-list_head_p mem_list_head_create(string_p str, list_head_p lh_next);
+bool mem_list_body_insert(list_body_p *lb_root, handler_p h);
+bool mem_list_body_remove(list_body_p *lb, handler_p h);
+
+list_head_p mem_list_head_create(tag_p tag, handler_p h);
 list_head_p mem_list_head_pop(list_head_p lh);
-list_head_p mem_list_head_find(list_head_p lh, string_p str);
+list_head_p mem_list_head_find(list_head_p lh, tag_p tag);
 
 #endif

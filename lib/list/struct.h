@@ -3,8 +3,12 @@
 
 #include "header.h"
 
-#define STR_SIZE 50
-typedef char string_p[STR_SIZE];
+#define TAG_SIZE 50
+
+STRUCT(tag)
+{
+    char str[TAG_SIZE];
+};
 
 STRUCT(list_body)
 {
@@ -16,7 +20,7 @@ STRUCT(list_head)
 {
     list_head_p lh;
     list_body_p lb;
-    string_p str;
+    tag_t tag;
 };
 
 #endif

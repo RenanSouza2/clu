@@ -33,6 +33,10 @@ void test_tag_eq()
     
     tag_convert(&tag2, "test");
     assert(tag_eq(&tag1, &tag2) == true);
+    
+    tag_convert(&tag1, "0123456789012345678901234567890123456789012345678");
+    tag_convert(&tag2, "0123456789012345678901234567890123456789012345678");
+    assert(tag_eq(&tag1, &tag2) == true);
 
     assert(list_memory());
 }
@@ -50,7 +54,7 @@ void test_tag()
 
 void test_list_body_create()
 {
-    printf("\n\t\ttest list body create\t\t");
+    printf("\n\t\t%s\t\t", __func__);
     
     list_body_p lb = mem_list_body_create((handler_p)1, LB(2));
     assert(lb->h  == (handler_p)1);
@@ -62,7 +66,7 @@ void test_list_body_create()
 
 void test_list_body_pop()
 {
-    printf("\n\t\ttest list body pop\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
     list_body_p lb = mem_list_body_create(NULL, LB(1));
     lb = mem_list_body_pop(lb);
@@ -73,26 +77,25 @@ void test_list_body_pop()
 
 void test_list_body_remove()
 {
-    printf("\n\t\ttest list body remove\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
-    list_body_p lb = mem_list_body_create((handler_p)1, NULL);
+    list_body_p lb = mem_list_body_create(HD(1), NULL);
     
-    assert(mem_list_body_remove(&lb, (handler_p)2) == false);
-    assert(lb);
-    assert(lb->h == (handler_p)1);
+    assert(mem_list_body_remove(&lb, HD(2)) == false);
+    assert(mem_list_body(lb, 1, HD(1)));
 
     assert(mem_list_body_remove(&lb, (handler_p)1) == true);
     assert(lb == NULL);
 
     assert(mem_list_body_remove(&lb, (handler_p)1) == false);
-    mem_free_body(lb);
+    mem_list_body_free(lb);
 
     assert(list_memory());
 }
 
 void test_list_body_operations()
 {
-    printf("\n\ttest list body operations\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     test_list_body_create();
     test_list_body_pop();
@@ -105,30 +108,47 @@ void test_list_body_operations()
 
 void test_list_head_create()
 {
-    printf("\n\t\ttest list head create\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
-    list_head_p lh = mem_list_head_create_test("test", LH(1));
-    assert(lh->lh == LH(1));
-    assert(lh->lb == NULL);
-    assert(strcmp(lh->tag.str, "test") == 0);
-    free(lh, list_head);
+    printf("\n\t\t\t%s 1\t\t", __func__);
+    tag_t tag;
+    tag_convert(&tag, "test");
+    list_head_p lh = mem_list_head_create(&tag, HD(1));
+    assert(mem_list_head(lh, 1,
+        tag, 1, HD(1)
+    ));
+    mem_list_head_free(lh);
 
-    lh = mem_list_head_create_test("", NULL);
-    assert(strcmp(lh->tag.str, "") == 0);
-    free(lh, list_head);
+    printf("\n\t\t\t%s 2\t\t", __func__);
+    tag_convert(&tag, "");
+    lh = mem_list_head_create(&tag, HD(1));
+    assert(mem_list_head(lh, 1,
+        tag, 1, HD(1)
+    ));
+    mem_list_head_free(lh);
 
-    lh = mem_list_head_create_test("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi", NULL);
-    assert(strcmp(lh->tag.str, "abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi") == 0);
-    free(lh, list_head);
+    printf("\n\t\t\t%s 3\t\t", __func__);
+    tag_convert(&tag, "abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi");
+    lh = mem_list_head_create(&tag, HD(1));
+    assert(mem_list_head(lh, 1,
+        tag, 1, HD(1)
+    ));
+    mem_list_head_free(lh);
 
     assert(list_memory());
 }
 
 void test_list_head_pop()
 {
-    printf("\n\t\ttest list head pop\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
-    list_head_p lh = mem_list_head_create_test("test", LH(1));
+    tag_t tag;
+    tag_convert(&tag, "test");
+
+    list_head_p lh = mem_list_head_create(&tag, HD(1));
+    free(lh->lb, list_body);
+
+    lh->lh = LH(1);
     lh = mem_list_head_pop(lh);
     assert(lh == LH(1));
 
@@ -137,7 +157,7 @@ void test_list_head_pop()
 
 void test_list_head_operations()
 {
-    printf("\n\ttest list head operations\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     test_list_head_create();
     test_list_head_pop();
@@ -185,7 +205,7 @@ void test_insert()
     assert(lh->lh->lb);
     assert(lh->lh->lb->h == (handler_p)4);
 
-    mem_free_head(lh);
+    mem_list_head_free(lh);
     assert(list_memory());
 }
 

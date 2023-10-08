@@ -18,25 +18,15 @@ bool list_memory()
     return list_head_alive == 0 && list_body_alive == 0;
 }
 
-void mem_free_body(list_body_p lb)
+void mem_list_body_free(list_body_p lb)
 {
     while(lb) lb = mem_list_body_pop(lb);
 }
 
-void mem_free_head(list_head_p lh)
+void mem_list_head_free(list_head_p lh)
 {
-    while(lh)
-    {
-        mem_free_body(lh->lb);
-        lh = mem_list_head_pop(lh);
-    }
-}
-
-list_head_p mem_list_head_create_test(char tag_s[], handler_p h)
-{
-    tag_t tag;
-    tag_convert(&tag, tag_s);
-    return mem_list_head_create(&tag, h);
+    for(; lh; lh = mem_list_head_pop(lh))
+        mem_list_body_free(lh->lb);
 }
 
 bool mem_list_body_variadic(list_body_p lb, va_list *args)
@@ -67,6 +57,13 @@ bool mem_list_body_variadic(list_body_p lb, va_list *args)
     }
 
     return true;
+}
+
+bool mem_list_body(list_body_p lb, ...)
+{
+    va_list args;
+    va_start(args, lb);
+    return mem_list_body_variadic(lb, &args);
 }
 
 bool mem_list_head(list_head_p lh, ...)
@@ -179,6 +176,8 @@ int mem_list_body_count(list_body_p lb)
 
 list_head_p mem_list_head_create(tag_p tag, handler_p h)
 {
+    assert(h);
+
     list_head_p lh = calloc(1, sizeof(list_head_t));
     assert(lh);
     INC(list_head);

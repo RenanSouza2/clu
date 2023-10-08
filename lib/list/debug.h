@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #define LH(POINTER) ((list_head_p)(POINTER))
+#define HD(POINTER) ((handler_p)(POINTER))
 
 extern int list_head_alive;
 extern int list_body_alive;
@@ -27,9 +28,11 @@ bool list_memory();
         free(POINTER);      \
     }
 
-void mem_free_body(list_body_p lb);
-void mem_free_head(list_head_p lh);
-list_head_p mem_list_head_create_test(char tag_s[], handler_p h);
+void mem_list_body_free(list_body_p lb);
+void mem_list_head_free(list_head_p lh);
+
+bool mem_list_body(list_body_p lb, ...);
+bool mem_list_head(list_head_p lh, ...);
 
 #else
 

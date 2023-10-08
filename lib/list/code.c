@@ -8,8 +8,6 @@
 
 #ifdef DEBUG
 
-#include <stdarg.h>
-
 int list_head_alive;
 int list_body_alive;
 
@@ -107,6 +105,20 @@ bool mem_list_head(list_head_p lh, ...)
     return true;
 }
 
+tag_t tag_convert_test(char const format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    return tag_convert(format, args);
+}
+
+bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    return mem_list_head_insert(lh_root, h, format, args);
+}
+
 #endif
 
 
@@ -118,12 +130,11 @@ int tag_len(char const tag_s[])
     return len;
 }
 
-tag_t tag_convert(char const tag_s[])
+tag_t tag_convert(char const format[], va_list args)
 {
     tag_t tag;
-    int len = tag_len(tag_s);
     memset(&tag, 0, TAG_SIZE);
-    memcpy(&tag, tag_s, len);
+    vsnprintf(tag.str, TAG_SIZE, format, args);
     return tag;
 }
 
@@ -233,9 +244,9 @@ bool mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
     return mem_list_head_insert_rec(&lh->lh, h, tag);
 }
 
-bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char const tag_s[])
+bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args)
 {
-    tag_t tag = tag_convert(tag_s);
+    tag_t tag = tag_convert(format, args);
     return mem_list_head_insert_rec(lh_root, h, &tag);
 }
 

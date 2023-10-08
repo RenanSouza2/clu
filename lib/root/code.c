@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include "debug.h"
-#include "../list/header.h"
+#include "../list/struct.h"
 
 #ifdef DEBUG
 #endif
@@ -15,20 +15,14 @@
 
 list_head_p lh_root_inserted = NULL;
 
-handler_p mem_handler_alloc(size_t size, char const format[], ...)
+handler_p mem_handler_alloc(size_t size, char format[], ...)
 {
     handler_p h = malloc(size);
     assert(h);
 
     va_list args;
     va_start(args, format);
-
-    char tag[50];
-    vsnprintf(tag, 50, format, args);
-
-    printf("\ninserting (%s): %p", tag, h);
-
-    mem_list_head_insert(&lh_root_inserted, h, tag);
+    mem_list_head_insert(&lh_root_inserted, h, format, args);
     
     return h;
 }

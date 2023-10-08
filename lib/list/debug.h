@@ -33,6 +33,8 @@ void mem_list_head_free(list_head_p lh);
 
 bool mem_list_body(list_body_p lb, ...);
 bool mem_list_head(list_head_p lh, ...);
+tag_t tag_convert_test(char const format[], ...);
+bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...);
 
 #else
 
@@ -44,7 +46,7 @@ bool mem_list_head(list_head_p lh, ...);
 
 #define LB(POINTER) ((list_body_p)(POINTER))
 
-tag_t tag_convert(char const tag_s[]);
+tag_t tag_convert(char const format[], va_list args);
 bool tag_eq(tag_p tag1, tag_p tag2);
 
 list_body_p mem_list_body_create(handler_p h);

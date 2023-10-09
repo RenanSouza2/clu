@@ -3,23 +3,16 @@
 
 #include "../debug.h"
 
-void test_hello()
+void test_list_head()
 {
-    printf("\n\ttest hello\t\t");
-}
-
-void test_root()
-{
-    printf("\ntest root library\t\t");
-
-    test_hello();
+    printf("\n%s\t\t", __func__);
 }
 
 
 int main() 
 {
     setbuf(stdout, NULL);
-    test_root();
+    test_list_head();
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

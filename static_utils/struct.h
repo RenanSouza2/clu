@@ -10,6 +10,10 @@
 
 typedef void * handler_p;
 
-typedef void const * handler_c;
+#ifdef DEBUG
+
+#define HD(POINTER) ((handler_p)(POINTER))
+
+#endif
 
 #endif

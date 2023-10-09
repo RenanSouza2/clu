@@ -11,7 +11,7 @@ void test_hello()
     hello_example();
 }
 
-void test_example()
+void test_list_body()
 {
     printf("\n%s\t\t", __func__);
 
@@ -22,7 +22,7 @@ void test_example()
 int main() 
 {
     setbuf(stdout, NULL);
-    test_example();
+    test_list_body();
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

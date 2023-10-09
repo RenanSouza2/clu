@@ -9,6 +9,7 @@ list_head_p lh_root_allocated = NULL;
 list_head_p lh_root_freed = NULL;
 
 #undef malloc
+#undef free
 
 handler_p mem_handler_alloc(size_t size, char format[], ...)
 {
@@ -23,19 +24,24 @@ handler_p mem_handler_alloc(size_t size, char format[], ...)
     return h;
 }
 
-void mem_handler_free(handler_p h, ...)
+bool mem_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
-    va_start(args, h);
+    va_start(args, format);
 
-    tag_t tag = mem_tag_convert("avulse");
-    mem_list_head_remove(&lh_root_allocated, h, &tag);
+    tag_t tag_alloc = mem_tag_convert("avulse");
+    mem_list_head_remove(&lh_root_allocated, h, &tag_alloc);
     if(!mem_list_head_insert(&lh_root_freed, h, "free", args))
     {
-        printf("\ndouble free (%s): %p\t", tag.str, h);
-        assert(false);
+        tag_t tag_free = mem_tag_convert("avulse", format, args);
+        printf("\ndouble free: %p\t", h);
+        printf("\n\t(%s)", tag_alloc.str);
+        printf("\n\t(%s)", tag_free.str);
+        printf("\n\t");
+        return false;
     }
     free(h);
+    return true;
 }
 
 

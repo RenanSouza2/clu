@@ -2,6 +2,7 @@
 #define __LIST_STRUCT_H__
 
 #include "header.h"
+#include "../tag/struct.h"
 
 STRUCT(list_body)
 {

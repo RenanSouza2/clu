@@ -30,7 +30,6 @@ bool list_memory();
 
 bool mem_list_body(list_body_p lb, ...);
 bool mem_list_head(list_head_p lh, ...);
-tag_t tag_convert_test(char const format[], ...);
 bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...);
 
 #else

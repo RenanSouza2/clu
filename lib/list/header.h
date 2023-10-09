@@ -4,17 +4,9 @@
 #include <stdarg.h>
 
 #include "../../static_utils/struct.h"
-
-#define TAG_SIZE 50
-
-STRUCT(tag)
-{
-    char str[TAG_SIZE];
-};
+#include "../tag/header.h"
 
 PLACEHOLDER(list_head);
-
-tag_t mem_tag_convert(char const format[], ...);
 
 bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args);
 void mem_list_head_free(list_head_p *lh_root);

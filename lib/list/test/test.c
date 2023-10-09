@@ -8,51 +8,6 @@
 
 
 
-void test_tag_convert()
-{
-    printf("\n\t\t%s\t\t", __func__);
-
-    printf("\n\t\t\t%s 1\t\t", __func__);
-    tag_t tag = tag_convert_test("test");
-    assert(strcmp(tag.str, "test") == 0);
-    
-    printf("\n\t\t\t%s 2\t\t", __func__);
-    tag = tag_convert_test("0123456789012345678901234567890123456789012345678");
-    assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678") == 0);
-
-    assert(list_memory());
-}
-
-void test_tag_eq()
-{
-    printf("\n\t\t%s\t\t", __func__);
-
-    tag_t tag1, tag2;
-    tag1 = tag_convert_test("test");
-    tag2 = tag_convert_test("teste");
-    assert(mem_tag_eq(&tag1, &tag2) == false);
-    
-    tag2 = tag_convert_test("test");
-    assert(mem_tag_eq(&tag1, &tag2) == true);
-    
-    tag1 = tag_convert_test("0123456789012345678901234567890123456789012345678");
-    tag2 = tag_convert_test("0123456789012345678901234567890123456789012345678");
-    assert(mem_tag_eq(&tag1, &tag2) == true);
-
-    assert(list_memory());
-}
-
-void test_tag()
-{
-    printf("\n\t%s\t\t", __func__);
-
-    test_tag_convert();
-    test_tag_eq();
-    
-    assert(list_memory());
-}
-
-
 void test_list_body_create()
 {
     printf("\n\t\t%s\t\t", __func__);
@@ -132,7 +87,7 @@ void test_list_head_create()
 
     printf("\n\t\t\t%s 1\t\t", __func__);
     tag_t tag;
-    tag = tag_convert_test("test");
+    tag = mem_tag_convert("test");
     list_head_p lh = mem_list_head_create(&tag, HD(1));
     assert(mem_list_head(lh, 1,
         tag, 1, HD(1)
@@ -140,7 +95,7 @@ void test_list_head_create()
     mem_list_head_free(&lh);
 
     printf("\n\t\t\t%s 2\t\t", __func__);
-    tag = tag_convert_test("");
+    tag = mem_tag_convert("");
     lh = mem_list_head_create(&tag, HD(1));
     assert(mem_list_head(lh, 1,
         tag, 1, HD(1)
@@ -148,7 +103,7 @@ void test_list_head_create()
     mem_list_head_free(&lh);
 
     printf("\n\t\t\t%s 3\t\t", __func__);
-    tag = tag_convert_test("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi");
+    tag = mem_tag_convert("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi");
     lh = mem_list_head_create(&tag, HD(1));
     assert(mem_list_head(lh, 1,
         tag, 1, HD(1)
@@ -163,7 +118,7 @@ void test_list_head_pop()
     printf("\n\t\t%s\t\t", __func__);
 
     tag_t tag;
-    tag = tag_convert_test("test");
+    tag = mem_tag_convert("test");
 
     list_head_p lh = mem_list_head_create(&tag, HD(1));
     free(lh->lb, list_body);
@@ -181,7 +136,7 @@ void test_list_head_insert()
 
     printf("\n\t\t\t%s 1\t\t", __func__);
     list_head_p lh = NULL;
-    tag_t tag1 = tag_convert_test("test 1");
+    tag_t tag1 = mem_tag_convert("test 1");
     assert(mem_list_head_insert_test(&lh, HD(1), "test 1") == true);
     assert(mem_list_head(lh, 1,
         tag1, 1, HD(1)
@@ -193,7 +148,6 @@ void test_list_head_insert()
         tag1, 1, HD(1)
     ));
     
-
     printf("\n\t\t\t%s 3\t\t", __func__);
     assert(mem_list_head_insert_test(&lh, HD(2), "test 1") == true);
     assert(mem_list_head(lh, 1,
@@ -201,7 +155,7 @@ void test_list_head_insert()
     ));
 
     printf("\n\t\t\t%s 4\t\t", __func__);
-    tag_t tag2 = tag_convert_test("test 2", NULL);
+    tag_t tag2 = mem_tag_convert("test 2", NULL);
     assert(mem_list_head_insert_test(&lh, HD(3), "test 2") == true);
     assert(mem_list_head(lh, 2,
         tag1, 2, HD(1), HD(2),
@@ -231,10 +185,10 @@ void test_list_head_remove()
     printf("\n\t\t%s\t\t", __func__);
 
     tag_t tag1, tag2, tag3, tag4;
-    tag1 = tag_convert_test("test 1");
-    tag2 = tag_convert_test("test 2");
-    tag3 = tag_convert_test("test 3");
-    tag4 = tag_convert_test("test 4");
+    tag1 = mem_tag_convert("test 1");
+    tag2 = mem_tag_convert("test 2");
+    tag3 = mem_tag_convert("test 3");
+    tag4 = mem_tag_convert("test 4");
 
     list_head_p lh = NULL;
     mem_list_head_insert_test(&lh, HD(1), "test 1");
@@ -322,7 +276,6 @@ void test_mem()
 {
     printf("\ntest mem library\t\t");
 
-    test_tag();
     test_list_body_operations();
     test_list_head_operations();
 

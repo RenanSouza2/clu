@@ -13,7 +13,8 @@
 #undef malloc
 #undef free
 
-list_head_p lh_root_inserted = NULL;
+list_head_p lh_root_allocated = NULL;
+list_head_p lh_root_freed = NULL;
 
 handler_p mem_handler_alloc(size_t size, char format[], ...)
 {
@@ -22,15 +23,21 @@ handler_p mem_handler_alloc(size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    mem_list_head_insert(&lh_root_inserted, h, format, args);
+    mem_list_head_insert(&lh_root_allocated, h, format, args);
     
     return h;
 }
 
-void mem_handler_free(handler_p h)
+void mem_handler_free(handler_p h, ...)
 {
-    printf("\nremove: %p", h);
-    mem_list_head_remove(&lh_root_inserted, h);
+    va_list args;
+    va_start(args, h);
+    mem_list_head_remove(&lh_root_allocated, h);
+    if(!mem_list_head_insert(&lh_root_freed, h, "free", args))
+    {
+        printf("\ndouble free: %p\t", h);
+        assert(false);
+    }
     free(h);
 }
 
@@ -38,17 +45,17 @@ void mem_handler_free(handler_p h)
 
 void mem_report(char tag[])
 {
-    mem_list_report(lh_root_inserted, tag);
+    mem_list_report(lh_root_allocated, tag);
 }
 
 void mem_report_full(char tag[])
 {
-    mem_list_report_full(lh_root_inserted, tag);
+    mem_list_report_full(lh_root_allocated, tag);
 }
 
 bool mem_empty()
 {
-    if(lh_root_inserted == NULL) return true;
+    if(lh_root_allocated == NULL) return true;
 
     mem_report("ASSERT");
     return false;
@@ -56,5 +63,5 @@ bool mem_empty()
 
 handler_p mem_get_pointer(int x, int y)
 {
-    return mem_list_get_pointer(lh_root_inserted, x, y);
+    return mem_list_get_pointer(lh_root_allocated, x, y);
 }

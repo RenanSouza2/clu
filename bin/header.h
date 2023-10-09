@@ -15,7 +15,6 @@ void mem_report_full(char tag[]);
 handler_p mem_get_pointer(int x, int y);
 
 #define malloc(SIZE) mem_handler_alloc(SIZE, "f|%s|l|%d", __func__, __LINE__)
-#define malloc_tag(SIZE, FORMAT, ARGS...) mem_handler_alloc(SIZE, FORMAT, ARGS)
 #define free(HANDLER) mem_handler_free(HANDLER)
 
 #endif

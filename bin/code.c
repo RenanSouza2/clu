@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <assert.h>
 
 #include "header.h"
@@ -6,6 +7,8 @@
 
 list_head_p lh_root_allocated = NULL;
 list_head_p lh_root_freed = NULL;
+
+#undef malloc
 
 handler_p mem_handler_alloc(size_t size, char format[], ...)
 {

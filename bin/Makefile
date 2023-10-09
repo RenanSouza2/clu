@@ -8,7 +8,7 @@ bin.o: code.o $(OBJ)
 	echo "Linking final object"
 	ld -r -o $@ $^
 
-bin.o: code.c $(OBJ)
+code.o: code.c
 	echo "Building final object"
 	gcc -o $@ $^ $(FLAGS)
 

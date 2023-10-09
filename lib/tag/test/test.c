@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "../debug.h"
+#include "../../mem/debug.h"
 
 void test_tag_convert()
 {
@@ -16,6 +17,8 @@ void test_tag_convert()
     printf("\n\t\t\t%s 2\t\t", __func__);
     tag = mem_tag_convert("0123456789012345678901234567890123456789012345678");
     assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678") == 0);
+
+    assert(mem_mem_empty());
 }
 
 void test_tag_eq()
@@ -33,6 +36,8 @@ void test_tag_eq()
     tag1 = mem_tag_convert("0123456789012345678901234567890123456789012345678");
     tag2 = mem_tag_convert("0123456789012345678901234567890123456789012345678");
     assert(mem_tag_eq(&tag1, &tag2) == true);
+
+    assert(mem_mem_empty());
 }
 
 void test_tag()
@@ -41,6 +46,8 @@ void test_tag()
 
     test_tag_convert();
     test_tag_eq();
+
+    assert(mem_mem_empty());
 }
 
 int main() 

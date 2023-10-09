@@ -5,16 +5,9 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../mem/debug.h"
 
 #ifdef DEBUG
-
-int list_head_alive;
-int list_body_alive;
-
-bool list_memory()
-{
-    return list_head_alive == 0 && list_body_alive == 0;
-}
 
 bool mem_list_body_variadic(list_body_p lb, va_list *args)
 {

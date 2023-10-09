@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include "../debug.h"
-
+#include "../../mem/debug.h"
 
 
 void test_list_body_create()
@@ -17,7 +17,7 @@ void test_list_body_create()
     assert(lb->lb == NULL);
     free(lb, list_body);
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_body_pop()
@@ -29,7 +29,7 @@ void test_list_body_pop()
     lb = mem_list_body_pop(lb);
     assert(lb == LB(1));
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_body_insert()
@@ -46,7 +46,7 @@ void test_list_body_insert()
     assert(mem_list_body(lb, 2, HD(1), HD(2)));
     mem_list_body_free(lb);
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_body_remove()
@@ -63,7 +63,7 @@ void test_list_body_remove()
 
     assert(mem_list_body_remove(&lb, (handler_p)1) == false);
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_body_operations()
@@ -76,7 +76,7 @@ void test_list_body_operations()
     test_list_body_insert();
     test_list_body_remove();
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 
@@ -110,7 +110,7 @@ void test_list_head_create()
     ));
     mem_list_head_free(&lh);
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_head_pop()
@@ -127,7 +127,7 @@ void test_list_head_pop()
     lh = mem_list_head_pop(lh);
     assert(lh == LH(1));
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_head_insert()
@@ -177,7 +177,7 @@ void test_list_head_insert()
     ));
 
     mem_list_head_free(&lh);
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_head_remove()
@@ -252,7 +252,7 @@ void test_list_head_remove()
     assert(mem_list_head_remove(&lh, HD(3), NULL) == true);
     assert(lh == NULL);
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 void test_list_head_operations()
@@ -265,7 +265,7 @@ void test_list_head_operations()
     test_list_head_insert();
     test_list_head_remove();
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 
@@ -279,7 +279,7 @@ void test_mem()
     test_list_body_operations();
     test_list_head_operations();
 
-    assert(list_memory());
+    assert(mem_mem_empty());
 }
 
 

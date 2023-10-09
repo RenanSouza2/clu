@@ -3,13 +3,6 @@
 
 #include "header.h"
 
-#define TAG_SIZE 50
-
-STRUCT(tag)
-{
-    char str[TAG_SIZE];
-};
-
 STRUCT(list_body)
 {
     handler_p h;

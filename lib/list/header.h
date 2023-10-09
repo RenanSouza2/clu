@@ -5,10 +5,19 @@
 
 #include "../../static_utils/struct.h"
 
+#define TAG_SIZE 50
+
+STRUCT(tag)
+{
+    char str[TAG_SIZE];
+};
+
 PLACEHOLDER(list_head);
 
+tag_t tag_convert(char const format[], va_list args);
+
 bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args);
-bool mem_list_head_remove(list_head_p *lh, handler_p h);
+bool mem_list_head_remove(list_head_p *lh, handler_p h, tag_p tag);
 
 void mem_list_report(list_head_p lh, char title[]);
 void mem_list_report_full(list_head_p lh, char title[]);

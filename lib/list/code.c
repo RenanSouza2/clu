@@ -198,8 +198,7 @@ bool mem_list_body_remove(list_body_p *lb_root, handler_p h)
 int mem_list_body_count(list_body_p lb)
 {
     int i = 0;
-    for(; lb; i++, lb = lb->lb)
-        printf("\n%d: %p\t", i, lb);
+    for(; lb; i++, lb = lb->lb);
     return i;
 }
 
@@ -251,7 +250,7 @@ bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_l
     return mem_list_head_insert_rec(lh_root, h, &tag);
 }
 
-bool mem_list_head_remove(list_head_p *lh_root, handler_p h)
+bool mem_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag)
 {
     assert(lh_root);
 
@@ -259,7 +258,9 @@ bool mem_list_head_remove(list_head_p *lh_root, handler_p h)
     if(lh == NULL) return false;
 
     if(!mem_list_body_remove(&lh->lb, h))
-        return mem_list_head_remove(&lh->lh, h);
+        return mem_list_head_remove(&lh->lh, h, tag);
+
+    *tag = lh->tag;
 
     if(lh->lb == NULL)
         *lh_root = mem_list_head_pop(lh);

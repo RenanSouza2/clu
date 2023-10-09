@@ -32,10 +32,12 @@ void mem_handler_free(handler_p h, ...)
 {
     va_list args;
     va_start(args, h);
-    mem_list_head_remove(&lh_root_allocated, h);
+
+    tag_t tag = tag_convert("avulse", NULL);
+    mem_list_head_remove(&lh_root_allocated, h, &tag);
     if(!mem_list_head_insert(&lh_root_freed, h, "free", args))
     {
-        printf("\ndouble free: %p\t", h);
+        printf("\ndouble free (%s): %p\t", tag.str, h);
         assert(false);
     }
     free(h);

@@ -1,18 +1,12 @@
 LIB = lib
-BIN = $(LIB)/lib.o
-TGT = bin/lib.o
+BIN = bin
 
-build: $(TGT)
+build:
+	$(MAKE) --directory=$(BIN)
 
-$(TGT): $(BIN)
-	cp $(BIN) $(TGT)
-
-.PHONY: $(BIN)
-$(BIN):
-	$(MAKE) --directory=$(LIB)
-	
 clean:
 	rm -rf $(TGT)
+	$(MAKE) clean --directory=$(BIN)
 	$(MAKE) clean --directory=$(LIB)
 	
 test: 

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <assert.h>
 
 #include "debug.h"
 #include "../mem/debug.h"
@@ -7,7 +8,6 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <assert.h>
 
 bool mem_list_body_variadic(list_body_p lb, va_list *args)
 {

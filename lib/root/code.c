@@ -24,6 +24,7 @@ handler_p mem_handler_alloc(size_t size, char format[], ...)
     va_list args;
     va_start(args, format);
     mem_list_head_insert(&lh_root_allocated, h, format, args);
+    mem_list_head_remove(&lh_root_freed, h, NULL);
     
     return h;
 }

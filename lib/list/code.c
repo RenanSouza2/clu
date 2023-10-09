@@ -260,7 +260,7 @@ bool mem_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag)
     if(!mem_list_body_remove(&lh->lb, h))
         return mem_list_head_remove(&lh->lh, h, tag);
 
-    *tag = lh->tag;
+    if(tag) *tag = lh->tag;
 
     if(lh->lb == NULL)
         *lh_root = mem_list_head_pop(lh);

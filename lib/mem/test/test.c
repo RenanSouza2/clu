@@ -3,7 +3,7 @@
 
 #include "../debug.h"
 
-void test_mem()
+void test_list_head()
 {
     printf("\n%s\t\t", __func__);
 }
@@ -12,7 +12,7 @@ void test_mem()
 int main() 
 {
     setbuf(stdout, NULL);
-    test_mem();
+    test_list_head();
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

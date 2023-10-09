@@ -6,15 +6,12 @@
 #ifdef DEBUG
 
 #define LH(POINTER) ((list_head_p)(POINTER))
-#define HD(POINTER) ((handler_p)(POINTER))
 
 bool mem_list_body(list_body_p lb, ...);
 bool mem_list_head(list_head_p lh, ...);
 bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...);
 
 #endif
-
-#define LB(POINTER) ((list_body_p)(POINTER))
 
 bool mem_tag_eq(tag_p tag1, tag_p tag2);
 

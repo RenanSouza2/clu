@@ -3,12 +3,7 @@
 
 #include "header.h"
 #include "../tag/struct.h"
-
-STRUCT(list_body)
-{
-    handler_p h;
-    list_body_p lb;
-};
+#include "../list_body/struct.h"
 
 STRUCT(list_head)
 {

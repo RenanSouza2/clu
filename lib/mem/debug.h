@@ -3,6 +3,7 @@
 
 #ifdef DEBUG
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 extern int list_head_alive;

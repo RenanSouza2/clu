@@ -111,20 +111,29 @@ bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[],
 
 #endif
 
-int tag_len(char const tag_s[])
+int mem_tag_len(char const tag_s[])
 {
     int len = strlen(tag_s);
     assert(len < TAG_SIZE);
     return len;
 }
 
-tag_t tag_convert(char const format[], va_list args)
+tag_t mem_tag_convert_variadic(char const format[], va_list args)
 {
     tag_t tag;
     memset(&tag, 0, TAG_SIZE);
     vsnprintf(tag.str, TAG_SIZE, format, args);
     return tag;
 }
+
+tag_t tag_convert(char const format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    return mem_tag_convert_variadic(format, args);
+}
+
 
 bool tag_eq(tag_p tag1, tag_p tag2)
 {
@@ -246,7 +255,7 @@ bool mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
 
 bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args)
 {
-    tag_t tag = tag_convert(format, args);
+    tag_t tag = mem_tag_convert_variadic(format, args);
     return mem_list_head_insert_rec(lh_root, h, &tag);
 }
 

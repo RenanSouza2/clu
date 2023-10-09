@@ -14,7 +14,7 @@ STRUCT(tag)
 
 PLACEHOLDER(list_head);
 
-tag_t tag_convert(char const format[], va_list args);
+tag_t tag_convert(char const format[], ...);
 
 bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args);
 void mem_list_head_free(list_head_p *lh_root);

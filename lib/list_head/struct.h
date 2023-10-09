@@ -1,5 +1,5 @@
-#ifndef __LIST_STRUCT_H__
-#define __LIST_STRUCT_H__
+#ifndef __LIST_HEAD_STRUCT_H__
+#define __LIST_HEAD_STRUCT_H__
 
 #include "header.h"
 #include "../tag/struct.h"

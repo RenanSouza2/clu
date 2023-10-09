@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include "debug.h"
-#include "../list/struct.h"
+#include "../list_head/struct.h"
 
 #ifdef DEBUG
 #endif

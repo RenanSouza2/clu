@@ -1,5 +1,5 @@
-#ifndef __LIST_DEBUG_H__
-#define __LIST_DEBUG_H__
+#ifndef __LIST_HEAD_DEBUG_H__
+#define __LIST_HEAD_DEBUG_H__
 
 #include "struct.h"
 

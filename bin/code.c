@@ -1,17 +1,8 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdarg.h>
 #include <assert.h>
 
-#include "debug.h"
-#include "../list_head/struct.h"
-
-#ifdef DEBUG
-#endif
-
-#undef malloc
-#undef free
+#include "header.h"
+#include "../lib/list_head/header.h"
+#include "../lib/tag/struct.h"
 
 list_head_p lh_root_allocated = NULL;
 list_head_p lh_root_freed = NULL;

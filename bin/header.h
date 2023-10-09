@@ -6,8 +6,8 @@
 
 typedef void * handler_p;
 
-handler_p mem_handler_alloc(size_t size, char const format[], ...);
-void mem_handler_free(handler_p h);
+handler_p mem_handler_alloc(size_t size, char format[], ...);
+void mem_handler_free(handler_p h, ...);
 
 bool mem_empty();
 void mem_report(char tag[]);

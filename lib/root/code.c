@@ -34,7 +34,7 @@ void mem_handler_free(handler_p h, ...)
     va_list args;
     va_start(args, h);
 
-    tag_t tag = tag_convert("avulse");
+    tag_t tag = mem_tag_convert("avulse");
     mem_list_head_remove(&lh_root_allocated, h, &tag);
     if(!mem_list_head_insert(&lh_root_freed, h, "free", args))
     {

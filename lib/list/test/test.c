@@ -30,14 +30,14 @@ void test_tag_eq()
     tag_t tag1, tag2;
     tag1 = tag_convert_test("test");
     tag2 = tag_convert_test("teste");
-    assert(tag_eq(&tag1, &tag2) == false);
+    assert(mem_tag_eq(&tag1, &tag2) == false);
     
     tag2 = tag_convert_test("test");
-    assert(tag_eq(&tag1, &tag2) == true);
+    assert(mem_tag_eq(&tag1, &tag2) == true);
     
     tag1 = tag_convert_test("0123456789012345678901234567890123456789012345678");
     tag2 = tag_convert_test("0123456789012345678901234567890123456789012345678");
-    assert(tag_eq(&tag1, &tag2) == true);
+    assert(mem_tag_eq(&tag1, &tag2) == true);
 
     assert(list_memory());
 }

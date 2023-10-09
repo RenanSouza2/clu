@@ -43,7 +43,7 @@ bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[],
 
 #define LB(POINTER) ((list_body_p)(POINTER))
 
-bool tag_eq(tag_p tag1, tag_p tag2);
+bool mem_tag_eq(tag_p tag1, tag_p tag2);
 
 list_body_p mem_list_body_create(handler_p h);
 list_body_p mem_list_body_pop(list_body_p lb);

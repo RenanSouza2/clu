@@ -64,7 +64,7 @@ bool mem_list_head(list_head_p lh, ...)
     for(; lh && (i<count_head); lh = lh->lh, i++)
     {
         tag_t tag = va_arg(args, tag_t);
-        if(!tag_eq(&lh->tag, &tag))
+        if(!mem_tag_eq(&lh->tag, &tag))
         {
             printf("\nMEM LIST HEAD | ERROR 1 TAG MISMATCH | %d %d", i, count_head);
             printf("\n\t(%s)", lh->tag.str);
@@ -99,7 +99,7 @@ tag_t tag_convert_test(char const format[], ...)
 {
     va_list args;
     va_start(args, format);
-    return tag_convert(format, args);
+    return mem_tag_convert(format, args);
 }
 
 bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...)
@@ -126,7 +126,7 @@ tag_t mem_tag_convert_variadic(char const format[], va_list args)
     return tag;
 }
 
-tag_t tag_convert(char const format[], ...)
+tag_t mem_tag_convert(char const format[], ...)
 {
     va_list args;
     va_start(args, format);
@@ -135,7 +135,7 @@ tag_t tag_convert(char const format[], ...)
 }
 
 
-bool tag_eq(tag_p tag1, tag_p tag2)
+bool mem_tag_eq(tag_p tag1, tag_p tag2)
 {
     return memcmp(tag1, tag2, TAG_SIZE) == 0;
 }
@@ -247,7 +247,7 @@ bool mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
         return true;
     }
 
-    if(tag_eq(&lh->tag, tag))
+    if(mem_tag_eq(&lh->tag, tag))
         return mem_list_body_insert(&lh->lb, h);
 
     return mem_list_head_insert_rec(&lh->lh, h, tag);

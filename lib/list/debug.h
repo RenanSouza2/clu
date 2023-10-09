@@ -28,9 +28,6 @@ bool list_memory();
         free(POINTER);      \
     }
 
-void mem_list_body_free(list_body_p lb);
-void mem_list_head_free(list_head_p lh);
-
 bool mem_list_body(list_body_p lb, ...);
 bool mem_list_head(list_head_p lh, ...);
 tag_t tag_convert_test(char const format[], ...);
@@ -50,6 +47,8 @@ bool tag_eq(tag_p tag1, tag_p tag2);
 
 list_body_p mem_list_body_create(handler_p h);
 list_body_p mem_list_body_pop(list_body_p lb);
+
+void mem_list_body_free(list_body_p lb);
 
 bool mem_list_body_insert(list_body_p *lb_root, handler_p h);
 bool mem_list_body_remove(list_body_p *lb, handler_p h);

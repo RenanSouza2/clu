@@ -58,7 +58,11 @@ void mem_report_full(char tag[])
 
 bool mem_empty()
 {
-    if(lh_root_allocated == NULL) return true;
+    if(lh_root_allocated == NULL) 
+    {
+        mem_list_head_free(&lh_root_freed);
+        return true;
+    }
 
     mem_report("ASSERT");
     return false;

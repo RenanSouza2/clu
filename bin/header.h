@@ -7,7 +7,7 @@
 
 typedef void * handler_p;
 
-handler_p clu_handler_alloc(size_t size, char format[], ...);
+handler_p clu_handler_malloc(size_t size, char format[], ...);
 handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...);
 bool clu_handler_free(handler_p h, char format[], ...);
 

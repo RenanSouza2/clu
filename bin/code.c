@@ -9,6 +9,7 @@ list_head_p lh_root_allocated = NULL;
 list_head_p lh_root_freed = NULL;
 
 #undef malloc
+#undef calloc
 #undef free
 
 void clu_handler_register(handler_p h, char format[], va_list vargs)

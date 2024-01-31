@@ -7,6 +7,6 @@
 
 PLACEHOLDER(list_body);
 
-int mem_list_body_count(list_body_p lb);
+int clu_list_body_count(list_body_p lb);
 
 #endif

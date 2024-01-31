@@ -11,14 +11,18 @@ void test_tag_convert()
     printf("\n\t\t%s\t\t", __func__);
 
     printf("\n\t\t\t%s 1\t\t", __func__);
-    tag_t tag = mem_tag_convert("test");
-    assert(strcmp(tag.str, "test") == 0);
+    tag_t tag = clu_tag_convert("test");
+    assert(strcmp(tag.str, "test\0") == 0);
     
     printf("\n\t\t\t%s 2\t\t", __func__);
-    tag = mem_tag_convert("0123456789012345678901234567890123456789012345678");
-    assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678") == 0);
+    tag = clu_tag_convert("0123456789012345678901234567890123456789012345678");
+    assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678\0") == 0);
+    
+    printf("\n\t\t\t%s 3\t\t", __func__);
+    tag = clu_tag_convert("01234567890123456789012345678901234567890123456789");
+    assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678\0") == 0);
 
-    assert(mem_mem_empty());
+    assert(clu_mem_empty());
 }
 
 void test_tag_eq()
@@ -26,18 +30,18 @@ void test_tag_eq()
     printf("\n\t\t%s\t\t", __func__);
 
     tag_t tag1, tag2;
-    tag1 = mem_tag_convert("test");
-    tag2 = mem_tag_convert("teste");
-    assert(mem_tag_eq(&tag1, &tag2) == false);
+    tag1 = clu_tag_convert("test");
+    tag2 = clu_tag_convert("teste");
+    assert(clu_tag_eq(&tag1, &tag2) == false);
     
-    tag2 = mem_tag_convert("test");
-    assert(mem_tag_eq(&tag1, &tag2) == true);
+    tag2 = clu_tag_convert("test");
+    assert(clu_tag_eq(&tag1, &tag2) == true);
     
-    tag1 = mem_tag_convert("0123456789012345678901234567890123456789012345678");
-    tag2 = mem_tag_convert("0123456789012345678901234567890123456789012345678");
-    assert(mem_tag_eq(&tag1, &tag2) == true);
+    tag1 = clu_tag_convert("0123456789012345678901234567890123456789012345678");
+    tag2 = clu_tag_convert("0123456789012345678901234567890123456789012345678");
+    assert(clu_tag_eq(&tag1, &tag2) == true);
 
-    assert(mem_mem_empty());
+    assert(clu_mem_empty());
 }
 
 void test_tag()
@@ -47,7 +51,7 @@ void test_tag()
     test_tag_convert();
     test_tag_eq();
 
-    assert(mem_mem_empty());
+    assert(clu_mem_empty());
 }
 
 int main() 

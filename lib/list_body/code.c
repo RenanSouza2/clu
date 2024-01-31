@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-bool mem_list_body_variadic(list_body_p lb, va_list *args)
+bool clu_list_body_variadic(list_body_p lb, va_list *args)
 {
     int count_body = va_arg(*args, int);
 
@@ -39,18 +39,18 @@ bool mem_list_body_variadic(list_body_p lb, va_list *args)
     return true;
 }
 
-bool mem_list_body(list_body_p lb, ...)
+bool clu_list_body(list_body_p lb, ...)
 {
     va_list args;
     va_start(args, lb);
-    return mem_list_body_variadic(lb, &args);
+    return clu_list_body_variadic(lb, &args);
 }
 
 #endif
 
 
 
-list_body_p mem_list_body_create(handler_p h)
+list_body_p clu_list_body_create(handler_p h)
 {
     list_body_p lb = malloc(sizeof(list_body_t));
     assert(lb);
@@ -60,7 +60,7 @@ list_body_p mem_list_body_create(handler_p h)
     return lb;
 }
 
-list_body_p mem_list_body_pop(list_body_p lb)
+list_body_p clu_list_body_pop(list_body_p lb)
 {
     assert(lb);
     list_body_p lb_aux = lb->lb;
@@ -68,31 +68,31 @@ list_body_p mem_list_body_pop(list_body_p lb)
     return lb_aux;
 }
 
-void mem_list_body_free(list_body_p lb)
+void clu_list_body_free(list_body_p lb)
 {
-    while(lb) lb = mem_list_body_pop(lb);
+    while(lb) lb = clu_list_body_pop(lb);
 }
 
 
 
-bool mem_list_body_insert(list_body_p *lb_root, handler_p h)
+bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
 
     list_body_p lb = *lb_root;
     if(lb == NULL)
     {
-        *lb_root = mem_list_body_create(h);
+        *lb_root = clu_list_body_create(h);
         return true;
     }
 
     if(lb->h == h)
         return false;
 
-    return mem_list_body_insert(&lb->lb, h);
+    return clu_list_body_insert(&lb->lb, h);
 }
 
-bool mem_list_body_remove(list_body_p *lb_root, handler_p h)
+bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
 
@@ -100,13 +100,13 @@ bool mem_list_body_remove(list_body_p *lb_root, handler_p h)
     if(lb == NULL) return false;
 
     if(lb->h != h)
-        return mem_list_body_remove(&lb->lb, h);
+        return clu_list_body_remove(&lb->lb, h);
     
-    *lb_root = mem_list_body_pop(lb);
+    *lb_root = clu_list_body_pop(lb);
     return true;
 }
 
-int mem_list_body_count(list_body_p lb)
+int clu_list_body_count(list_body_p lb)
 {
     int i = 0;
     for(; lb; i++, lb = lb->lb);

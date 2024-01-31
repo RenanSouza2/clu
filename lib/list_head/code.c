@@ -11,7 +11,7 @@
 
 #include "../list_body/debug.h"
 
-bool mem_list_head(list_head_p lh, ...)
+bool clu_list_head(list_head_p lh, ...)
 {
     va_list args;
     va_start(args, lh);
@@ -22,7 +22,7 @@ bool mem_list_head(list_head_p lh, ...)
     for(; lh && (i<count_head); lh = lh->lh, i++)
     {
         tag_t tag = va_arg(args, tag_t);
-        if(!mem_tag_eq(&lh->tag, &tag))
+        if(!clu_tag_eq(&lh->tag, &tag))
         {
             printf("\nMEM LIST HEAD | ERROR 1 TAG MISMATCH | %d %d", i, count_head);
             printf("\n\t(%s)", lh->tag.str);
@@ -31,7 +31,7 @@ bool mem_list_head(list_head_p lh, ...)
             return false;
         }
 
-        if(!mem_list_body_variadic(lh->lb, &args))
+        if(!clu_list_body_variadic(lh->lb, &args))
         {
             printf("\nMEM LIST HEAD | ERROR 2 LIST BODY MISMATCH | %d %d", i, count_head);
             return false;
@@ -53,18 +53,18 @@ bool mem_list_head(list_head_p lh, ...)
     return true;
 }
 
-bool mem_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...)
+bool clu_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    return mem_list_head_insert(lh_root, h, format, args);
+    return clu_list_head_insert(lh_root, h, format, args);
 }
 
 #endif
 
 
 
-list_head_p mem_list_head_create(tag_p tag, handler_p h)
+list_head_p clu_list_head_create(tag_p tag, handler_p h)
 {
     assert(h);
 
@@ -72,12 +72,12 @@ list_head_p mem_list_head_create(tag_p tag, handler_p h)
     assert(lh);
     INC(list_head);
 
-    list_body_p lb = mem_list_body_create(h);
+    list_body_p lb = clu_list_body_create(h);
     *lh = (list_head_t){NULL, lb, *tag};
     return lh;
 }
 
-list_head_p mem_list_head_pop(list_head_p lh)
+list_head_p clu_list_head_pop(list_head_p lh)
 {
     assert(lh);
     list_head_p lh_aux = lh->lh;
@@ -85,60 +85,60 @@ list_head_p mem_list_head_pop(list_head_p lh)
     return lh_aux;
 }
 
-void mem_list_head_free(list_head_p *lh_root)
+void clu_list_head_free(list_head_p *lh_root)
 {
-    for(list_head_p lh = *lh_root; lh; lh = mem_list_head_pop(lh))
-        mem_list_body_free(lh->lb);
+    for(list_head_p lh = *lh_root; lh; lh = clu_list_head_pop(lh))
+        clu_list_body_free(lh->lb);
 
     *lh_root = NULL;
 }
 
 
 
-bool mem_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
+bool clu_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
 {
     assert(lh_root);
 
     list_head_p lh = *lh_root;
     if(lh == NULL)
     {
-        *lh_root = mem_list_head_create(tag, h);
+        *lh_root = clu_list_head_create(tag, h);
         return true;
     }
 
-    if(mem_tag_eq(&lh->tag, tag))
-        return mem_list_body_insert(&lh->lb, h);
+    if(clu_tag_eq(&lh->tag, tag))
+        return clu_list_body_insert(&lh->lb, h);
 
-    return mem_list_head_insert_rec(&lh->lh, h, tag);
+    return clu_list_head_insert_rec(&lh->lh, h, tag);
 }
 
-bool mem_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args)
+bool clu_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args)
 {
-    tag_t tag = mem_tag_convert_variadic(format, args);
-    return mem_list_head_insert_rec(lh_root, h, &tag);
+    tag_t tag = clu_tag_convert_variadic(format, args);
+    return clu_list_head_insert_rec(lh_root, h, &tag);
 }
 
-bool mem_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag)
+bool clu_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag)
 {
     assert(lh_root);
 
     list_head_p lh = *lh_root;
     if(lh == NULL) return false;
 
-    if(!mem_list_body_remove(&lh->lb, h))
-        return mem_list_head_remove(&lh->lh, h, tag);
+    if(!clu_list_body_remove(&lh->lb, h))
+        return clu_list_head_remove(&lh->lh, h, tag);
 
     if(tag) *tag = lh->tag;
 
     if(lh->lb == NULL)
-        *lh_root = mem_list_head_pop(lh);
+        *lh_root = clu_list_head_pop(lh);
 
     return true;
 }
 
 
 
-void mem_list_report(list_head_p lh, char tag[])
+void clu_list_report(list_head_p lh, char tag[])
 {
     printf("\n\nMEM REPORT: %s", tag);
     if(lh == NULL)
@@ -149,13 +149,13 @@ void mem_list_report(list_head_p lh, char tag[])
 
     for(; lh; lh = lh->lh)
     {
-        int count = mem_list_body_count(lh->lb);
+        int count = clu_list_body_count(lh->lb);
         printf("\n%s: %d", lh->tag.str, count);
     }
     printf("\n\n");
 }
 
-void mem_list_report_full(list_head_p lh, char tag[])
+void clu_list_report_full(list_head_p lh, char tag[])
 {
     printf("\n\nMEM REPORT FULL: %s", tag);
     if(lh == NULL)
@@ -175,7 +175,7 @@ void mem_list_report_full(list_head_p lh, char tag[])
 
 
 
-handler_p mem_list_get_pointer(list_head_p lh, int x, int y)
+handler_p clu_list_get_pointer(list_head_p lh, int x, int y)
 {
     for(int i=0; lh && (i < x); lh = lh->lh, i++);
 

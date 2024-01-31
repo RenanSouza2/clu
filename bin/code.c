@@ -11,29 +11,45 @@ list_head_p lh_root_freed = NULL;
 #undef malloc
 #undef free
 
-handler_p mem_handler_alloc(size_t size, char format[], ...)
+void clu_handler_register(handler_p h, char format[], va_list vargs)
+{
+    assert(h);
+    clu_list_head_insert(&lh_root_allocated, h, format, vargs);
+    clu_list_head_remove(&lh_root_freed, h, NULL);
+}
+
+handler_p clu_handler_malloc(size_t size, char format[], ...)
 {
     handler_p h = malloc(size);
-    assert(h);
 
     va_list args;
     va_start(args, format);
-    mem_list_head_insert(&lh_root_allocated, h, format, args);
-    mem_list_head_remove(&lh_root_freed, h, NULL);
+    clu_handler_register(h, format, args);
     
     return h;
 }
 
-bool mem_handler_free(handler_p h, char format[], ...)
+handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
+{
+    handler_p h = calloc(amt, size);
+
+    va_list args;
+    va_start(args, format);
+    clu_handler_register(h, format, args);
+    
+    return h;
+}
+
+bool clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
 
-    tag_t tag_alloc = mem_tag_convert("avulse");
-    mem_list_head_remove(&lh_root_allocated, h, &tag_alloc);
-    if(!mem_list_head_insert(&lh_root_freed, h, "free", args))
+    tag_t tag_alloc = clu_tag_convert("avulse");
+    clu_list_head_remove(&lh_root_allocated, h, &tag_alloc);
+    if(!clu_list_head_insert(&lh_root_freed, h, "free", args))
     {
-        tag_t tag_free = mem_tag_convert("avulse", format, args);
+        tag_t tag_free = clu_tag_convert("avulse", format, args);
         printf("\ndouble free: %p\t", h);
         printf("\n\t(%s)", tag_alloc.str);
         printf("\n\t(%s)", tag_free.str);
@@ -48,19 +64,19 @@ bool mem_handler_free(handler_p h, char format[], ...)
 
 void mem_report(char tag[])
 {
-    mem_list_report(lh_root_allocated, tag);
+    clu_list_report(lh_root_allocated, tag);
 }
 
 void mem_report_full(char tag[])
 {
-    mem_list_report_full(lh_root_allocated, tag);
+    clu_list_report_full(lh_root_allocated, tag);
 }
 
 bool mem_empty()
 {
     if(lh_root_allocated == NULL) 
     {
-        mem_list_head_free(&lh_root_freed);
+        clu_list_head_free(&lh_root_freed);
         return true;
     }
 
@@ -70,5 +86,5 @@ bool mem_empty()
 
 handler_p mem_get_pointer(int x, int y)
 {
-    return mem_list_get_pointer(lh_root_allocated, x, y);
+    return clu_list_get_pointer(lh_root_allocated, x, y);
 }

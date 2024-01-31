@@ -9,7 +9,7 @@
 extern int list_head_alive;
 extern int list_body_alive;
 
-bool mem_mem_empty();
+bool clu_mem_empty();
 
 #define INC(NAME) NAME##_alive++;
 #define DEC(NAME)               \

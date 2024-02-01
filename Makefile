@@ -1,13 +1,13 @@
 LIB = lib
 BIN = bin
 
-build:
+build b:
 	$(MAKE) --directory=$(BIN)
 
-clean:
+clean c:
 	rm -rf $(TGT)
 	$(MAKE) clean --directory=$(BIN)
 	$(MAKE) clean --directory=$(LIB)
 	
-test: 
+test t: 
 	$(MAKE) test --directory=$(LIB) -s

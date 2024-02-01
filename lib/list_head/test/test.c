@@ -134,7 +134,7 @@ void test_list_head_remove()
     ));
 
     printf("\n\t\t%s 1\t\t", __func__);
-    assert(clu_list_head_remove(&lh, HD(7), NULL) == false);
+    assert(clu_list_head_remove(&lh, HD(7)) == false);
     assert(clu_list_head(lh, 4,
         tag1, 2, HD(1), HD(2),
         tag2, 2, HD(3), HD(4),
@@ -143,7 +143,7 @@ void test_list_head_remove()
     ));
 
     printf("\n\t\t%s 2\t\t", __func__);
-    assert(clu_list_head_remove(&lh, HD(5), NULL) == true);
+    assert(clu_list_head_remove(&lh, HD(5)) == true);
     assert(clu_list_head(lh, 3,
         tag1, 2, HD(1), HD(2),
         tag2, 2, HD(3), HD(4),
@@ -151,34 +151,34 @@ void test_list_head_remove()
     ));
 
     printf("\n\t\t%s 3\t\t", __func__);
-    assert(clu_list_head_remove(&lh, HD(6), NULL) == true);
+    assert(clu_list_head_remove(&lh, HD(6)) == true);
     assert(clu_list_head(lh, 2,
         tag1, 2, HD(1), HD(2),
         tag2, 2, HD(3), HD(4)
     ));
 
     printf("\n\t\t%s 4\t\t", __func__);
-    assert(clu_list_head_remove(&lh, HD(4), NULL) == true);
+    assert(clu_list_head_remove(&lh, HD(4)) == true);
     assert(clu_list_head(lh, 2,
         tag1, 2, HD(1), HD(2),
         tag2, 1, HD(3)
     ));
 
     printf("\n\t\t%s 5\t\t", __func__);
-    assert(clu_list_head_remove(&lh, HD(2), NULL) == true);
+    assert(clu_list_head_remove(&lh, HD(2)) == true);
     assert(clu_list_head(lh, 2,
         tag1, 1, HD(1),
         tag2, 1, HD(3)
     ));
 
     printf("\n\t\t%s 6\t\t", __func__);
-    assert(clu_list_head_remove(&lh, HD(1), NULL) == true);
+    assert(clu_list_head_remove(&lh, HD(1)) == true);
     assert(clu_list_head(lh, 1,
         tag2, 1, HD(3)
     ));
 
     printf("\n\t\t%s 6\t\t", __func__);
-    assert(clu_list_head_remove(&lh, HD(3), NULL) == true);
+    assert(clu_list_head_remove(&lh, HD(3)) == true);
     assert(lh == NULL);
 
     assert(clu_mem_empty());

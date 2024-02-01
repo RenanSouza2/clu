@@ -105,7 +105,7 @@ bool clu_list_head_insert(list_head_p *lh_root, handler_p h, tag_p tag)
     return clu_list_head_insert(&lh->lh, h, tag);
 }
 
-bool clu_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag)
+bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 {
     assert(lh_root);
 
@@ -113,9 +113,7 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag)
     if(lh == NULL) return false;
 
     if(!clu_list_body_remove(&lh->lb, h))
-        return clu_list_head_remove(&lh->lh, h, tag);
-
-    if(tag) *tag = lh->tag;
+        return clu_list_head_remove(&lh->lh, h);
 
     if(lh->lb == NULL)
         *lh_root = clu_list_head_pop(lh);

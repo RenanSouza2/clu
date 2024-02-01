@@ -12,11 +12,12 @@ list_head_p lh_root_freed = NULL;
 #undef calloc
 #undef free
 
-void clu_handler_register(handler_p h, char format[], va_list vargs)
+void clu_handler_register(handler_p h, char format[], va_list args)
 {
     assert(h);
-    clu_list_head_insert(&lh_root_allocated, h, format, vargs);
-    clu_list_head_remove(&lh_root_freed, h, NULL);
+    tag_t tag = clu_tag_format_variadic(format, args);
+    clu_list_head_insert(&lh_root_allocated, h, &tag);
+    clu_list_head_remove(&lh_root_freed, h);
 }
 
 handler_p clu_handler_malloc(size_t size, char format[], ...)
@@ -46,12 +47,13 @@ bool clu_handler_free(handler_p h, char format[], ...)
     va_list args;
     va_start(args, format);
 
-    tag_t tag_alloc = clu_tag_convert("not registered");
-    clu_list_head_remove(&lh_root_allocated, h, &tag_alloc);
-    if(!clu_list_head_insert(&lh_root_freed, h, "free", args))
+    clu_list_head_remove(&lh_root_allocated, h);
+
+    tag_t tag_free = clu_tag_format("free");
+    if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
     {
-        tag_t tag_free = clu_tag_convert_variadic(format, args);
-        printf("\ndouble free: %s\t", tag_free.str);
+        tag_t tag = clu_tag_format_variadic(format, args);
+        printf("\ndouble free: %s\t", tag.str);
         printf("\n");
         printf("\n\t");
         return false;

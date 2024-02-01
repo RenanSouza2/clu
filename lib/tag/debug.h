@@ -4,6 +4,9 @@
 #include "struct.h"
 
 #ifdef DEBUG
+
+#define TAG(STR) ((tag_p)(STR))
+
 #endif
 
 #endif

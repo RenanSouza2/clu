@@ -53,13 +53,6 @@ bool clu_list_head(list_head_p lh, ...)
     return true;
 }
 
-bool clu_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...)
-{
-    va_list args;
-    va_start(args, format);
-    return clu_list_head_insert(lh_root, h, format, args);
-}
-
 #endif
 
 
@@ -95,7 +88,7 @@ void clu_list_head_free(list_head_p *lh_root)
 
 
 
-bool clu_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
+bool clu_list_head_insert(list_head_p *lh_root, handler_p h, tag_p tag)
 {
     assert(lh_root);
 
@@ -109,13 +102,7 @@ bool clu_list_head_insert_rec(list_head_p *lh_root, handler_p h, tag_p tag)
     if(clu_tag_eq(&lh->tag, tag))
         return clu_list_body_insert(&lh->lb, h);
 
-    return clu_list_head_insert_rec(&lh->lh, h, tag);
-}
-
-bool clu_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args)
-{
-    tag_t tag = clu_tag_convert_variadic(format, args);
-    return clu_list_head_insert_rec(lh_root, h, &tag);
+    return clu_list_head_insert(&lh->lh, h, tag);
 }
 
 bool clu_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag)

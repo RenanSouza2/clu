@@ -10,7 +10,7 @@ STRUCT(tag)
     char str[TAG_SIZE];
 };
 
-tag_t clu_tag_convert(char const format[], ...);
-tag_t clu_tag_convert_variadic(char const format[], va_list args);
+tag_t clu_tag_format(char const format[], ...);
+tag_t clu_tag_format_variadic(char const format[], va_list args);
 
 #endif

@@ -11,7 +11,7 @@
 
 
 
-tag_t clu_tag_convert_variadic(char const format[], va_list args)
+tag_t clu_tag_format_variadic(char const format[], va_list args)
 {
     tag_t tag;
     memset(&tag, 0, TAG_SIZE);
@@ -19,12 +19,12 @@ tag_t clu_tag_convert_variadic(char const format[], va_list args)
     return tag;
 }
 
-tag_t clu_tag_convert(char const format[], ...)
+tag_t clu_tag_format(char const format[], ...)
 {
     va_list args;
     va_start(args, format);
 
-    return clu_tag_convert_variadic(format, args);
+    return clu_tag_format_variadic(format, args);
 }
 
 bool clu_tag_eq(tag_p tag1, tag_p tag2)

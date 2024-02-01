@@ -46,17 +46,17 @@ bool clu_handler_free(handler_p h, char format[], ...)
     va_list args;
     va_start(args, format);
 
-    tag_t tag_alloc = clu_tag_convert("avulse");
+    tag_t tag_alloc = clu_tag_convert("not registered");
     clu_list_head_remove(&lh_root_allocated, h, &tag_alloc);
     if(!clu_list_head_insert(&lh_root_freed, h, "free", args))
     {
-        tag_t tag_free = clu_tag_convert("avulse", format, args);
-        printf("\ndouble free: %p\t", h);
-        printf("\n\t(%s)", tag_alloc.str);
-        printf("\n\t(%s)", tag_free.str);
+        tag_t tag_free = clu_tag_convert_variadic(format, args);
+        printf("\ndouble free: %s\t", tag_free.str);
+        printf("\n");
         printf("\n\t");
         return false;
     }
+    
     free(h);
     return true;
 }

@@ -9,7 +9,7 @@
 
 bool clu_list_body(list_body_p lb, ...);
 bool clu_list_head(list_head_p lh, ...);
-bool clu_list_head_insert_test(list_head_p *lh_root, handler_p h, char format[], ...);
+bool clu_list_head_insert_immed(list_head_p *lh_root, handler_p h, char format[], ...);
 
 #endif
 

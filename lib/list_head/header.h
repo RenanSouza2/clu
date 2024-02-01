@@ -8,7 +8,7 @@
 
 PLACEHOLDER(list_head);
 
-bool clu_list_head_insert(list_head_p *lh_root, handler_p h, char format[], va_list args);
+bool clu_list_head_insert(list_head_p *lh_root, handler_p h, tag_p tag);
 void clu_list_head_free(list_head_p *lh_root);
 bool clu_list_head_remove(list_head_p *lh_root, handler_p h, tag_p tag);
 

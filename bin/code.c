@@ -10,15 +10,35 @@ list_head_p lh_root_freed = NULL;
 
 #undef malloc
 #undef calloc
+#undef realloc
 #undef free
 
-void clu_handler_register(handler_p h, char format[], va_list args)
+
+
+void clu_handler_register(handler_p h, tag_p tag)
 {
     assert(h);
-    tag_t tag = clu_tag_format_variadic(format, args);
-    clu_list_head_insert(&lh_root_allocated, h, &tag);
+    clu_list_head_insert(&lh_root_allocated, h, tag);
     clu_list_head_remove(&lh_root_freed, h);
 }
+
+bool clu_handler_free_tag(handler_p h, tag_p tag)
+{
+    clu_list_head_remove(&lh_root_allocated, h);
+
+    tag_t tag_free = clu_tag_format("free");
+    if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
+    {
+        printf("\ndouble free: %s\t", tag->str);
+        printf("\n");
+        printf("\n\t");
+        return false;
+    }
+    
+    return true;
+}
+
+
 
 handler_p clu_handler_malloc(size_t size, char format[], ...)
 {
@@ -26,7 +46,9 @@ handler_p clu_handler_malloc(size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_register(h, format, args);
+    tag_t tag = clu_tag_format_variadic(format, args);
+
+    clu_handler_register(h, &tag);
     
     return h;
 }
@@ -37,8 +59,29 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_register(h, format, args);
+    tag_t tag = clu_tag_format_variadic(format, args);
+
+    clu_handler_register(h, &tag);
     
+    return h;
+}
+
+handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...)
+{
+    assert(size);
+
+    handler_p h = realloc(h_old, size);
+    assert(h);
+
+    if(h == h_old) return h;
+
+    va_list args;
+    va_start(args, format);
+    tag_t tag = clu_tag_format_variadic(format, args);
+
+    clu_handler_free_tag(h_old, &tag);
+    clu_handler_register(h, &tag);
+
     return h;
 }
 
@@ -46,19 +89,11 @@ bool clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
+    tag_t tag = clu_tag_format_variadic(format, args);
 
-    clu_list_head_remove(&lh_root_allocated, h);
-
-    tag_t tag_free = clu_tag_format("free");
-    if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
-    {
-        tag_t tag = clu_tag_format_variadic(format, args);
-        printf("\ndouble free: %s\t", tag.str);
-        printf("\n");
-        printf("\n\t");
+    if(!clu_handler_free_tag(h, &tag))
         return false;
-    }
-    
+
     free(h);
     return true;
 }

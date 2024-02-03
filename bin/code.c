@@ -29,6 +29,7 @@ bool clu_handler_free_tag(handler_p h, tag_p tag)
     tag_t tag_free = clu_tag_format("free");
     if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
     {
+        printf("\n");
         printf("\ndouble free: %s\t", tag->str);
         printf("\n");
         printf("\n\t");
@@ -79,7 +80,7 @@ handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...)
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
 
-    clu_handler_free_tag(h_old, &tag);
+    if(h_old) clu_handler_free_tag(h_old, &tag);
     clu_handler_register(h, &tag);
 
     return h;

@@ -15,22 +15,27 @@ list_head_p lh_root_freed = NULL;
 
 
 
-void clu_handler_register(handler_p h, tag_p tag)
+void clu_handler_register(handler_p h, char format[], va_list args)
 {
     assert(h);
-    clu_list_head_insert(&lh_root_allocated, h, tag);
+    
+    tag_t tag = clu_tag_format_variadic(format, args);
+    clu_list_head_insert(&lh_root_allocated, h, &tag);
     clu_list_head_remove(&lh_root_freed, h);
 }
 
-bool clu_handler_free_tag(handler_p h, tag_p tag)
+bool clu_handler_free_variadic(handler_p h, char format[], va_list args)
 {
+    assert(h);
+
     clu_list_head_remove(&lh_root_allocated, h);
 
     tag_t tag_free = clu_tag_format("free");
     if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
-    {
+    {    
+        tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
-        printf("\ndouble free: %s\t", tag->str);
+        printf("\ndouble free: %s\t", tag.str);
         printf("\n");
         printf("\n\t");
         return false;
@@ -47,9 +52,7 @@ handler_p clu_handler_malloc(size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    tag_t tag = clu_tag_format_variadic(format, args);
-
-    clu_handler_register(h, &tag);
+    clu_handler_register(h, format, args);
     
     return h;
 }
@@ -60,9 +63,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    tag_t tag = clu_tag_format_variadic(format, args);
-
-    clu_handler_register(h, &tag);
+    clu_handler_register(h, format, args);
     
     return h;
 }
@@ -78,10 +79,8 @@ handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    tag_t tag = clu_tag_format_variadic(format, args);
-
-    if(h_old) clu_handler_free_tag(h_old, &tag);
-    clu_handler_register(h, &tag);
+    if(h_old) clu_handler_free_variadic(h_old, format, args);
+    clu_handler_register(h, format, args);
 
     return h;
 }
@@ -90,9 +89,7 @@ bool clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    tag_t tag = clu_tag_format_variadic(format, args);
-
-    if(!clu_handler_free_tag(h, &tag))
+    if(!clu_handler_free_variadic(h, format, args))
         return false;
 
     free(h);

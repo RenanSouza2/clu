@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdarg.h>
 #include <string.h>
 
 #include "debug.h"

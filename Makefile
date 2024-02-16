@@ -3,7 +3,7 @@ BIN = bin
 SRC = src
 
 build b:
-	$(MAKE) --directory=$(SRC)
+	$(MAKE) --directory=$(BIN)
 
 clean c:
 	rm -rf $(TGT)

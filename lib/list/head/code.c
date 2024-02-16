@@ -125,7 +125,7 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 
 void clu_list_report(list_head_p lh, char tag[])
 {
-    printf("\n\nMEM REPORT: %s", tag);
+    printf("\nMEM REPORT: %s", tag);
     if(lh == NULL)
     {
         printf("\n\nEMPTY LIST\n\n");
@@ -137,12 +137,11 @@ void clu_list_report(list_head_p lh, char tag[])
         int count = clu_list_body_count(lh->lb);
         printf("\n%s: %d", lh->tag.str, count);
     }
-    printf("\n\n");
 }
 
 void clu_list_report_full(list_head_p lh, char tag[])
 {
-    printf("\n\nMEM REPORT FULL: %s", tag);
+    printf("\nMEM REPORT FULL: %s", tag);
     if(lh == NULL)
     {
         printf("\n\nEMPTY LIST\n\n");
@@ -154,7 +153,6 @@ void clu_list_report_full(list_head_p lh, char tag[])
         printf("\n%s", lh->tag.str);
         clu_list_body_report_full(lh->lb);
     }
-    printf("\n\n");
 }
 
 

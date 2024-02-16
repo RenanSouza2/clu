@@ -4,6 +4,8 @@
 #include "../../../mem/header.h"
 #include "../../../../utils/assert.h"
 
+
+
 void test_list_body_create()
 {
     printf("\n\t%s", __func__);
@@ -13,7 +15,7 @@ void test_list_body_create()
     assert(lb->lb == NULL);
     free(lb, list_body);
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_list_body_pop()
@@ -25,7 +27,7 @@ void test_list_body_pop()
     lb = clu_list_body_pop(lb);
     assert(lb == LB(1));
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_list_body_insert()
@@ -42,7 +44,7 @@ void test_list_body_insert()
     assert(clu_list_body_test_immed(lb, 2, HD(1), HD(2)));
     clu_list_body_free(lb);
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_list_body_remove()
@@ -59,7 +61,7 @@ void test_list_body_remove()
 
     assert(clu_list_body_remove(&lb, (handler_p)1) == false);
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_list_body()
@@ -72,7 +74,7 @@ void test_list_body()
     test_list_body_insert();
     test_list_body_remove();
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 int main() 

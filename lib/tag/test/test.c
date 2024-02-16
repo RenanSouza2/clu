@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
 
 #include "../debug.h"
@@ -24,7 +22,7 @@ void test_tag_format()
     tag = clu_tag_format("01234567890123456789012345678901234567890123456789");
     assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678\0") == 0);
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_tag_eq()
@@ -43,7 +41,7 @@ void test_tag_eq()
     tag2 = clu_tag_format("0123456789012345678901234567890123456789012345678");
     assert(clu_tag_eq(&tag1, &tag2) == true);
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_tag()
@@ -53,7 +51,7 @@ void test_tag()
     test_tag_format();
     test_tag_eq();
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 int main() 

@@ -1,13 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
 
 #include "../debug.h"
 #include "../../../mem/header.h"
 #include "../../../../utils/assert.h"
-
-#include "../../../tag/debug.h"
 
 
 
@@ -40,7 +35,7 @@ void test_list_head_create()
     ));
     clu_list_head_free(&lh);
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_list_head_pop()
@@ -57,7 +52,7 @@ void test_list_head_pop()
     lh = clu_list_head_pop(lh);
     assert(lh == LH(1));
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_list_head_insert()
@@ -107,7 +102,7 @@ void test_list_head_insert()
     ));
 
     clu_list_head_free(&lh);
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 void test_list_head_remove()
@@ -182,7 +177,7 @@ void test_list_head_remove()
     assert(clu_list_head_remove(&lh, HD(3)) == true);
     assert(lh == NULL);
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 
@@ -197,7 +192,7 @@ void test_list_head()
     test_list_head_insert();
     test_list_head_remove();
 
-    assert(clu_mem_empty());
+    assert(clu_mem_empty_internal());
 }
 
 

@@ -98,17 +98,17 @@ bool clu_handler_free(handler_p h, char format[], ...)
 
 
 
-void mem_report(char tag[])
+void clu_mem_report(char tag[])
 {
     clu_list_report(lh_root_allocated, tag);
 }
 
-void mem_report_full(char tag[])
+void clu_mem_report_full(char tag[])
 {
     clu_list_report_full(lh_root_allocated, tag);
 }
 
-bool mem_empty()
+bool clu_mem_empty()
 {
     if(lh_root_allocated == NULL) 
     {
@@ -116,11 +116,11 @@ bool mem_empty()
         return true;
     }
 
-    mem_report("ASSERT");
+    clu_mem_report("ASSERT");
     return false;
 }
 
-handler_p mem_get_pointer(int x, int y)
+handler_p clu_mem_get_pointer(int x, int y)
 {
     return clu_list_get_pointer(lh_root_allocated, x, y);
 }

@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <assert.h>
 
 typedef void * handler_p;
 

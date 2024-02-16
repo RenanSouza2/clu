@@ -11,7 +11,16 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-bool clu_list_body_variadic(list_body_p lb, va_list *args)
+
+
+bool clu_list_body_test_immed(list_body_p lb, ...)
+{
+    va_list args;
+    va_start(args, lb);
+    return clu_list_body_test_variadic(lb, &args);
+}
+
+bool clu_list_body_test_variadic(list_body_p lb, va_list *args)
 {
     int count_body = va_arg(*args, int);
 
@@ -39,13 +48,6 @@ bool clu_list_body_variadic(list_body_p lb, va_list *args)
     }
 
     return true;
-}
-
-bool clu_list_body(list_body_p lb, ...)
-{
-    va_list args;
-    va_start(args, lb);
-    return clu_list_body_variadic(lb, &args);
 }
 
 #endif

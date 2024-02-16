@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "../debug.h"
@@ -35,12 +34,12 @@ void test_list_body_insert()
 
     list_body_p lb = NULL;
     assert(clu_list_body_insert(&lb, HD(1)));
-    assert(clu_list_body(lb, 1, HD(1)));
+    assert(clu_list_body_test_immed(lb, 1, HD(1)));
 
     assert(clu_list_body_insert(&lb, HD(1)) == false);
     
     assert(clu_list_body_insert(&lb, HD(2)));
-    assert(clu_list_body(lb, 2, HD(1), HD(2)));
+    assert(clu_list_body_test_immed(lb, 2, HD(1), HD(2)));
     clu_list_body_free(lb);
 
     assert(clu_mem_empty());
@@ -53,7 +52,7 @@ void test_list_body_remove()
     list_body_p lb = clu_list_body_create(HD(1));
     
     assert(clu_list_body_remove(&lb, HD(2)) == false);
-    assert(clu_list_body(lb, 1, HD(1)));
+    assert(clu_list_body_test_immed(lb, 1, HD(1)));
 
     assert(clu_list_body_remove(&lb, (handler_p)1) == true);
     assert(lb == NULL);

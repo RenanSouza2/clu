@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <assert.h>
 
 #include "../debug.h"
 #include "../../mem/debug.h"
+#include "../../../utils/assert.h"
 
 void test_list_body_create()
 {
-    printf("\n\t%s\t\t", __func__);
+    printf("\n\t%s", __func__);
     
     list_body_p lb = clu_list_body_create(HD(1));
     assert(lb->h  == HD(1));
@@ -18,7 +18,7 @@ void test_list_body_create()
 
 void test_list_body_pop()
 {
-    printf("\n\t%s\t\t", __func__);
+    printf("\n\t%s", __func__);
 
     list_body_p lb = clu_list_body_create(HD(1));
     lb->lb = LB(1);
@@ -30,7 +30,7 @@ void test_list_body_pop()
 
 void test_list_body_insert()
 {
-    printf("\n\t%s\t\t", __func__);
+    printf("\n\t%s", __func__);
 
     list_body_p lb = NULL;
     assert(clu_list_body_insert(&lb, HD(1)));
@@ -47,7 +47,7 @@ void test_list_body_insert()
 
 void test_list_body_remove()
 {
-    printf("\n\t%s\t\t", __func__);
+    printf("\n\t%s", __func__);
 
     list_body_p lb = clu_list_body_create(HD(1));
     
@@ -64,7 +64,7 @@ void test_list_body_remove()
 
 void test_list_body()
 {
-    printf("\n%s\t\t", __func__);
+    printf("\n%s", __func__);
 
     test_list_body_create();
     test_list_body_pop();

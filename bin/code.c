@@ -1,5 +1,6 @@
 #include <stdlib.h>
-#include <assert.h>
+
+#include "../utils/assert.h"
 
 #include "header.h"
 #include "../lib/list_head/header.h"

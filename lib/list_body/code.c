@@ -1,13 +1,16 @@
 #include <stdlib.h>
-#include <assert.h>
 
 #include "debug.h"
-#include "../mem/debug.h"
+#include "../../utils/assert.h"
+
+
 
 #ifdef DEBUG
 
 #include <stdio.h>
 #include <stdarg.h>
+
+#include "../mem/debug.h"
 
 bool clu_list_body_variadic(list_body_p lb, va_list *args)
 {

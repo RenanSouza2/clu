@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <assert.h>
 
 #include "debug.h"
-#include "../mem/debug.h"
+#include "../../utils/assert.h"
+
 
 #ifdef DEBUG
+
+#include "../mem/debug.h"
 
 #include "../list_body/debug.h"
 

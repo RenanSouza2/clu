@@ -1,11 +1,10 @@
 #include <stdio.h>
-#include <assert.h>
 
 #include "../debug.h"
 
 void test_list_head()
 {
-    printf("\n%s\t\t", __func__);
+    printf("\n%s", __func__);
 }
 
 

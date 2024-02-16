@@ -1,11 +1,10 @@
 #include <stdio.h>
-#include <assert.h>
 
 #include "../debug.h"
 
 void test_hello()
 {
-    printf("\n\t%s\t\t", __func__);
+    printf("\n\t%s", __func__);
 
     hello_debug();
     hello_example();
@@ -13,7 +12,7 @@ void test_hello()
 
 void test_list_body()
 {
-    printf("\n%s\t\t", __func__);
+    printf("\n%s", __func__);
 
     test_hello();
 }

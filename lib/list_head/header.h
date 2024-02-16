@@ -3,7 +3,7 @@
 
 #include <stdarg.h>
 
-#include "../../static_utils/struct.h"
+#include "../../utils/struct.h"
 #include "../tag/header.h"
 
 PLACEHOLDER(list_head);

@@ -4,13 +4,13 @@
 #include <string.h>
 
 #include "debug.h"
-#include "../mem/header.h"
-#include "../../utils/assert.h"
+#include "../../mem/header.h"
+#include "../../../utils/assert.h"
 
 
 #ifdef DEBUG
 
-#include "../list_body/debug.h"
+#include "../body/debug.h"
 
 bool clu_list_head(list_head_p lh, ...)
 {

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "../mem/header.h"
-#include "../../utils/assert.h"
+#include "../../mem/header.h"
+#include "../../../utils/assert.h"
 
 
 

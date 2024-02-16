@@ -2,7 +2,7 @@
 #define __LIST_HEAD_STRUCT_H__
 
 #include "header.h"
-#include "../body/struct.h"
+#include "../body/header.h"
 #include "../../tag/struct.h"
 
 STRUCT(list_head)

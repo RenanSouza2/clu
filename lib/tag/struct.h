@@ -3,6 +3,8 @@
 
 #include "header.h"
 
+#include <stdarg.h>
+
 #define TAG_SIZE 50
 
 STRUCT(tag)

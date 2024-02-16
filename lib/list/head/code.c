@@ -1,7 +1,4 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
 
 #include "debug.h"
 #include "../../mem/header.h"
@@ -12,7 +9,9 @@
 
 #include "../body/debug.h"
 
-bool clu_list_head(list_head_p lh, ...)
+
+
+bool clu_list_head_test_immed(list_head_p lh, ...)
 {
     va_list args;
     va_start(args, lh);
@@ -153,22 +152,15 @@ void clu_list_report_full(list_head_p lh, char tag[])
     for(; lh; lh = lh->lh)
     {
         printf("\n%s", lh->tag.str);
-        for(list_body_p lb = lh->lb; lb; lb = lb->lb)
-            printf("\n\t%p\t", lb->h);
+        clu_list_body_report_full(lh->lb);
     }
     printf("\n\n");
 }
 
 
 
-handler_p clu_list_get_pointer(list_head_p lh, int x, int y)
+handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
 {
     for(int i=0; lh && (i < x); lh = lh->lh, i++);
-
-    if(lh == NULL) return NULL;
-
-    list_body_p lb = lh->lb;
-    for(int j=0; lb && (j < x); lb = lb->lb, j++);
-    
-    return lb ? lb->h : NULL;
+    return lh ? clu_list_body_get_pointer(lh->lb, y) : NULL;
 }

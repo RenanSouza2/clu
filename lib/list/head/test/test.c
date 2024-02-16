@@ -19,7 +19,7 @@ void test_list_head_create()
     tag_t tag;
     tag = clu_tag_format("test");
     list_head_p lh = clu_list_head_create(&tag, HD(1));
-    assert(clu_list_head(lh, 1,
+    assert(clu_list_head_test_immed(lh, 1,
         tag, 1, HD(1)
     ));
     clu_list_head_free(&lh);
@@ -27,7 +27,7 @@ void test_list_head_create()
     printf("\n\t\t%s 2", __func__);
     tag = clu_tag_format("");
     lh = clu_list_head_create(&tag, HD(1));
-    assert(clu_list_head(lh, 1,
+    assert(clu_list_head_test_immed(lh, 1,
         tag, 1, HD(1)
     ));
     clu_list_head_free(&lh);
@@ -35,7 +35,7 @@ void test_list_head_create()
     printf("\n\t\t%s 3", __func__);
     tag = clu_tag_format("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi");
     lh = clu_list_head_create(&tag, HD(1));
-    assert(clu_list_head(lh, 1,
+    assert(clu_list_head_test_immed(lh, 1,
         tag, 1, HD(1)
     ));
     clu_list_head_free(&lh);
@@ -68,40 +68,40 @@ void test_list_head_insert()
     list_head_p lh = NULL;
     tag_t tag1 = clu_tag_format("test 1");
     assert(clu_list_head_insert(&lh, HD(1), &tag1) == true);
-    assert(clu_list_head(lh, 1,
+    assert(clu_list_head_test_immed(lh, 1,
         tag1, 1, HD(1)
     ));
 
     printf("\n\t\t%s 2", __func__);
     assert(clu_list_head_insert(&lh, HD(1), &tag1) == false);
-    assert(clu_list_head(lh, 1,
+    assert(clu_list_head_test_immed(lh, 1,
         tag1, 1, HD(1)
     ));
     
     printf("\n\t\t%s 3", __func__);
     assert(clu_list_head_insert(&lh, HD(2), &tag1) == true);
-    assert(clu_list_head(lh, 1,
+    assert(clu_list_head_test_immed(lh, 1,
         tag1, 2, HD(1), HD(2)
     ));
 
     printf("\n\t\t%s 4", __func__);
     tag_t tag2 = clu_tag_format("test 2");
     assert(clu_list_head_insert(&lh, HD(3), &tag2) == true);
-    assert(clu_list_head(lh, 2,
+    assert(clu_list_head_test_immed(lh, 2,
         tag1, 2, HD(1), HD(2),
         tag2, 1, HD(3)
     ));
     
     printf("\n\t\t%s 5", __func__);
     assert(clu_list_head_insert(&lh, HD(4), &tag1) == true);
-    assert(clu_list_head(lh, 2,
+    assert(clu_list_head_test_immed(lh, 2,
         tag1, 3, HD(1), HD(2), HD(4),
         tag2, 1, HD(3)
     ));
     
     printf("\n\t\t%s 5", __func__);
     assert(clu_list_head_insert(&lh, HD(5), &tag2) == true);
-    assert(clu_list_head(lh, 2,
+    assert(clu_list_head_test_immed(lh, 2,
         tag1, 3, HD(1), HD(2), HD(4),
         tag2, 2, HD(3), HD(5)
     ));
@@ -127,7 +127,7 @@ void test_list_head_remove()
     clu_list_head_insert(&lh, HD(4), &tag2);
     clu_list_head_insert(&lh, HD(5), &tag3);
     clu_list_head_insert(&lh, HD(6), &tag4);
-    assert(clu_list_head(lh, 4,
+    assert(clu_list_head_test_immed(lh, 4,
         tag1, 2, HD(1), HD(2),
         tag2, 2, HD(3), HD(4),
         tag3, 1, HD(5),
@@ -136,7 +136,7 @@ void test_list_head_remove()
 
     printf("\n\t\t%s 1", __func__);
     assert(clu_list_head_remove(&lh, HD(7)) == false);
-    assert(clu_list_head(lh, 4,
+    assert(clu_list_head_test_immed(lh, 4,
         tag1, 2, HD(1), HD(2),
         tag2, 2, HD(3), HD(4),
         tag3, 1, HD(5),
@@ -145,7 +145,7 @@ void test_list_head_remove()
 
     printf("\n\t\t%s 2", __func__);
     assert(clu_list_head_remove(&lh, HD(5)) == true);
-    assert(clu_list_head(lh, 3,
+    assert(clu_list_head_test_immed(lh, 3,
         tag1, 2, HD(1), HD(2),
         tag2, 2, HD(3), HD(4),
         tag4, 1, HD(6)
@@ -153,28 +153,28 @@ void test_list_head_remove()
 
     printf("\n\t\t%s 3", __func__);
     assert(clu_list_head_remove(&lh, HD(6)) == true);
-    assert(clu_list_head(lh, 2,
+    assert(clu_list_head_test_immed(lh, 2,
         tag1, 2, HD(1), HD(2),
         tag2, 2, HD(3), HD(4)
     ));
 
     printf("\n\t\t%s 4", __func__);
     assert(clu_list_head_remove(&lh, HD(4)) == true);
-    assert(clu_list_head(lh, 2,
+    assert(clu_list_head_test_immed(lh, 2,
         tag1, 2, HD(1), HD(2),
         tag2, 1, HD(3)
     ));
 
     printf("\n\t\t%s 5", __func__);
     assert(clu_list_head_remove(&lh, HD(2)) == true);
-    assert(clu_list_head(lh, 2,
+    assert(clu_list_head_test_immed(lh, 2,
         tag1, 1, HD(1),
         tag2, 1, HD(3)
     ));
 
     printf("\n\t\t%s 6", __func__);
     assert(clu_list_head_remove(&lh, HD(1)) == true);
-    assert(clu_list_head(lh, 1,
+    assert(clu_list_head_test_immed(lh, 1,
         tag2, 1, HD(3)
     ));
 

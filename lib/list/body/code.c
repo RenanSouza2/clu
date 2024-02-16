@@ -116,3 +116,19 @@ int clu_list_body_count(list_body_p lb)
     for(; lb; i++, lb = lb->lb);
     return i;
 }
+
+
+
+void clu_list_body_report_full(list_body_p lb)
+{
+    for(; lb; lb = lb->lb)
+        printf("\n\t%p\t", lb->h);
+}
+
+
+
+handler_p clu_list_body_get_pointer(list_body_p lb, int y) // TODO test
+{
+    for(int j=0; lb && (j < y); lb = lb->lb, j++);
+    return lb ? lb->h : NULL;
+}

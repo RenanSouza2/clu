@@ -128,7 +128,7 @@ void clu_list_report(list_head_p lh, char tag[])
     printf("\nMEM REPORT: %s", tag);
     if(lh == NULL)
     {
-        printf("\n\nEMPTY LIST\n\n");
+        printf("\n\nEMPTY LIST");
         return;
     }
 
@@ -144,7 +144,7 @@ void clu_list_report_full(list_head_p lh, char tag[])
     printf("\nMEM REPORT FULL: %s", tag);
     if(lh == NULL)
     {
-        printf("\n\nEMPTY LIST\n\n");
+        printf("\n\nEMPTY LIST");
         return;
     }
 

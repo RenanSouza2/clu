@@ -4,12 +4,11 @@
 #include <string.h>
 
 #include "debug.h"
+#include "../mem/header.h"
 #include "../../utils/assert.h"
 
 
 #ifdef DEBUG
-
-#include "../mem/debug.h"
 
 #include "../list_body/debug.h"
 

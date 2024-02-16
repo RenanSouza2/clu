@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "debug.h"
+#include "header.h"
 
 #ifdef DEBUG
 

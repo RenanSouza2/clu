@@ -101,12 +101,16 @@ bool clu_handler_free(handler_p h, char format[], ...)
 
 void clu_mem_report(char tag[])
 {
+    printf("\n----------------------");
     clu_list_report(lh_root_allocated, tag);
+    printf("\n----------------------");
 }
 
 void clu_mem_report_full(char tag[])
 {
+    printf("\n----------------------");
     clu_list_report_full(lh_root_allocated, tag);
+    printf("\n----------------------");
 }
 
 bool clu_mem_empty()

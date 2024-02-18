@@ -2,7 +2,10 @@ LIB = lib
 BIN = bin
 SRC = src
 
+DIR = $(shell basename $(CURDIR))
+
 build b:
+	echo "linking $(DIR) object"
 	$(MAKE) --directory=$(BIN)
 
 clean c:

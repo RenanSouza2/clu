@@ -2,10 +2,12 @@ FLAGS = -c -Wall -Werror -Wfatal-errors
 
 BIN = ../bin/bin.o
 
+DIR = $(shell basename $(CURDIR))
+
 build: code.o
 
 code.o: code.c
-	echo "Building final object"
+	echo "Building clu $(DIR) object"
 	gcc -o $@ $^ $(FLAGS)
 
 clean:

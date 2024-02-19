@@ -3,12 +3,12 @@ FLAGS = -c -Wall -Werror -Wfatal-errors
 OBJ = ../lib/lib.o
 MAIN = ../src/code.o
 
-DIR = clu
+DIR = $(shell basename $(CURDIR))
 
 build: bin.o
 
 bin.o: $(MAIN) $(OBJ)
-	echo "linking $(DIR) object"
+	echo "linking clu $(DIR) object"
 	ld -r -o $@ $^
 
 .PHONY: $(MAIN) $(OBJ)

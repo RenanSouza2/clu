@@ -1,6 +1,6 @@
 FLAGS = -c -Wall -Werror -Wfatal-errors
 
-LIB_ROOT = ../..
+LIB_ROOT = $(word 1,$(subst lib, ,$(CURDIR)))lib
 DIR = $(shell basename $(CURDIR))
 
 build: lib.o
@@ -13,12 +13,19 @@ debug.o: code.c
 	echo "Building $(DIR) debug"
 	gcc -o $@ $^ $(FLAGS) -D DEBUG
 
-clean:
+clean c:
+	$(MAKE) clean --directory=$(LIB_ROOT)
+
+_clean:
 	rm -f *.o
 	$(MAKE) clean --directory=test
 
 .PHONY: test
-test:
+test t:
+	$(MAKE) debug.o --directory=$(LIB_ROOT) -s
+	$(MAKE) _test -s
+
+_test:
 	$(MAKE) --directory=test
 
 export

@@ -30,14 +30,19 @@ $(DGB_FILES):
 
 
 .PHONY: clean
-clean:
+clean c:
+	echo "cleaning $(DIR)"
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
-		( $(MAKE) clean --directory=$$DIR ) || exit $$? ; \
+		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \
 	done
 
 .PHONY: test
-test:
+test t:
+	$(MAKE) debug.o
+	$(MAKE) _test -s
+
+_test:
 	for DIR in $(DIRS) ; do \
-		( $(MAKE) test --directory=$$DIR ) || exit $$? ; \
+		( $(MAKE) _test --directory=$$DIR ) || exit $$? ; \
 	done

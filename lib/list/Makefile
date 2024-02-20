@@ -1,5 +1,6 @@
 DIRS := $(wildcard */.)
 
+LIB_ROOT = $(word 1,$(subst lib, ,$(CURDIR)))lib
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
@@ -30,14 +31,21 @@ $(DGB_FILES):
 
 
 .PHONY: clean
-clean:
+clean c:
+	$(MAKE) clean --directory=$(LIB_ROOT) -s
+
+_clean:
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
-		( $(MAKE) clean --directory=$$DIR ) || exit $$? ; \
+		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \
 	done
 
 .PHONY: test
-test:
+test t:
+	$(MAKE) debug.o --directory=$(LIB_ROOT) -s
+	$(MAKE) _test -s
+
+_test:
 	for DIR in $(DIRS) ; do \
-		( $(MAKE) test --directory=$$DIR ) || exit $$? ; \
+		( $(MAKE) _test --directory=$$DIR ) || exit $$? ; \
 	done

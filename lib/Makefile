@@ -31,7 +31,7 @@ $(DGB_FILES):
 
 .PHONY: clean
 clean c:
-	echo "cleaning $(DIR)"
+	echo "cleaning clu $(DIR)"
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
 		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \

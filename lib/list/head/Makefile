@@ -17,7 +17,7 @@ clean c:
 	$(MAKE) clean --directory=$(LIB_ROOT)
 
 _clean:
-	echo "cleaning $(DIR)"
+	echo "cleaning clu $(DIR)"
 	rm -f *.o
 	$(MAKE) clean --directory=test
 

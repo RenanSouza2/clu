@@ -1,19 +1,21 @@
 FLAGS = -c -Wall -Werror -Wfatal-errors
 
 OBJ = ../lib/lib.o
-MAIN = ../src/code.o
+SRC = ../src/code.o
 
 DIR = $(shell basename $(CURDIR))
 
 build: bin.o
 
-bin.o: $(MAIN) $(OBJ)
+bin.o: $(SRC) $(OBJ)
 	echo "linking clu $(DIR) object"
 	ld -r -o $@ $^
 
-.PHONY: $(MAIN) $(OBJ)
-$(MAIN) $(OBJ):
+.PHONY: $(SRC) $(OBJ)
+$(SRC) $(OBJ):
 	$(MAKE) --directory=$(dir $@)
 
 clean:
+	echo "cleaning clu bin"
 	rm -rf *.o
+	$(MAKE) clean --directory=..

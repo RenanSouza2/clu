@@ -35,6 +35,7 @@ clean c:
 	$(MAKE) clean --directory=$(LIB_ROOT) -s
 
 _clean:
+	echo "cleaning $(DIR)"
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
 		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \

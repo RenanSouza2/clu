@@ -10,7 +10,6 @@ build b:
 
 clean c:
 	rm -rf $(TGT)
-	$(MAKE) clean --directory=$(BIN) -s
 	$(MAKE) clean --directory=$(LIB) -s
 	$(MAKE) clean --directory=$(SRC) -s
 	

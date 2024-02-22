@@ -10,7 +10,7 @@ build: lib.o
 
 
 lib.o: $(LIB_FILES)
-	echo "linking clu $(DIR) object"
+	echo "linking $(DIR) object"
 	ld -r -o $@ $^
 	
 debug.o: $(DGB_FILES)
@@ -29,13 +29,17 @@ $(DGB_FILES):
 
 
 
-.PHONY: clean
 clean c:
-	echo "cleaning clu $(DIR)"
+	$(MAKE) _clean -s
+
+_clean:
+	echo "cleaning $(DIR)"
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
 		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \
 	done
+
+
 
 .PHONY: test
 test t:

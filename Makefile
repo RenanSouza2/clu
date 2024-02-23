@@ -5,7 +5,7 @@ SRC = src
 DIR = $(shell basename $(CURDIR))
 
 build b:
-	echo "linking $(DIR) object"
+	echo "linking  clu object $(DIR)"
 	$(MAKE) --directory=$(BIN) -s
 
 clean c:

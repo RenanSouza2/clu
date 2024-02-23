@@ -10,11 +10,11 @@ build: lib.o
 
 
 lib.o: $(LIB_FILES)
-	echo "linking $(DIR) object"
+	echo "linking  clu object $(DIR)"
 	ld -r -o $@ $^
 	
 debug.o: $(DGB_FILES)
-	echo "linking $(DIR) debug"
+	echo "linking  debug $(DIR)"
 	ld -r -o $@ $^
 
 
@@ -33,7 +33,7 @@ clean c:
 	$(MAKE) _clean -s
 
 _clean:
-	echo "cleaning $(DIR)"
+	echo "cleaning clu $(DIR)"
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
 		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \

@@ -8,7 +8,7 @@ DIR = $(shell basename $(CURDIR))
 build: bin.o
 
 bin.o: $(SRC) $(OBJ)
-	echo "linking clu $(DIR) object"
+	echo "linking  clu object $(DIR)"
 	ld -r -o $@ $^
 
 .PHONY: $(SRC) $(OBJ)
@@ -16,6 +16,6 @@ $(SRC) $(OBJ):
 	$(MAKE) --directory=$(dir $@)
 
 clean:
-	echo "cleaning clu bin"
+	echo "cleaning clu $(DIR)"
 	rm -rf *.o
 	$(MAKE) clean --directory=..

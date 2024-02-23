@@ -6,11 +6,11 @@ DIR = $(shell basename $(CURDIR))
 build: lib.o
 
 lib.o: code.c
-	echo "Building $(DIR) object"
+	echo "building object $(DIR)"
 	gcc -o $@ $^ $(FLAGS)
 
 debug.o: code.c
-	echo "Building $(DIR) debug"
+	echo "building debug $(DIR)"
 	gcc -o $@ $^ $(FLAGS) -D DEBUG
 
 clean:

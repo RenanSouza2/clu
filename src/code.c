@@ -16,12 +16,34 @@ list_head_p lh_root_freed = NULL;
 
 
 
-void clu_handler_register(handler_p h, char format[], va_list args)
+void clu_handler_register(handler_p h, char format[], va_list args, size_t size, char fn[])
 {
-    assert(h);
-    
     tag_t tag = clu_tag_format_variadic(format, args);
-    clu_list_head_insert(&lh_root_allocated, h, &tag);
+
+    if(size == 0)
+    {
+        printf("\n");
+        printf("\n\tallocation failure");
+        printf("\n\tsize is ZERO");
+        printf("\n\ttag: %s", tag.str);
+        printf("\n");
+        printf("\n\t");
+        assert(false);
+    }
+    
+    if(!h)
+    {
+        printf("\n");
+        printf("\n\tallocation failure");
+        printf("\n\tsize: %lu", size);
+        printf("\n\tfn: %s", fn);
+        printf("\n\ttag: %s", tag.str);
+        printf("\n");
+        printf("\n\t");
+        assert(false);
+    }
+    
+    assert(clu_list_head_insert(&lh_root_allocated, h, &tag));
     clu_list_head_remove(&lh_root_freed, h);
 }
 
@@ -53,7 +75,7 @@ handler_p clu_handler_malloc(size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_register(h, format, args);
+    clu_handler_register(h, format, args, size, "malloc");
     
     return h;
 }
@@ -64,7 +86,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_register(h, format, args);
+    clu_handler_register(h, format, args, size, "calloc");
     
     return h;
 }
@@ -81,7 +103,7 @@ handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...)
     va_list args;
     va_start(args, format);
     if(h_old) clu_handler_free_variadic(h_old, format, args);
-    clu_handler_register(h, format, args);
+    clu_handler_register(h, format, args, size, "realloc");
 
     return h;
 }

@@ -6,7 +6,7 @@ DIR = $(shell basename $(CURDIR))
 build: lib.o
 
 lib.o: code.c
-	echo "building object $(DIR)"
+	echo "building clu object $(DIR)"
 	gcc -o $@ $^ $(FLAGS)
 
 debug.o: code.c

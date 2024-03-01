@@ -1,7 +1,7 @@
 FLAGS = -c -Wall -Werror -Wfatal-errors
 
 LIB_ROOT = ..
-DIR = $(shell basename $(CURDIR))
+DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
 
 build: lib.o
 

@@ -2,7 +2,7 @@ FLAGS = -c -Wall -Werror -Wfatal-errors
 
 BIN = ../bin/bin.o
 
-DIR = $(shell basename $(CURDIR))
+DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
 
 build: code.o
 

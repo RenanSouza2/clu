@@ -2,10 +2,10 @@ LIB = lib
 BIN = bin
 SRC = src
 
-DIR = $(shell basename $(CURDIR))
+DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
 
 build b:
-	echo "linking  clu object $(DIR)"
+	echo " linking clu object $(DIR)"
 	$(MAKE) --directory=$(BIN) -s
 
 clean c:

@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include "../utils/assert.h"
+
 typedef void * handler_p;
 
 handler_p clu_handler_malloc(size_t size, char format[], ...);

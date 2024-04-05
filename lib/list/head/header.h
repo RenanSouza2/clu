@@ -1,10 +1,11 @@
 #ifndef __LIST_HEAD_H__
 #define __LIST_HEAD_H__
 
-#include <stdarg.h>
+#include <stdbool.h>
 
-#include "../../static_utils/struct.h"
-#include "../tag/header.h"
+#include "../../../utils/struct.h"
+
+#include "../../tag/header.h"
 
 PLACEHOLDER(list_head);
 

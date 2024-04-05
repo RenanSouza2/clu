@@ -1,17 +1,17 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <assert.h>
 
 #include "debug.h"
-#include "../mem/debug.h"
+#include "../../mem/header.h"
+#include "../../../utils/assert.h"
+
 
 #ifdef DEBUG
 
-#include "../list_body/debug.h"
+#include "../body/debug.h"
 
-bool clu_list_head(list_head_p lh, ...)
+
+
+bool clu_list_head_test_immed(list_head_p lh, ...)
 {
     va_list args;
     va_start(args, lh);
@@ -31,7 +31,7 @@ bool clu_list_head(list_head_p lh, ...)
             return false;
         }
 
-        if(!clu_list_body_variadic(lh->lb, &args))
+        if(!clu_list_body_test_variadic(lh->lb, &args))
         {
             printf("\nMEM LIST HEAD | ERROR 2 LIST BODY MISMATCH | %d %d", i, count_head);
             return false;
@@ -125,10 +125,10 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 
 void clu_list_report(list_head_p lh, char tag[])
 {
-    printf("\n\nMEM REPORT: %s", tag);
+    printf("\nMEM REPORT: %s", tag);
     if(lh == NULL)
     {
-        printf("\n\nEMPTY LIST\n\n");
+        printf("\n\nEMPTY LIST");
         return;
     }
 
@@ -137,37 +137,28 @@ void clu_list_report(list_head_p lh, char tag[])
         int count = clu_list_body_count(lh->lb);
         printf("\n%s: %d", lh->tag.str, count);
     }
-    printf("\n\n");
 }
 
 void clu_list_report_full(list_head_p lh, char tag[])
 {
-    printf("\n\nMEM REPORT FULL: %s", tag);
+    printf("\nMEM REPORT FULL: %s", tag);
     if(lh == NULL)
     {
-        printf("\n\nEMPTY LIST\n\n");
+        printf("\n\nEMPTY LIST");
         return;
     }
 
     for(; lh; lh = lh->lh)
     {
         printf("\n%s", lh->tag.str);
-        for(list_body_p lb = lh->lb; lb; lb = lb->lb)
-            printf("\n\t%p\t", lb->h);
+        clu_list_body_report_full(lh->lb);
     }
-    printf("\n\n");
 }
 
 
 
-handler_p clu_list_get_pointer(list_head_p lh, int x, int y)
+handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
 {
     for(int i=0; lh && (i < x); lh = lh->lh, i++);
-
-    if(lh == NULL) return NULL;
-
-    list_body_p lb = lh->lb;
-    for(int j=0; lb && (j < x); lb = lb->lb, j++);
-    
-    return lb ? lb->h : NULL;
+    return lh ? clu_list_body_get_pointer(lh->lb, y) : NULL;
 }

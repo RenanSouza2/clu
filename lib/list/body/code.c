@@ -1,15 +1,26 @@
 #include <stdlib.h>
-#include <assert.h>
 
 #include "debug.h"
-#include "../mem/debug.h"
+#include "../../mem/header.h"
+#include "../../../utils/assert.h"
+
+
 
 #ifdef DEBUG
 
 #include <stdio.h>
 #include <stdarg.h>
 
-bool clu_list_body_variadic(list_body_p lb, va_list *args)
+
+
+bool clu_list_body_test_immed(list_body_p lb, ...)
+{
+    va_list args;
+    va_start(args, lb);
+    return clu_list_body_test_variadic(lb, &args);
+}
+
+bool clu_list_body_test_variadic(list_body_p lb, va_list *args)
 {
     int count_body = va_arg(*args, int);
 
@@ -37,13 +48,6 @@ bool clu_list_body_variadic(list_body_p lb, va_list *args)
     }
 
     return true;
-}
-
-bool clu_list_body(list_body_p lb, ...)
-{
-    va_list args;
-    va_start(args, lb);
-    return clu_list_body_variadic(lb, &args);
 }
 
 #endif
@@ -111,4 +115,20 @@ int clu_list_body_count(list_body_p lb)
     int i = 0;
     for(; lb; i++, lb = lb->lb);
     return i;
+}
+
+
+
+void clu_list_body_report_full(list_body_p lb)
+{
+    for(; lb; lb = lb->lb)
+        printf("\n\t%p\t", lb->h);
+}
+
+
+
+handler_p clu_list_body_get_pointer(list_body_p lb, int y) // TODO test
+{
+    for(int j=0; lb && (j < y); lb = lb->lb, j++);
+    return lb ? lb->h : NULL;
 }

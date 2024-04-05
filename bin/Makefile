@@ -1,20 +1,19 @@
 FLAGS = -c -Wall -Werror -Wfatal-errors
 
 OBJ = ../lib/lib.o
+SRC = ../src/code.o
 
 build: bin.o
 
-bin.o: code.o $(OBJ)
-	echo "Linking final object"
+bin.o: $(SRC) $(OBJ)
+	echo " linking clu"
 	ld -r -o $@ $^
 
-code.o: code.c
-	echo "Building final object"
-	gcc -o $@ $^ $(FLAGS)
-
-.PHONY: $(OBJ)
-$(OBJ):
-	$(MAKE) --directory=$(dir $(OBJ))
+.PHONY: $(SRC) $(OBJ)
+$(SRC) $(OBJ):
+	$(MAKE) --directory=$(dir $@)
 
 clean:
+	echo "cleaning clu"
 	rm -rf *.o
+	$(MAKE) clean --directory=..

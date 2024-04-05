@@ -1,5 +1,6 @@
 DIRS := $(wildcard */.)
 
+LIB_ROOT = $(word 1,$(subst lib, ,$(CURDIR)))lib
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
@@ -30,7 +31,7 @@ $(DGB_FILES):
 
 
 clean c:
-	$(MAKE) _clean -s
+	$(MAKE) _clean --directory=$(LIB_ROOT) -s
 
 _clean:
 	echo "cleaning clu $(DIR)"
@@ -43,7 +44,7 @@ _clean:
 
 .PHONY: test
 test t:
-	$(MAKE) debug.o
+	$(MAKE) debug.o --directory=$(LIB_ROOT) -s
 	$(MAKE) _test -s
 
 _test:

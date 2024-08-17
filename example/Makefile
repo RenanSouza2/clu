@@ -10,7 +10,7 @@ lib.o: code.c
 	gcc -o $@ $^ $(FLAGS)
 
 debug.o: code.c
-	echo "building debug $(DIR)"
+	echo "building clu debug $(DIR)"
 	gcc -o $@ $^ $(FLAGS) -D DEBUG
 
 clean:

@@ -151,6 +151,9 @@ void clu_list_report(list_head_p lh, char tag[], bool full)
 
 handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
 {
-    for(int i=0; lh && (i < x); lh = lh->lh, i++);
-    return lh ? clu_list_body_get_pointer(lh->lb, y) : NULL;
+    for(int i=0; i < x; lh = lh->lh, i++)
+        if(lh == NULL)
+            return NULL;
+
+    return clu_list_body_get_pointer(lh->lb, y);
 }

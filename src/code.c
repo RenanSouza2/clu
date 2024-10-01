@@ -16,7 +16,7 @@ list_head_p lh_root_freed = NULL;
 
 
 
-void clu_handler_register(handler_p h, char format[], va_list args, size_t size, char fn[])
+void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size, char fn[])
 {
     tag_t tag = clu_tag_format_variadic(format, args);
 
@@ -47,7 +47,7 @@ void clu_handler_register(handler_p h, char format[], va_list args, size_t size,
     clu_list_head_remove(&lh_root_freed, h);
 }
 
-bool clu_handler_free_variadic(handler_p h, char format[], va_list args)
+bool clu_handler_deallocate(handler_p h, char format[], va_list args)
 {
     assert(h);
 
@@ -75,7 +75,7 @@ handler_p clu_handler_malloc(size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_register(h, format, args, size, "malloc");
+    clu_handler_allocate(h, format, args, size, "malloc");
     
     return h;
 }
@@ -86,7 +86,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_register(h, format, args, size, "calloc");
+    clu_handler_allocate(h, format, args, size, "calloc");
     
     return h;
 }
@@ -102,8 +102,8 @@ handler_p clu_handler_realloc(handler_p volatile h_old, size_t size, char format
 
     va_list args;
     va_start(args, format);
-    if(h_old) clu_handler_free_variadic(h_old, format, args);
-    clu_handler_register(h, format, args, size, "realloc");
+    if(h_old) clu_handler_deallocate(h_old, format, args);
+    clu_handler_allocate(h, format, args, size, "realloc");
 
     return h;
 }
@@ -112,7 +112,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    assert(!clu_handler_free_variadic(h, format, args));
+    assert(!clu_handler_deallocate(h, format, args));
 
     free(h);
 }

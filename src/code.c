@@ -108,15 +108,13 @@ handler_p clu_handler_realloc(handler_p volatile h_old, size_t size, char format
     return h;
 }
 
-bool clu_handler_free(handler_p h, char format[], ...)
+void clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    if(!clu_handler_free_variadic(h, format, args))
-        return false;
+    assert(!clu_handler_free_variadic(h, format, args));
 
     free(h);
-    return true;
 }
 
 

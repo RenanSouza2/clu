@@ -112,8 +112,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    assert(!clu_handler_deallocate(h, format, args));
-
+    assert(clu_handler_deallocate(h, format, args));
     free(h);
 }
 

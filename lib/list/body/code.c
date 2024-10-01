@@ -129,6 +129,9 @@ void clu_list_body_report_full(list_body_p lb)
 
 handler_p clu_list_body_get_pointer(list_body_p lb, int y) // TODO test
 {
-    for(int j=0; lb && (j < y); lb = lb->lb, j++);
-    return lb ? lb->h : NULL;
+    for(int j=0; j < y; lb = lb->lb, j++)
+        if(lb == NULL)
+            return NULL;
+
+    return lb->h;
 }

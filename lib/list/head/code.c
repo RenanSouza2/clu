@@ -123,7 +123,7 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 
 
 
-void clu_list_report(list_head_p lh, char tag[])
+void clu_list_report(list_head_p lh, char tag[], bool full)
 {
     printf("\nMEM REPORT: %s", tag);
     if(lh == NULL)
@@ -134,24 +134,16 @@ void clu_list_report(list_head_p lh, char tag[])
 
     for(; lh; lh = lh->lh)
     {
-        int count = clu_list_body_count(lh->lb);
-        printf("\n%s: %d", lh->tag.str, count);
-    }
-}
-
-void clu_list_report_full(list_head_p lh, char tag[])
-{
-    printf("\nMEM REPORT FULL: %s", tag);
-    if(lh == NULL)
-    {
-        printf("\n\nEMPTY LIST");
-        return;
-    }
-
-    for(; lh; lh = lh->lh)
-    {
-        printf("\n%s", lh->tag.str);
-        clu_list_body_report_full(lh->lb);
+        if(full)
+        {
+            printf("\n%s", lh->tag.str);
+            clu_list_body_report_full(lh->lb);
+        }
+        else
+        {
+            int count = clu_list_body_count(lh->lb);
+            printf("\n%s: %d", lh->tag.str, count);
+        }
     }
 }
 
@@ -159,6 +151,9 @@ void clu_list_report_full(list_head_p lh, char tag[])
 
 handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
 {
-    for(int i=0; lh && (i < x); lh = lh->lh, i++);
-    return lh ? clu_list_body_get_pointer(lh->lb, y) : NULL;
+    for(int i=0; i < x; lh = lh->lh, i++)
+        if(lh == NULL)
+            return NULL;
+
+    return clu_list_body_get_pointer(lh->lb, y);
 }

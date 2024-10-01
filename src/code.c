@@ -91,7 +91,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
     return h;
 }
 
-handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...)
+handler_p clu_handler_realloc(handler_p volatile h_old, size_t size, char format[], ...)
 {
     assert(size);
 

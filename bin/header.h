@@ -16,7 +16,11 @@ void clu_handler_free(handler_p h, char format[], ...);
 bool clu_mem_empty();
 void clu_mem_report(char tag[]);
 void clu_mem_report_full(char tag[]);
+
+int clu_mem_count(int x);
 handler_p clu_mem_get_pointer(int x, int y);
+
+void clu_set_log(bool _log_allocations);
 
 #define malloc(SIZE) clu_handler_malloc(SIZE, "f|%s|l|%d", __func__, __LINE__)
 #define calloc(AMT, SIZE) clu_handler_calloc(AMT, SIZE, "f|%s|l|%d", __func__, __LINE__)

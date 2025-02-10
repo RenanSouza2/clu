@@ -149,6 +149,15 @@ void clu_list_report(list_head_p lh, char tag[], bool full)
 
 
 
+int clu_list_count(list_head_p lh, int x) //  TODO test
+{
+    for(int i=0; i < x; lh = lh->lh, i++)
+        if(lh == NULL)
+            return 0;
+
+    return clu_list_body_count(lh->lb);
+}
+
 handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
 {
     for(int i=0; i < x; lh = lh->lh, i++)

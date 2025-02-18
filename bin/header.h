@@ -13,12 +13,14 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...);
 handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...);
 void clu_handler_free(handler_p h, char format[], ...);
 
-bool clu_mem_empty();
 void clu_mem_report(char tag[]);
 void clu_mem_report_full(char tag[]);
 
+bool clu_mem_empty();
 int clu_mem_count(int x);
 handler_p clu_mem_get_pointer(int x, int y);
+bool clu_is_allocated(handler_p h);
+bool cli_is_freed(handler_p h);
 
 void clu_set_log(bool _log_allocations);
 

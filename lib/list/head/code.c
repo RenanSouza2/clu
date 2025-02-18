@@ -166,3 +166,12 @@ handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
 
     return clu_list_body_get_pointer(lh->lb, y);
 }
+
+bool clu_list_head_contains(list_head_p lh, handler_p h) // TODO test
+{
+    for(; lh; lh = lh->lh)
+        if(clu_list_body_contains(lh->lb, h))
+            return true;
+
+    return false;
+}

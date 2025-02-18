@@ -135,3 +135,12 @@ handler_p clu_list_body_get_pointer(list_body_p lb, int y) // TODO test
 
     return lb->h;
 }
+
+bool clu_list_body_contains(list_body_p lb, handler_p h) // TODO test
+{
+    for(; lb; lb = lb->lb)
+        if(lb->h == h)
+            return true;
+
+    return false;
+}

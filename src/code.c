@@ -53,7 +53,15 @@ bool clu_handler_deallocate(handler_p h, char format[], va_list args)
 {
     assert(h);
 
-    clu_list_head_remove(&lh_root_allocated, h);
+    if(!clu_list_head_remove(&lh_root_allocated, h))
+    {    
+        tag_t tag = clu_tag_format_variadic(format, args);
+        printf("\n");
+        printf("\nfree not allocated pointer: %s\t", tag.str);
+        printf("\n");
+        printf("\n\t");
+        return false;
+    }
 
     tag_t tag_free = clu_tag_format("free");
     if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
@@ -167,6 +175,11 @@ handler_p clu_mem_get_pointer(int x, int y)
 bool clu_is_allocated(handler_p h)
 {
     return clu_list_head_contains(lh_root_allocated, h);
+}
+
+bool clu_is_safe(handler_p h)
+{
+    return !h || clu_is_allocated(h);
 }
 
 bool clu_is_freed(handler_p h)

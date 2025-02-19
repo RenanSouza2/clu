@@ -1,6 +1,8 @@
 #ifndef __ROOT_H__
 #define __ROOT_H__
 
+#ifdef DEBUG
+
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -20,7 +22,8 @@ bool clu_mem_empty();
 int clu_mem_count(int x);
 handler_p clu_mem_get_pointer(int x, int y);
 bool clu_is_allocated(handler_p h);
-bool cli_is_freed(handler_p h);
+bool clu_is_safe(handler_p h);
+bool clu_is_freed(handler_p h);
 
 void clu_set_log(bool _log_allocations);
 
@@ -28,5 +31,13 @@ void clu_set_log(bool _log_allocations);
 #define calloc(AMT, SIZE) clu_handler_calloc(AMT, SIZE, "f|%s|l|%d", __func__, __LINE__)
 #define realloc(PTR, SIZE) clu_handler_realloc(PTR, SIZE, "f|%s|l|%d", __func__, __LINE__)
 #define free(HANDLER) clu_handler_free(HANDLER, "f|%s|l|%d", __func__, __LINE__)
+
+#define DBG_CHECK_PTR(H) assert(clu_is_safe(H));
+
+#else
+
+#define DBG_CHECK_PTR(H)
+
+#endif // DEBUG
 
 #endif

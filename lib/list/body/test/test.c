@@ -9,7 +9,7 @@
 void test_list_body_create()
 {
     printf("\n\t%s", __func__);
-    
+
     list_body_p lb = clu_list_body_create(HD(1));
     assert(lb->h  == HD(1));
     assert(lb->lb == NULL);
@@ -39,7 +39,7 @@ void test_list_body_insert()
     assert(clu_list_body_test_immed(lb, 1, HD(1)));
 
     assert(clu_list_body_insert(&lb, HD(1)) == false);
-    
+
     assert(clu_list_body_insert(&lb, HD(2)));
     assert(clu_list_body_test_immed(lb, 2, HD(1), HD(2)));
     clu_list_body_free(lb);
@@ -52,7 +52,7 @@ void test_list_body_remove()
     printf("\n\t%s", __func__);
 
     list_body_p lb = clu_list_body_create(HD(1));
-    
+
     assert(clu_list_body_remove(&lb, HD(2)) == false);
     assert(clu_list_body_test_immed(lb, 1, HD(1)));
 
@@ -77,7 +77,7 @@ void test_list_body()
     assert(clu_mem_empty_internal());
 }
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_list_body();

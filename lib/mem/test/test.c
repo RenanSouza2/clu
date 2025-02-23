@@ -10,7 +10,7 @@ void test_list_head()
 }
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_list_head();

@@ -31,7 +31,7 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         printf("\n\t");
         assert(false);
     }
-    
+
     if(!h)
     {
         printf("\n");
@@ -43,7 +43,7 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         printf("\n\t");
         assert(false);
     }
-    
+
     assert(clu_list_head_insert(&lh_root_allocated, h, &tag));
     clu_list_head_remove(&lh_root_freed, h);
     if(log_allocations) printf("\n%s | %s: %p\t", fn, tag.str, h);
@@ -54,7 +54,7 @@ bool clu_handler_deallocate(handler_p h, char format[], va_list args)
     assert(h);
 
     if(!clu_list_head_remove(&lh_root_allocated, h))
-    {    
+    {
         tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
         printf("\nfree not allocated pointer: %s\t", tag.str);
@@ -65,7 +65,7 @@ bool clu_handler_deallocate(handler_p h, char format[], va_list args)
 
     tag_t tag_free = clu_tag_format("free");
     if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
-    {    
+    {
         tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
         printf("\ndouble free: %s\t", tag.str);
@@ -73,7 +73,7 @@ bool clu_handler_deallocate(handler_p h, char format[], va_list args)
         printf("\n\t");
         return false;
     }
-    
+
     if(log_allocations) printf("\n\tfree: %p\t", h);
     return true;
 }
@@ -87,7 +87,7 @@ handler_p clu_handler_malloc(size_t size, char format[], ...)
     va_list args;
     va_start(args, format);
     clu_handler_allocate(h, format, args, size, "malloc");
-    
+
     return h;
 }
 
@@ -98,7 +98,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
     va_list args;
     va_start(args, format);
     clu_handler_allocate(h, format, args, size, "calloc");
-    
+
     return h;
 }
 
@@ -150,7 +150,7 @@ void clu_mem_report_full(char tag[])
 
 bool clu_mem_empty()
 {
-    if(lh_root_allocated == NULL) 
+    if(lh_root_allocated == NULL)
     {
         clu_list_head_free(&lh_root_freed);
         return true;

@@ -105,7 +105,7 @@ bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 
     if(lb->h != h)
         return clu_list_body_remove(&lb->lb, h);
-    
+
     *lb_root = clu_list_body_pop(lb);
     return true;
 }

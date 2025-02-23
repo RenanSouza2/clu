@@ -18,7 +18,7 @@ void test_list_body()
 }
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_list_body();

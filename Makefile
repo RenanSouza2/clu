@@ -13,5 +13,5 @@ clean c:
 	$(MAKE) clean --directory=$(LIB) -s
 	$(MAKE) clean --directory=$(SRC) -s
 	
-test t: 
+test t:
 	$(MAKE) test --directory=$(LIB) -s

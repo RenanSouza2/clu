@@ -72,7 +72,7 @@ void test_list_head_insert()
     assert(clu_list_head_test_immed(lh, 1,
         tag1, 1, HD(1)
     ));
-    
+
     printf("\n\t\t%s 3", __func__);
     assert(clu_list_head_insert(&lh, HD(2), &tag1) == true);
     assert(clu_list_head_test_immed(lh, 1,
@@ -86,14 +86,14 @@ void test_list_head_insert()
         tag1, 2, HD(1), HD(2),
         tag2, 1, HD(3)
     ));
-    
+
     printf("\n\t\t%s 5", __func__);
     assert(clu_list_head_insert(&lh, HD(4), &tag1) == true);
     assert(clu_list_head_test_immed(lh, 2,
         tag1, 3, HD(1), HD(2), HD(4),
         tag2, 1, HD(3)
     ));
-    
+
     printf("\n\t\t%s 5", __func__);
     assert(clu_list_head_insert(&lh, HD(5), &tag2) == true);
     assert(clu_list_head_test_immed(lh, 2,
@@ -197,7 +197,7 @@ void test_list_head()
 
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_list_head();

@@ -19,6 +19,4 @@ list_head_p clu_list_head_pop(list_head_p lh);
 
 list_body_p cli_list_head_get_body(list_head_p lh, int x);
 
-list_head_p clu_list_head_find(list_head_p lh, tag_p tag);
-
 #endif

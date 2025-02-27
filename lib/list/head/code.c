@@ -215,25 +215,6 @@ list_body_p cli_list_head_get_body(list_head_p lh, int x)
     return cli_list_head_get_body(lh->lh, x-1);
 }
 
-handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
-{
-    for(int i=0; i < x; lh = lh->lh, i++)
-        if(lh == NULL)
-            return NULL;
-
-    return clu_list_body_get_pointer(lh->lb, y);
-}
-
-int clu_list_head_count_tag(list_head_p lh, int x) //  TODO test
-{
-    for(int i=0; i < x; lh = lh->lh, i++)
-        if(lh == NULL)
-            return 0;
-
-    return clu_list_body_count(lh->lb);
-}
-
-
 bool clu_list_head_contains(list_head_p lh, handler_p h) // TODO test
 {
     for(; lh; lh = lh->lh)

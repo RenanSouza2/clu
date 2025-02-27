@@ -64,23 +64,28 @@ void test_list_body_pop(bool show)
     assert(clu_mem_internal_empty());
 }
 
+
+
 void test_list_body_insert(bool show)
 {
     printf("\n\t%s", __func__);
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_body_p lb = clu_list_body_create_immed(0);
-    assert(clu_list_body_insert(&lb, HD(1)) == true);
+    bool res = clu_list_body_insert(&lb, HD(1));
+    assert(res == true);
     assert(clu_list_body_immed(lb, 1, HD(1)));
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     lb = clu_list_body_create_immed(1, HD(1));
-    assert(clu_list_body_insert(&lb, HD(2)) == true);
+    res = clu_list_body_insert(&lb, HD(2));
+    assert(res == true);
     assert(clu_list_body_immed(lb, 2, HD(1), HD(2)));
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     lb = clu_list_body_create_immed(1, HD(1));
-    assert(clu_list_body_insert(&lb, HD(1)) == false);
+    res = clu_list_body_insert(&lb, HD(1));
+    assert(res == false);
     assert(clu_list_body_immed(lb, 1, HD(1)));
 
     assert(clu_mem_internal_empty());
@@ -92,18 +97,48 @@ void test_list_body_remove(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_body_p lb = clu_list_body_create_immed(0);
+    bool res = clu_list_body_remove(&lb, HD(1));
     assert(clu_list_body_remove(&lb, HD(1)) == false);
     assert(clu_list_body_immed(lb, 0));
     
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     lb = clu_list_body_create_immed(1, HD(1));
-    assert(clu_list_body_remove(&lb, HD(2)) == false);
+    res = clu_list_body_remove(&lb, HD(2));
+    assert(res == false);
     assert(clu_list_body_immed(lb, 1, HD(1)));
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     lb = clu_list_body_create_immed(1, HD(1));
-    assert(clu_list_body_remove(&lb, HD(1)) == true);
+    res = clu_list_body_remove(&lb, HD(1));
+    assert(res == true);
     assert(clu_list_body_immed(lb, 0));
+
+    assert(clu_mem_internal_empty());
+}
+
+
+
+void test_list_body_count(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
+
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    list_body_p lb = clu_list_body_create_immed(0);
+    int res = clu_list_body_count(lb);
+    assert(int_t(res, 0));
+    clu_list_body_free(lb);
+    
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    lb = clu_list_body_create_immed(1, HD(1));
+    res = clu_list_body_count(lb);
+    assert(int_t(res, 1));
+    clu_list_body_free(lb);
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    lb = clu_list_body_create_immed(2, HD(1), HD(2));
+    res = clu_list_body_count(lb);
+    assert(int_t(res, 2));
+    clu_list_body_free(lb);
 
     assert(clu_mem_internal_empty());
 }
@@ -119,10 +154,11 @@ void test_list_body()
     test_list_body_create(show);
     test_list_body_create_immed(show);
     test_list_body_pop(show);
+
     test_list_body_insert(show);
-
-
     test_list_body_remove(show);
+
+    test_list_body_count(show);
 
     assert(clu_mem_internal_empty());
 }

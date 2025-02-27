@@ -43,6 +43,17 @@ list_body_p clu_list_body_create_immed(int n, ...)
 
 
 
+bool int_t(int i1, int i2)
+{
+    if(i1 != i2)
+    {
+        printf("\n\tINT ASSERTION ERROR\t| %d %d", i1, i2);
+        return false;
+    }
+
+    return true;
+}
+
 bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
 {
     for(int i=0; lb_1 && lb_2; i++)

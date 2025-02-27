@@ -93,6 +93,32 @@ bool clu_list_head_immed(list_head_p lh, int n, ...)
 
 
 
+void clu_list_report(list_head_p lh, char tag[], bool full)
+{
+    printf("\n\tCLU REPORT: %s", tag);
+    if(lh == NULL)
+    {
+        printf("\n\nEMPTY LIST");
+        return;
+    }
+
+    for(; lh; lh = lh->lh)
+    {
+        if(full)
+        {
+            printf("\n%s", lh->tag.str);
+            clu_list_body_display(lh->lb);
+        }
+        else
+        {
+            int count = clu_list_body_count(lh->lb);
+            printf("\n%s: %d", lh->tag.str, count);
+        }
+    }
+}
+
+
+
 list_head_p clu_list_head_create(tag_p tag, list_body_p lb)
 {
     list_head_p lh = calloc(1, sizeof(list_head_t));
@@ -169,39 +195,24 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 
 
 
-void clu_list_report(list_head_p lh, char tag[], bool full)
+int clu_list_head_count(list_head_p lh)
 {
-    printf("\n\tCLU REPORT: %s", tag);
-    if(lh == NULL)
-    {
-        printf("\n\nEMPTY LIST");
-        return;
-    }
+    int i = 0;
+    for(; lh; i++)
+        lh = lh->lh;
 
-    for(; lh; lh = lh->lh)
-    {
-        if(full)
-        {
-            printf("\n%s", lh->tag.str);
-            clu_list_body_display(lh->lb);
-        }
-        else
-        {
-            int count = clu_list_body_count(lh->lb);
-            printf("\n%s: %d", lh->tag.str, count);
-        }
-    }
+    return i;
 }
 
-
-
-int clu_list_count(list_head_p lh, int x) //  TODO test
+list_body_p cli_list_head_get_body(list_head_p lh, int x)
 {
-    for(int i=0; i < x; lh = lh->lh, i++)
-        if(lh == NULL)
-            return 0;
+    if(lh == NULL)
+        return NULL;
 
-    return clu_list_body_count(lh->lb);
+    if(x == 0)
+        return lh->lb;
+
+    return cli_list_head_get_body(lh->lh, x-1);
 }
 
 handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
@@ -212,6 +223,16 @@ handler_p clu_list_get_pointer(list_head_p lh, int x, int y) //  TODO test
 
     return clu_list_body_get_pointer(lh->lb, y);
 }
+
+int clu_list_head_count_tag(list_head_p lh, int x) //  TODO test
+{
+    for(int i=0; i < x; lh = lh->lh, i++)
+        if(lh == NULL)
+            return 0;
+
+    return clu_list_body_count(lh->lb);
+}
+
 
 bool clu_list_head_contains(list_head_p lh, handler_p h) // TODO test
 {

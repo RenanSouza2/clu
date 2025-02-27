@@ -6,7 +6,7 @@
     struct _##NAME
 
 #define PLACEHOLDER(NAME)                   \
-    typedef struct _##NAME * NAME##_p;      
+    typedef struct _##NAME * NAME##_p;
 
 typedef void * handler_p;
 

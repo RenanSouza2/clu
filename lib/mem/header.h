@@ -8,7 +8,8 @@
 extern int list_head_alive;
 extern int list_body_alive;
 
-bool clu_mem_empty_internal();
+void clu_mem_internal_display();
+bool clu_mem_internal_empty();
 
 #define INC(NAME) NAME##_alive++;
 #define DEC(NAME)               \

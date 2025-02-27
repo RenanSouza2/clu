@@ -7,6 +7,8 @@
 
 #define TAG(STR) ((tag_p)(STR))
 
+bool clu_tag(tag_p tag_1, tag_p tag_2);
+
 #endif
 
 #endif

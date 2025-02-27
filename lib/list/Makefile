@@ -13,7 +13,7 @@ build: lib.o
 lib.o: $(LIB_FILES)
 	echo " linking clu object $(DIR)"
 	ld -r -o $@ $^
-	
+
 debug.o: $(DGB_FILES)
 	echo " linking debug $(DIR)"
 	ld -r -o $@ $^

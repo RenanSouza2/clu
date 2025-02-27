@@ -11,43 +11,94 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-
-
-bool clu_list_body_test_immed(list_body_p lb, ...)
+list_body_p clu_list_body_create_variadic_n(int n, va_list *args)
 {
-    va_list args;
-    va_start(args, lb);
-    return clu_list_body_test_variadic(lb, &args);
+    if(n == 0)
+        return NULL;
+
+    handler_p h = va_arg(*args, handler_p);
+    list_body_p lb_first = clu_list_body_create(h);
+
+    list_body_p lb = lb_first;
+    for(int i=1; i<n; i++)
+    {
+        h = va_arg(*args, handler_p);
+        lb = lb->lb = clu_list_body_create(h);
+    }
+    return lb_first;
 }
 
-bool clu_list_body_test_variadic(list_body_p lb, va_list *args)
+list_body_p clu_list_body_create_variadic(va_list *args)
 {
-    int count_body = va_arg(*args, int);
+    int n = va_arg(*args, int);
+    return clu_list_body_create_variadic_n(n, args);
+}
 
-    int i=0;
-    for(; lb && (i<count_body); lb = lb->lb, i++)
+list_body_p clu_list_body_create_immed(int n, ...)
+{
+    va_list args;
+    va_start(args, n);
+    return clu_list_body_create_variadic_n(n, &args);
+}
+
+
+
+bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
+{
+    for(int i=0; lb_1 && lb_2; i++)
     {
-        handler_p h = va_arg(*args, handler_p);
-        if(lb->h != h)
+        if(lb_1->h != lb_2->h)
         {
-            printf("\nMEM LIST BODY | ERROR 1 HANDLER MISMATCH | %d %d", i, count_body);
+            printf("\nMEM LIST BODY | ERROR 1 HANDLER MISMATCH | INDEX %d ", i);
             return false;
         }
+
+        lb_1 = lb_1->lb;
+        lb_2 = lb_2->lb;
     }
 
-    if(i<count_body)
+    if(lb_2)
     {
-        printf("\nMEM LIST BODY | ERROR 2 LIST SHORTER | %d %d", i, count_body);
+        printf("\nMEM LIST BODY | ERROR 2 LIST SHORTER");
         return false;
     }
 
-    if(lb)
+    if(lb_1)
     {
-        printf("\nMEM LIST BODY | ERROR 3 LIST LONGER | %d", count_body);
+        printf("\nMEM LIST BODY | ERROR 3 LIST LONGER");
         return false;
     }
 
     return true;
+}
+
+bool clu_list_body_variadic(list_body_p lb, va_list *args)
+{
+    list_body_p lb_2 = clu_list_body_create_variadic(args);
+    bool res = clu_list_body_str(lb, lb_2);
+
+    clu_list_body_free(lb_2);
+    return res;
+}
+
+bool clu_list_body_immed(list_body_p lb, ...)
+{
+    va_list args;
+    va_start(args, lb);
+    bool res = clu_list_body_variadic(lb, &args);
+
+    clu_list_body_free(lb);
+    return res;
+}
+
+
+
+void clu_list_body_display(list_body_p lb)
+{
+    printf("\n");
+    for(; lb; lb = lb->lb)
+        printf("\nlb->lh: %p", lb->h);
+    printf("\n");
 }
 
 #endif
@@ -74,7 +125,8 @@ list_body_p clu_list_body_pop(list_body_p lb)
 
 void clu_list_body_free(list_body_p lb)
 {
-    while(lb) lb = clu_list_body_pop(lb);
+    while(lb)
+        lb = clu_list_body_pop(lb);
 }
 
 

@@ -31,7 +31,7 @@ bool clu_list_head_test_immed(list_head_p lh, ...)
             return false;
         }
 
-        if(!clu_list_body_test_variadic(lh->lb, &args))
+        if(!clu_list_body_variadic(lh->lb, &args))
         {
             printf("\nMEM LIST HEAD | ERROR 2 LIST BODY MISMATCH | %d %d", i, count_head);
             return false;

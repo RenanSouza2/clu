@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "../utils/assert.h"
+#include "./utils/assert.h"
 
 typedef void * handler_p;
 

@@ -188,7 +188,16 @@ void test_list_body_contains(bool show)
     printf("\n\t%s\t\t", __func__);
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    assert(false);
+    list_body_p lb = clu_list_body_create_immed(1, HD(1));
+    bool res = clu_list_body_contains(lb, HD(1));
+    assert(res == true);
+    clu_list_body_free(lb);
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    lb = clu_list_body_create_immed(1, HD(1));
+    res = clu_list_body_contains(lb, HD(2));
+    assert(res == false);
+    clu_list_body_free(lb);
 
     assert(clu_mem_internal_empty());
 }
@@ -199,7 +208,7 @@ void test_list_body()
 {
     printf("\n%s", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_list_body_create(show);
     test_list_body_create_immed(show);

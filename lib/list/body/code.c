@@ -178,7 +178,7 @@ int clu_list_body_count(list_body_p lb)
     int i = 0;
     for(; lb; i++)
         lb = lb->lb;
-        
+
     return i;
 }
 
@@ -193,8 +193,10 @@ handler_p clu_list_body_get_pointer(list_body_p lb, int y)
     return lb ? lb->h : NULL;
 }
 
-bool clu_list_body_contains(list_body_p lb, handler_p h) // TODO test
+bool clu_list_body_contains(list_body_p lb, handler_p h)
 {
+    assert(lb);
+
     for(; lb; lb = lb->lb)
         if(lb->h == h)
             return true;

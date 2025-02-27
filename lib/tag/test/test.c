@@ -37,7 +37,6 @@ void test_tag_eq(bool show)
 {
     printf("\n\t\t%s", __func__);
 
-    
     if(show) printf("\n\t\t\t%s 1\t\t", __func__);
     tag_t tag_1, tag_2;
     tag_1 = clu_tag_format("test");

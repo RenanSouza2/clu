@@ -343,19 +343,19 @@ void test_list_head_get_body(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_head_p lh = clu_list_head_create_immed(0);
-    list_body_p lb = cli_list_head_get_body(lh, 0);
+    list_body_p lb = clu_list_head_get_body(lh, 0);
     assert(lb == NULL);
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     lh = clu_list_head_create_immed(0);
-    lb = cli_list_head_get_body(lh, 1);
+    lb = clu_list_head_get_body(lh, 1);
     assert(lb == NULL);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     lh = clu_list_head_create_immed(1,
         tag_1, 1, HD(1)
     );
-    lb = cli_list_head_get_body(lh, 0);
+    lb = clu_list_head_get_body(lh, 0);
     assert(lb != NULL);
     assert(lb->h == HD(1));
     clu_list_head_free(&lh);
@@ -364,7 +364,7 @@ void test_list_head_get_body(bool show)
     lh = clu_list_head_create_immed(1,
         tag_1, 1, HD(1)
     );
-    lb = cli_list_head_get_body(lh, 1);
+    lb = clu_list_head_get_body(lh, 1);
     assert(lb == NULL);
     clu_list_head_free(&lh);
 
@@ -372,7 +372,7 @@ void test_list_head_get_body(bool show)
     lh = clu_list_head_create_immed(1,
         tag_1, 1, HD(1)
     );
-    lb = cli_list_head_get_body(lh, 2);
+    lb = clu_list_head_get_body(lh, 2);
     assert(lb == NULL);
     clu_list_head_free(&lh);
 
@@ -381,7 +381,7 @@ void test_list_head_get_body(bool show)
         tag_1, 1, HD(1),
         tag_2, 1, HD(2)
     );
-    lb = cli_list_head_get_body(lh, 0);
+    lb = clu_list_head_get_body(lh, 0);
     assert(lb != NULL);
     assert(lb->h == HD(1));
     clu_list_head_free(&lh);
@@ -391,7 +391,7 @@ void test_list_head_get_body(bool show)
         tag_1, 1, HD(1),
         tag_2, 1, HD(2)
     );
-    lb = cli_list_head_get_body(lh, 1);
+    lb = clu_list_head_get_body(lh, 1);
     assert(lb != NULL);
     assert(lb->h == HD(2));
     clu_list_head_free(&lh);
@@ -401,7 +401,7 @@ void test_list_head_get_body(bool show)
         tag_1, 1, HD(1),
         tag_2, 1, HD(2)
     );
-    lb = cli_list_head_get_body(lh, 3);
+    lb = clu_list_head_get_body(lh, 3);
     assert(lb == NULL);
     clu_list_head_free(&lh);
 

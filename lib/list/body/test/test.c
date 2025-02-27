@@ -145,37 +145,37 @@ void test_list_body_count(bool show)
 
 
 
-void test_list_body_get_pointer(bool show)
+void test_list_body_get_handler(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_body_p lb = clu_list_body_create_immed(1, HD(1));
-    handler_p h = clu_list_body_get_pointer(lb, 0);
+    handler_p h = clu_list_body_get_handler(lb, 0);
     assert(h == HD(1));
     clu_list_body_free(lb);
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     lb = clu_list_body_create_immed(1, HD(1));
-    h = clu_list_body_get_pointer(lb, 1);
+    h = clu_list_body_get_handler(lb, 1);
     assert(h == NULL);
     clu_list_body_free(lb);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    h = clu_list_body_get_pointer(lb, 0);
+    h = clu_list_body_get_handler(lb, 0);
     assert(h == HD(1));
     clu_list_body_free(lb);
 
     if(show) printf("\n\t\t%s 4\t\t", __func__);
     lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    h = clu_list_body_get_pointer(lb, 1);
+    h = clu_list_body_get_handler(lb, 1);
     assert(h == HD(2));
     clu_list_body_free(lb);
 
     if(show) printf("\n\t\t%s 5\t\t", __func__);
     lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    h = clu_list_body_get_pointer(lb, 2);
+    h = clu_list_body_get_handler(lb, 2);
     assert(h == NULL);
     clu_list_body_free(lb);
 
@@ -218,7 +218,7 @@ void test_list_body()
     test_list_body_remove(show);
 
     test_list_body_count(show);
-    test_list_body_get_pointer(show);
+    test_list_body_get_handler(show);
     test_list_body_contains(show);
 
     assert(clu_mem_internal_empty());

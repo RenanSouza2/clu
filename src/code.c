@@ -3,6 +3,7 @@
 #include "../utils/assert.h"
 
 #include "../header.h"
+#include "../lib/list/body/header.h"
 #include "../lib/list/head/header.h"
 #include "../lib/tag/struct.h"
 
@@ -132,7 +133,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 void _clu_mem_report(char tag[], bool full)
 {
     printf("\n----------------------");
-    clu_list_report(lh_root_allocated, tag, full);
+    clu_list_head_report(lh_root_allocated, tag, full);
     printf("\n----------------------");
 }
 
@@ -160,14 +161,21 @@ bool clu_mem_empty()
     return true;
 }
 
-int clu_mem_count(int x)
+int clu_mem_count_x()
 {
-    return clu_list_count(lh_root_allocated, x);
+    return clu_list_head_count(lh_root_allocated);
+}
+
+int clu_mem_count_y(int x)
+{
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
+    return clu_list_body_count(lb);
 }
 
 handler_p clu_mem_get_pointer(int x, int y)
 {
-    return clu_list_get_pointer(lh_root_allocated, x, y);
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
+    return clu_list_body_get_handler(lb, y);
 }
 
 

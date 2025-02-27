@@ -1,8 +1,6 @@
 #ifndef __LIST_BODY_DEBUG_H__
 #define __LIST_BODY_DEBUG_H__
 
-#include <stdbool.h>
-
 #include "struct.h"
 
 #ifdef DEBUG

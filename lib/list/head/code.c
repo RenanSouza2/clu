@@ -93,7 +93,7 @@ bool clu_list_head_immed(list_head_p lh, int n, ...)
 
 
 
-void clu_list_report(list_head_p lh, char tag[], bool full)
+void clu_list_head_report(list_head_p lh, char tag[], bool full)
 {
     printf("\n\tCLU REPORT: %s", tag);
     if(lh == NULL)
@@ -151,6 +151,8 @@ list_head_p clu_list_head_pop(list_head_p lh)
     return lh_aux;
 }
 
+
+
 void clu_list_head_free(list_head_p *lh_root)
 {
     for(list_head_p lh = *lh_root; lh; lh = clu_list_head_pop(lh))
@@ -158,8 +160,6 @@ void clu_list_head_free(list_head_p *lh_root)
 
     *lh_root = NULL;
 }
-
-
 
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
 {
@@ -204,7 +204,7 @@ int clu_list_head_count(list_head_p lh)
     return i;
 }
 
-list_body_p cli_list_head_get_body(list_head_p lh, int x)
+list_body_p clu_list_head_get_body(list_head_p lh, int x)
 {
     if(lh == NULL)
         return NULL;
@@ -212,7 +212,7 @@ list_body_p cli_list_head_get_body(list_head_p lh, int x)
     if(x == 0)
         return lh->lb;
 
-    return cli_list_head_get_body(lh->lh, x-1);
+    return clu_list_head_get_body(lh->lh, x-1);
 }
 
 bool clu_list_head_contains(list_head_p lh, handler_p h) // TODO test

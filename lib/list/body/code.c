@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+
+
 list_body_p clu_list_body_create_variadic_item(va_list *args)
 {
     handler_p h = va_arg(*args, handler_p);
@@ -188,8 +190,7 @@ int clu_list_body_count(list_body_p lb)
     return i;
 }
 
-
-handler_p clu_list_body_get_pointer(list_body_p lb, int y)
+handler_p clu_list_body_get_handler(list_body_p lb, int y)
 {
     assert(lb);
 

@@ -155,9 +155,7 @@ void test_list_head_insert(bool show)
     lh = clu_list_head_create_immed(1,
         tag_1, 2, HD(1), HD(2)
     );
-    printf("\na\t\t");
     res = clu_list_head_insert(&lh, &tag_2, HD(3));
-    printf("\nb\t\t");
     assert(res == true);
     assert(clu_list_head_immed(lh, 2,
         tag_1, 2, HD(1), HD(2),
@@ -177,13 +175,29 @@ void test_list_head_insert(bool show)
     ));
 
     if(show) printf("\n\t\t%s 6\t\t", __func__);
-    assert(clu_list_head_insert(&lh, &tag_2, HD(5)) == true);
+    lh = clu_list_head_create_immed(2,
+        tag_1, 3, HD(1), HD(2), HD(4),
+        tag_2, 1, HD(3)
+    );
+    res = clu_list_head_insert(&lh, &tag_2, HD(5));
+    assert(res == true);
     assert(clu_list_head_immed(lh, 2,
         tag_1, 3, HD(1), HD(2), HD(4),
         tag_2, 2, HD(3), HD(5)
     ));
 
-    clu_list_head_free(&lh);
+    if(show) printf("\n\t\t%s 7\t\t", __func__);
+    lh = clu_list_head_create_immed(2,
+        tag_1, 3, HD(1), HD(2), HD(4),
+        tag_2, 2, HD(3), HD(5)
+    );
+    res = clu_list_head_insert(&lh, &tag_2, HD(5));
+    assert(res == false);
+    assert(clu_list_head_immed(lh, 2,
+        tag_1, 3, HD(1), HD(2), HD(4),
+        tag_2, 2, HD(3), HD(5)
+    ));
+
     assert(clu_mem_internal_empty());
 }
 

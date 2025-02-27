@@ -47,13 +47,13 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
     {
         if(!clu_tag(&lh_1->tag, &lh_2->tag))
         {
-            printf("\nMEM LIST HEAD | ERROR 1 TAG MISMATCH | INDEX %d ", i);
+            printf("\n\tLIST HEAD ASSERT ERROR\t| TAG MISMATCH | INDEX %d ", i);
             return false;
         }
 
         if(!clu_list_body_str(lh_1->lb, lh_2->lb))
         {
-            printf("\nMEM LIST HEAD | ERROR 2 LIST BODY MISMATCH | %d", i);
+            printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | %d", i);
             return false;
         }
 
@@ -63,13 +63,13 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
 
     if(lh_2)
     {
-        printf("\nMEM LIST HEAD | ERROR 3 LIST SHORTER");
+        printf("\n\tLIST HEAD ASSERT ERROR\t| LIST SHORTER");
         return false;
     }
 
     if(lh_1)
     {
-        printf("\nMEM LIST HEAD | ERROR 4 LIST LONGER");
+        printf("\n\tLIST HEAD ASSERT ERROR\t| LIST LONGER");
         return false;
     }
 
@@ -171,7 +171,7 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 
 void clu_list_report(list_head_p lh, char tag[], bool full)
 {
-    printf("\nMEM REPORT: %s", tag);
+    printf("\n\tCLU REPORT: %s", tag);
     if(lh == NULL)
     {
         printf("\n\nEMPTY LIST");

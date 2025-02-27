@@ -62,7 +62,7 @@ bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
     {
         if(lb_1->h != lb_2->h)
         {
-            printf("\nMEM LIST BODY | ERROR 1 HANDLER MISMATCH | INDEX %d ", i);
+            printf("\n\tLIST BODY | ERROR 1 HANDLER MISMATCH | INDEX %d ", i);
             return false;
         }
 
@@ -72,13 +72,13 @@ bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
 
     if(lb_2)
     {
-        printf("\nMEM LIST BODY | ERROR 2 LIST SHORTER");
+        printf("\n\tLIST BODY | ERROR 2 LIST SHORTER");
         return false;
     }
 
     if(lb_1)
     {
-        printf("\nMEM LIST BODY | ERROR 3 LIST LONGER");
+        printf("\n\tLIST BODY | ERROR 3 LIST LONGER");
         return false;
     }
 

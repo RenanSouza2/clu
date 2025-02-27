@@ -472,7 +472,7 @@ void test_list_head()
 {
     printf("\n%s", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_list_head_create(show);
     test_list_head_pop(show);

@@ -7,6 +7,6 @@
 
 PLACEHOLDER(tag);
 
-bool clu_tag_eq(tag_p tag1, tag_p tag2);
+bool clu_tag_eq(tag_p tag_1, tag_p tag_2);
 
 #endif

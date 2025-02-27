@@ -49,7 +49,7 @@ void test_list_head_pop(bool show)
 void test_list_head_create_variadic(bool show)
 {
     printf("\n\t%s\t\t", __func__);
-    
+
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 

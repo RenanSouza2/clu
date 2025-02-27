@@ -126,7 +126,7 @@ list_body_p clu_list_body_create(handler_p h)
 
     *lb = (list_body_t)
     {
-        .h = h, 
+        .h = h,
         .lb = NULL
     };
     return lb;

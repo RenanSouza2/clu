@@ -23,7 +23,7 @@ list_head_p clu_list_head_create_variadic(int n, va_list *args)
 {
     if(n == 0)
         return NULL;
-    
+
     list_head_p lh, lh_first;
     lh = lh_first = clu_list_head_create_variadic_item(args);
     for(int i=1; i<n; i++)
@@ -128,8 +128,8 @@ list_head_p clu_list_head_create(tag_p tag, list_body_p lb)
     *lh = (list_head_t)
     {
         .tag = *tag,
-        .lb = lb, 
-        .lh = NULL 
+        .lb = lb,
+        .lh = NULL
     };
     return lh;
 }

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "debug.h"
+#include "../body/header.h"
 #include "../../mem/header.h"
 #include "../../../utils/assert.h"
 
@@ -9,7 +10,38 @@
 
 #include "../body/debug.h"
 
+list_head_p clu_list_head_create_variadic(int n, va_list args)
+{
+    if(n == 0)
+        return NULL;
+    
+    tag_t tag = va_arg(args, tag_t);
+    list_body_p lb = clu_list_body_create_variadic(&args);
+    list_head_p lh_first = clu_list_head_create(&tag, lb);
 
+    list_head_p lh = lh_first;
+    for(int i=1; i<n; i++)
+    {
+        tag = va_arg(args, tag_t);
+        lb = clu_list_body_create_variadic(&args);
+        lh = lh->lh = clu_list_head_create(&tag, lb);
+    }
+    return lh_first;
+}
+
+list_head_p clu_list_head_create_immed(int n, ...)
+{
+    va_list args;
+    va_start(args, n);
+    return clu_list_head_create_variadic(n, args);
+}
+
+
+
+bool clu_list_head_test_str()
+{
+
+}
 
 bool clu_list_head_test_immed(list_head_p lh, ...)
 {
@@ -57,17 +89,27 @@ bool clu_list_head_test_immed(list_head_p lh, ...)
 
 
 
-list_head_p clu_list_head_create(tag_p tag, handler_p h)
+list_head_p clu_list_head_create(tag_p tag, list_body_p lb)
 {
-    assert(h);
-
     list_head_p lh = calloc(1, sizeof(list_head_t));
     assert(lh);
     INC(list_head);
 
-    list_body_p lb = clu_list_body_create(h);
-    *lh = (list_head_t){NULL, lb, *tag};
+    *lh = (list_head_t)
+    {
+        .tag = *tag,
+        .lb = lb, 
+        .lh = NULL 
+    };
     return lh;
+}
+
+list_head_p clu_list_head_create_handler(tag_p tag, handler_p h)
+{
+    assert(h);
+
+    list_body_p lb = clu_list_body_create(h);
+    return clu_list_head_create(tag, lb);
 }
 
 list_head_p clu_list_head_pop(list_head_p lh)
@@ -88,14 +130,14 @@ void clu_list_head_free(list_head_p *lh_root)
 
 
 
-bool clu_list_head_insert(list_head_p *lh_root, handler_p h, tag_p tag)
+bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
 {
     assert(lh_root);
 
     list_head_p lh = *lh_root;
     if(lh == NULL)
     {
-        *lh_root = clu_list_head_create(tag, h);
+        *lh_root = clu_list_head_create_handler(tag, h);
         return true;
     }
 

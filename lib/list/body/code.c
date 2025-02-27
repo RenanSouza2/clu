@@ -120,7 +120,11 @@ list_body_p clu_list_body_create(handler_p h)
     assert(lb);
     INC(list_body);
 
-    *lb = (list_body_t){h, NULL};
+    *lb = (list_body_t)
+    {
+        .h = h, 
+        .lb = NULL
+    };
     return lb;
 }
 

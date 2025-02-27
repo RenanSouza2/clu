@@ -6,36 +6,36 @@
 
 
 
-void test_list_head_create()
+void test_list_head_create(bool show)
 {
-    printf("\n\t%s", __func__);
+    printf("\n\t%s\t\t", __func__);
 
-    printf("\n\t\t%s 1", __func__);
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
     tag_t tag;
     tag = clu_tag_format("test");
-    list_head_p lh = clu_list_head_create(&tag, HD(1));
+    list_head_p lh = clu_list_head_create_handler(&tag, HD(1));
     assert(clu_list_head_test_immed(lh, 1,
         tag, 1, HD(1)
     ));
     clu_list_head_free(&lh);
 
-    printf("\n\t\t%s 2", __func__);
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
     tag = clu_tag_format("");
-    lh = clu_list_head_create(&tag, HD(1));
+    lh = clu_list_head_create_handler(&tag, HD(1));
     assert(clu_list_head_test_immed(lh, 1,
         tag, 1, HD(1)
     ));
     clu_list_head_free(&lh);
 
-    printf("\n\t\t%s 3", __func__);
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
     tag = clu_tag_format("abcdefghi abcdefghi abcdefghi abcdefghi abcdefghi");
-    lh = clu_list_head_create(&tag, HD(1));
+    lh = clu_list_head_create_handler(&tag, HD(1));
     assert(clu_list_head_test_immed(lh, 1,
         tag, 1, HD(1)
     ));
     clu_list_head_free(&lh);
 
-    assert(clu_mem_empty_internal());
+    assert(clu_mem_internal_empty());
 }
 
 void test_list_head_pop()
@@ -45,14 +45,14 @@ void test_list_head_pop()
     tag_t tag;
     tag = clu_tag_format("test");
 
-    list_head_p lh = clu_list_head_create(&tag, HD(1));
+    list_head_p lh = clu_list_head_create_handler(&tag, HD(1));
     free(lh->lb, list_body);
 
     lh->lh = LH(1);
     lh = clu_list_head_pop(lh);
     assert(lh == LH(1));
 
-    assert(clu_mem_empty_internal());
+    assert(clu_mem_internal_empty());
 }
 
 void test_list_head_insert()
@@ -102,7 +102,7 @@ void test_list_head_insert()
     ));
 
     clu_list_head_free(&lh);
-    assert(clu_mem_empty_internal());
+    assert(clu_mem_internal_empty());
 }
 
 void test_list_head_remove()
@@ -177,7 +177,7 @@ void test_list_head_remove()
     assert(clu_list_head_remove(&lh, HD(3)) == true);
     assert(lh == NULL);
 
-    assert(clu_mem_empty_internal());
+    assert(clu_mem_internal_empty());
 }
 
 
@@ -186,13 +186,15 @@ void test_list_head()
 {
     printf("\n%s", __func__);
 
-    test_list_head_create();
+    bool show = true;
+
+    test_list_head_create(show);
     test_list_head_pop();
 
     test_list_head_insert();
     test_list_head_remove();
 
-    assert(clu_mem_empty_internal());
+    assert(clu_mem_internal_empty());
 }
 
 

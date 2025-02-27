@@ -7,9 +7,9 @@
 
 STRUCT(list_head)
 {
-    list_head_p lh;
-    list_body_p lb;
     tag_t tag;
+    list_body_p lb;
+    list_head_p lh;
 };
 
 #endif

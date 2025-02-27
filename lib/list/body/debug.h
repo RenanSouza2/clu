@@ -20,11 +20,6 @@ bool clu_list_body_immed(list_body_p lb, ...);
 
 #endif
 
-list_body_p clu_list_body_create(handler_p h);
 list_body_p clu_list_body_pop(list_body_p lb);
-void clu_list_body_free(list_body_p lb);
-
-bool clu_list_body_insert(list_body_p *lb_root, handler_p h);
-bool clu_list_body_remove(list_body_p *lb_root, handler_p h);
 
 #endif

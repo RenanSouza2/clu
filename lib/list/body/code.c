@@ -102,17 +102,15 @@ bool clu_list_body_immed(list_body_p lb, ...)
     return res;
 }
 
+#endif
+
 
 
 void clu_list_body_display(list_body_p lb)
 {
-    printf("\n");
     for(; lb; lb = lb->lb)
-        printf("\nlb->lh: %p", lb->h);
-    printf("\n");
+        printf("\n\t%p\t", lb->h);
 }
-
-#endif
 
 
 
@@ -173,30 +171,26 @@ bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
     return true;
 }
 
+
+
 int clu_list_body_count(list_body_p lb)
 {
     int i = 0;
-    for(; lb; i++, lb = lb->lb);
+    for(; lb; i++)
+        lb = lb->lb;
+        
     return i;
 }
 
 
-
-void clu_list_body_report_full(list_body_p lb)
+handler_p clu_list_body_get_pointer(list_body_p lb, int y)
 {
-    for(; lb; lb = lb->lb)
-        printf("\n\t%p\t", lb->h);
-}
+    assert(lb);
 
+    for(int i=0; i < y && lb; i++)
+        lb = lb->lb;
 
-
-handler_p clu_list_body_get_pointer(list_body_p lb, int y) // TODO test
-{
-    for(int j=0; j < y; lb = lb->lb, j++)
-        if(lb == NULL)
-            return NULL;
-
-    return lb->h;
+    return lb ? lb->h : NULL;
 }
 
 bool clu_list_body_contains(list_body_p lb, handler_p h) // TODO test

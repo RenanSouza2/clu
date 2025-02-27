@@ -18,8 +18,6 @@ bool int_t(int i1, int i2);
 bool clu_list_body_variadic(list_body_p lb, va_list *args);
 bool clu_list_body_immed(list_body_p lb, ...);
 
-void clu_list_body_display(list_body_p lb);
-
 #endif
 
 list_body_p clu_list_body_create(handler_p h);

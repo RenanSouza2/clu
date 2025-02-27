@@ -137,7 +137,7 @@ void clu_list_report(list_head_p lh, char tag[], bool full)
         if(full)
         {
             printf("\n%s", lh->tag.str);
-            clu_list_body_report_full(lh->lb);
+            clu_list_body_display(lh->lb);
         }
         else
         {

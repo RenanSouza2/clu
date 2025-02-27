@@ -45,8 +45,9 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         assert(false);
     }
 
-    assert(clu_list_head_insert(&lh_root_allocated, h, &tag));
     clu_list_head_remove(&lh_root_freed, h);
+    assert(clu_list_head_insert(&lh_root_allocated, &tag, h));
+
     if(log_allocations) printf("\n%s | %s: %p\t", fn, tag.str, h);
 }
 
@@ -65,7 +66,7 @@ bool clu_handler_deallocate(handler_p h, char format[], va_list args)
     }
 
     tag_t tag_free = clu_tag_format("free");
-    if(!clu_list_head_insert(&lh_root_freed, h, &tag_free))
+    if(!clu_list_head_insert(&lh_root_freed, &tag_free, h))
     {
         tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
@@ -130,7 +131,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 
 
 
-void _clu_mem_report(char tag[], bool full)
+void clu_mem_report_inner(char tag[], bool full)
 {
     printf("\n----------------------");
     clu_list_head_report(lh_root_allocated, tag, full);
@@ -139,12 +140,12 @@ void _clu_mem_report(char tag[], bool full)
 
 void clu_mem_report(char tag[])
 {
-    _clu_mem_report(tag, false);
+    clu_mem_report_inner(tag, false);
 }
 
 void clu_mem_report_full(char tag[])
 {
-    _clu_mem_report(tag, true);
+    clu_mem_report_inner(tag, true);
 }
 
 
@@ -153,7 +154,7 @@ bool clu_mem_empty()
 {
     if(lh_root_allocated)
     {
-        clu_mem_report("ASSERT");
+        clu_mem_report("ASSERT FAIL");
         return false;
     }
 

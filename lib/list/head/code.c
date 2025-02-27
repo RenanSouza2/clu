@@ -164,6 +164,7 @@ void clu_list_head_free(list_head_p *lh_root)
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
 {
     assert(lh_root);
+
     list_head_p lh = *lh_root;
     if(lh == NULL)
     {

@@ -9,23 +9,26 @@
 #ifdef DEBUG
 
 #include "../body/debug.h"
+#include "../../tag/debug.h"
 
-list_head_p clu_list_head_create_variadic(int n, va_list args)
+list_head_p clu_list_head_create_variadic_item(va_list *args)
+{
+    tag_t tag = va_arg(*args, tag_t);
+    list_body_p lb = clu_list_body_create_variadic(args);
+    assert(lb);
+    return clu_list_head_create(&tag, lb);
+}
+
+list_head_p clu_list_head_create_variadic(int n, va_list *args)
 {
     if(n == 0)
         return NULL;
     
-    tag_t tag = va_arg(args, tag_t);
-    list_body_p lb = clu_list_body_create_variadic(&args);
-    list_head_p lh_first = clu_list_head_create(&tag, lb);
-
-    list_head_p lh = lh_first;
+    list_head_p lh, lh_first;
+    lh = lh_first = clu_list_head_create_variadic_item(args);
     for(int i=1; i<n; i++)
-    {
-        tag = va_arg(args, tag_t);
-        lb = clu_list_body_create_variadic(&args);
-        lh = lh->lh = clu_list_head_create(&tag, lb);
-    }
+        lh = lh->lh = clu_list_head_create_variadic_item(args);
+
     return lh_first;
 }
 
@@ -33,56 +36,57 @@ list_head_p clu_list_head_create_immed(int n, ...)
 {
     va_list args;
     va_start(args, n);
-    return clu_list_head_create_variadic(n, args);
+    return clu_list_head_create_variadic(n, &args);
 }
 
 
 
-bool clu_list_head_test_str()
+bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
 {
-
-}
-
-bool clu_list_head_test_immed(list_head_p lh, ...)
-{
-    va_list args;
-    va_start(args, lh);
-
-    int count_head = va_arg(args, int);
-
-    int i=0;
-    for(; lh && (i<count_head); lh = lh->lh, i++)
+    for(int i; lh_1 && lh_2; i++)
     {
-        tag_t tag = va_arg(args, tag_t);
-        if(!clu_tag_eq(&lh->tag, &tag))
+        if(!clu_tag(&lh_1->tag, &lh_2->tag))
         {
-            printf("\nMEM LIST HEAD | ERROR 1 TAG MISMATCH | %d %d", i, count_head);
-            printf("\n\t(%s)", lh->tag.str);
-            printf("\n\t(%s)", tag.str);
-            printf("\n");
+            printf("\nMEM LIST HEAD | ERROR 1 TAG MISMATCH | INDEX %d ", i);
             return false;
         }
 
-        if(!clu_list_body_variadic(lh->lb, &args))
+        if(!clu_list_body_str(lh_1->lb, lh_2->lb))
         {
-            printf("\nMEM LIST HEAD | ERROR 2 LIST BODY MISMATCH | %d %d", i, count_head);
+            printf("\nMEM LIST HEAD | ERROR 2 LIST BODY MISMATCH | %d", i);
             return false;
         }
+
+        lh_1 = lh_1->lh;
+        lh_2 = lh_2->lh;
     }
 
-    if(i<count_head)
+    if(lh_2)
     {
-        printf("\nMEM LIST HEAD | ERROR 3 LIST SHORTER | %d %d", i, count_head);
+        printf("\nMEM LIST HEAD | ERROR 3 LIST SHORTER");
         return false;
     }
 
-    if(lh)
+    if(lh_1)
     {
-        printf("\nMEM LIST HEAD | ERROR 4 LIST LONGER | %d", count_head);
+        printf("\nMEM LIST HEAD | ERROR 4 LIST LONGER");
         return false;
     }
 
     return true;
+}
+
+bool clu_list_head_immed(list_head_p lh, int n, ...)
+{
+    va_list args;
+    va_start(args, n);
+    list_head_p lh_2 = clu_list_head_create_variadic(n, &args);
+
+    bool res = clu_list_head_str(lh, lh_2);
+
+    clu_list_head_free(&lh);
+    clu_list_head_free(&lh_2);
+    return res;
 }
 
 #endif
@@ -109,7 +113,8 @@ list_head_p clu_list_head_create_handler(tag_p tag, handler_p h)
     assert(h);
 
     list_body_p lb = clu_list_body_create(h);
-    return clu_list_head_create(tag, lb);
+    list_head_p lh = clu_list_head_create(tag, lb);
+    return lh;
 }
 
 list_head_p clu_list_head_pop(list_head_p lh)
@@ -133,7 +138,6 @@ void clu_list_head_free(list_head_p *lh_root)
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
 {
     assert(lh_root);
-
     list_head_p lh = *lh_root;
     if(lh == NULL)
     {
@@ -144,7 +148,7 @@ bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
     if(clu_tag_eq(&lh->tag, tag))
         return clu_list_body_insert(&lh->lb, h);
 
-    return clu_list_head_insert(&lh->lh, h, tag);
+    return clu_list_head_insert(&lh->lh, tag, h);
 }
 
 bool clu_list_head_remove(list_head_p *lh_root, handler_p h)

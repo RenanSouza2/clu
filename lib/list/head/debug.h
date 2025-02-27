@@ -7,8 +7,9 @@
 
 #define LH(POINTER) ((list_head_p)(POINTER))
 
-bool clu_list_head_test_immed(list_head_p lh, ...);
-bool clu_list_head_insert_immed(list_head_p *lh_root, handler_p h, char format[], ...);
+list_head_p clu_list_head_create_immed(int n, ...);
+
+bool clu_list_head_immed(list_head_p lh, int n, ...);
 
 #endif
 

@@ -11,20 +11,22 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+list_body_p clu_list_body_create_variadic_item(va_list *args)
+{
+    handler_p h = va_arg(*args, handler_p);
+    return clu_list_body_create(h);
+}
+
 list_body_p clu_list_body_create_variadic_n(int n, va_list *args)
 {
     if(n == 0)
         return NULL;
 
-    handler_p h = va_arg(*args, handler_p);
-    list_body_p lb_first = clu_list_body_create(h);
-
-    list_body_p lb = lb_first;
+    list_body_p lb, lb_first;
+    lb = lb_first = clu_list_body_create_variadic_item(args);
     for(int i=1; i<n; i++)
-    {
-        h = va_arg(*args, handler_p);
-        lb = lb->lb = clu_list_body_create(h);
-    }
+        lb = lb->lb = clu_list_body_create_variadic_item(args);
+
     return lb_first;
 }
 

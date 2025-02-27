@@ -150,14 +150,14 @@ void clu_mem_report_full(char tag[])
 
 bool clu_mem_empty()
 {
-    if(lh_root_allocated == NULL)
+    if(lh_root_allocated)
     {
-        clu_list_head_free(&lh_root_freed);
-        return true;
+        clu_mem_report("ASSERT");
+        return false;
     }
 
-    clu_mem_report("ASSERT");
-    return false;
+    clu_list_head_free(&lh_root_freed);
+    return true;
 }
 
 int clu_mem_count(int x)

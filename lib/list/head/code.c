@@ -43,7 +43,7 @@ list_head_p clu_list_head_create_immed(int n, ...)
 
 bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
 {
-    for(int i; lh_1 && lh_2; i++)
+    for(int i=0; lh_1 && lh_2; i++)
     {
         if(!clu_tag(&lh_1->tag, &lh_2->tag))
         {

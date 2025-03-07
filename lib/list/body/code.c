@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "../../mem/header.h"
 #include "../../../utils/assert.h"
+#include "../../../utils/U64.h"
 
 
 
@@ -13,32 +14,28 @@
 
 
 
-list_body_p clu_list_body_create_variadic_item(va_list *args)
-{
-    handler_p h = va_arg(*args, handler_p);
-    return clu_list_body_create(h);
-}
-
-list_body_p clu_list_body_create_variadic_n(int n, va_list *args)
+list_body_p clu_list_body_create_variadic_n(uint64_t n, va_list *args)
 {
     if(n == 0)
         return NULL;
 
-    list_body_p lb, lb_first;
-    lb = lb_first = clu_list_body_create_variadic_item(args);
-    for(int i=1; i<n; i++)
-        lb = lb->lb = clu_list_body_create_variadic_item(args);
+    list_body_p lb = NULL;
+    for(uint64_t i=0; i<n; i++)
+    {
+        handler_p h = va_arg(*args, handler_p);
+        assert(clu_list_body_insert(&lb, h));
+    }
 
-    return lb_first;
+    return lb;
 }
 
 list_body_p clu_list_body_create_variadic(va_list *args)
 {
-    int n = va_arg(*args, int);
+    uint64_t n = va_arg(*args, uint64_t);
     return clu_list_body_create_variadic_n(n, args);
 }
 
-list_body_p clu_list_body_create_immed(int n, ...)
+list_body_p clu_list_body_create_immed(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
@@ -47,44 +44,46 @@ list_body_p clu_list_body_create_immed(int n, ...)
 
 
 
-bool int_t(int i1, int i2)
+bool uint64(uint64_t i1, uint64_t i2)
 {
     if(i1 != i2)
     {
-        printf("\n\tINT ASSERTION ERROR\t| %d %d", i1, i2);
+        printf("\n\tUINT64 ASSERTION ERROR\t| " U64P() " " U64P() "", i1, i2);
         return false;
     }
 
     return true;
 }
 
-bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
+bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint64_t index)
 {
-    for(int i=0; lb_1 && lb_2; i++)
+    if(lb_1 == NULL)
     {
-        if(lb_1->h != lb_2->h)
+        if(lb_2 != NULL)
         {
-            printf("\n\tLIST BODY | ERROR 1 HANDLER MISMATCH | INDEX %d ", i);
+            printf("\n\tLIST BODY ASSERTION ERROR\t| L1 EMPTY L2 NOT | %p " U64P() "", h, index);
             return false;
         }
 
-        lb_1 = lb_1->lb;
-        lb_2 = lb_2->lb;
+        return true;
     }
 
-    if(lb_2)
+    if(lb_2 == NULL)
     {
-        printf("\n\tLIST BODY | ERROR 2 LIST SHORTER");
+        printf("\n\tLIST BODY ASSERTION ERROR\t| L1 NOT EMPTY L2 IS | %p " U64P() "", h, index);
         return false;
     }
 
-    if(lb_1)
-    {
-        printf("\n\tLIST BODY | ERROR 3 LIST LONGER");
-        return false;
-    }
+    for(uint64_t i=0; i<16; i++)
+        if(!clu_list_body_str_rec(lb_1->arr[i], lb_2->arr[i], SET(h, index, i), index + 1))
+            return false;
 
     return true;
+}
+
+bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
+{
+    return clu_list_body_str_rec(lb_1, lb_2, NULL, 0);
 }
 
 bool clu_list_body_variadic(list_body_p lb, va_list *args)

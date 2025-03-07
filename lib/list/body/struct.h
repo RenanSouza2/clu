@@ -5,8 +5,7 @@
 
 STRUCT(list_body)
 {
-    handler_p h;
-    list_body_p lb;
+    list_body_p arr[16];
 };
 
 #endif

@@ -138,8 +138,8 @@ list_head_p clu_list_head_create_handler(tag_p tag, handler_p h)
 {
     assert(h);
 
-    list_body_p lb = clu_list_body_create(h);
-    list_head_p lh = clu_list_head_create(tag, lb);
+    list_head_p lh = clu_list_head_create(tag, NULL);
+    clu_list_body_insert(&lh->lb, h);
     return lh;
 }
 

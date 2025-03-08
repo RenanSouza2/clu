@@ -16,8 +16,8 @@ void clu_list_head_free(list_head_p *lh_root);
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h);
 bool clu_list_head_remove(list_head_p *lh_root, handler_p h);
 
-int clu_list_head_count(list_head_p lh);
-list_body_p clu_list_head_get_body(list_head_p lh, int x);
+uint64_t clu_list_head_count(list_head_p lh);
+list_body_p clu_list_head_get_body(list_head_p lh, uint64_t x);
 bool clu_list_head_contains(list_head_p lh, handler_p h);
 
 #endif

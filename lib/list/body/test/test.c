@@ -3,8 +3,60 @@
 #include "../debug.h"
 #include "../../../mem/header.h"
 #include "../../../../utils/assert.h"
+#include "../../../../utils/U64.h"
 
 
+
+void test_offset(bool show)
+{
+    printf("\n\t%s", __func__);
+
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    uint64_t res = OFFSET(15);
+    assert(uint64(res, 0));
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    res = OFFSET(0);
+    assert(uint64(res, 60));
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    res = OFFSET(5);
+    assert(uint64(res, 40));
+}
+
+void test_get(bool show)
+{
+    printf("\n\t%s", __func__);
+
+    handler_p h = HD(0x0123456789abcdef);
+
+    for(uint64_t index=0; index<16; index++)
+    {
+        if(show) printf("\n\t\t%s " U64P(2) "\t\t", __func__, index + 1);
+        uint64_t key = GET(h, index);
+        assert(uint64(key, index));
+    }
+
+    assert(clu_mem_internal_empty());
+}
+
+void test_set(bool show)
+{
+    printf("\n\t%s", __func__);
+
+    
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    handler_p h = HD(0);
+    handler_p h_res = SET(h, 15, 0xf);
+    assert(h_res == HD(0xf));
+
+    // if(show) printf("\n\t\t%s 2\t\t", __func__);
+    // h = HD(0);
+    // h_res = SET(h, 0, 0xf);
+    // assert(h_res == HD(0xf000000000000000));
+
+    assert(clu_mem_internal_empty());
+}
 
 void test_list_body_create(bool show)
 {
@@ -14,12 +66,11 @@ void test_list_body_create(bool show)
     list_body_p lb = clu_list_body_create();
     for(uint64_t i=0; i<16; i++)
         assert(lb->arr[i] == NULL);
+
     free(lb, list_body);
 
     assert(clu_mem_internal_empty());
 }
-
-
 
 void test_list_body_insert(bool show)
 {
@@ -163,10 +214,13 @@ void test_list_body()
 {
     printf("\n%s", __func__);
 
-    bool show = false;
+    bool show = true;
+
+    test_offset(show);
+    test_get(show);
+    test_set(show);
 
     test_list_body_create(show);
-
     test_list_body_insert(show);
     test_list_body_remove(show);
 

@@ -25,6 +25,8 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
     if(size == 0)
     {
         printf("\n");
+        printf("\n");
+        printf("\n\t---------------");
         printf("\n\tallocation failure");
         printf("\n\tsize is ZERO");
         printf("\n\ttag: %s", tag.str);
@@ -36,6 +38,8 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
     if(!h)
     {
         printf("\n");
+        printf("\n");
+        printf("\n\t---------------");
         printf("\n\tallocation failure");
         printf("\n\tsize: %lu", size);
         printf("\n\tfn: %s", fn);
@@ -51,18 +55,16 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
     if(log_allocations) printf("\n%s | %s: %p\t", fn, tag.str, h);
 }
 
-bool clu_handler_deallocate(handler_p h, char format[], va_list args)
+void clu_handler_deallocate(handler_p h, char format[], va_list args)
 {
-    assert(h);
-
-    if(!clu_list_head_remove(&lh_root_allocated, h))
+    if(h == NULL)
     {
-        tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
-        printf("\nfree not allocated pointer: %s\t", tag.str);
         printf("\n");
+        printf("\n\t---------------");
+        printf("\n\tfree NULL pointer\t");
         printf("\n\t");
-        return false;
+        assert(false);
     }
 
     tag_t tag_free = clu_tag_format("free");
@@ -70,14 +72,24 @@ bool clu_handler_deallocate(handler_p h, char format[], va_list args)
     {
         tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
-        printf("\ndouble free: %s\t", tag.str);
         printf("\n");
+        printf("\n\t---------------");
+        printf("\n\tdouble free: %s\t", tag.str);
         printf("\n\t");
-        return false;
+        assert(false);
+    }
+
+    if(!clu_list_head_remove(&lh_root_allocated, h))
+    {
+        tag_t tag = clu_tag_format_variadic(format, args);
+        printf("\n");
+        printf("\n");
+        printf("\n\tfree not allocated pointer: %s\t", tag.str);
+        printf("\n\t");
+        assert(false);
     }
 
     if(log_allocations) printf("\n\tfree: %p\t", h);
-    return true;
 }
 
 
@@ -111,7 +123,8 @@ handler_p clu_handler_realloc(handler_p volatile h_old, size_t size, char format
     handler_p h = realloc(h_old, size);
     assert(h);
 
-    if(h == h_old) return h;
+    if(h == h_old)
+        return h;
 
     va_list args;
     va_start(args, format);
@@ -125,7 +138,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    assert(clu_handler_deallocate(h, format, args));
+    clu_handler_deallocate(h, format, args);
     free(h);
 }
 

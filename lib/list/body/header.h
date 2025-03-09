@@ -2,6 +2,7 @@
 #define __LIST_BODY_H__
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "../../../utils/struct.h"
 

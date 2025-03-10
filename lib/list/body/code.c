@@ -114,13 +114,13 @@ void clu_list_body_display_rec(list_body_p lb, handler_p h, uint64_t index)
     if(lb == NULL)
         return;
 
-    if(index == 64)
+    if(index == INDEX_MAX)
     {
         printf("\n\t%p\t", h);
         return;
     }
 
-    for(uint64_t i=0; i<16; i++)
+    for(uint64_t i=0; i<SIZE; i++)
         clu_list_body_display_rec(lb->arr[i], SET(h, index, i), index + 1);
 }
 
@@ -145,7 +145,7 @@ void clu_list_body_free(list_body_p lb)
     if(lb == NULL)
         return;
 
-    for(uint64_t i=0; i<16; i++)
+    for(uint64_t i=0; i<SIZE; i++)
         clu_list_body_free(lb->arr[i]);
 
     free(lb, list_body);
@@ -157,7 +157,7 @@ list_body_p clu_list_body_insert_rec_2(handler_p h, uint64_t index)
 {
     list_body_p lb = clu_list_body_create();
 
-    if(index < 64)
+    if(index < INDEX_MAX)
         lb->arr[GET(h, index)] = clu_list_body_insert_rec_2(h, index + 1);
 
     return lb;
@@ -167,11 +167,18 @@ bool clu_list_body_insert_rec_1(list_body_p *lb_root, handler_p h, uint64_t inde
 {
     assert(lb_root);
 
-    if(index == 64)
-        return false;
-
     list_body_p lb = *lb_root;
     uint64_t key = GET(h, index);
+
+    if(index == INDEX_MAX)
+    {
+        if(lb != NULL)
+            return false;
+
+        *lb_root = clu_list_body_create();
+        return true;
+    }
+
     if(lb != NULL)
         return clu_list_body_insert_rec_1(&lb->arr[key], h, index + 1);
 
@@ -194,7 +201,7 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
     if(lb == NULL)
         return false;
 
-    if(index == 64)
+    if(index == INDEX_MAX)
     {
         free(lb, list_body);
         *lb_root = NULL;
@@ -204,7 +211,7 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
     if(!clu_list_body_remove_rec(&lb->arr[GET(h, index)], h, index + 1))
         return false;
 
-    for(uint64_t i=0; i<16; i++)
+    for(uint64_t i=0; i<SIZE; i++)
         if(lb->arr[i])
             return true;
 
@@ -227,11 +234,11 @@ uint64_t clu_list_body_count_res(list_body_p lb, uint64_t index)
     if(lb == NULL)
         return 0;
 
-    if(index == 64)
+    if(index == INDEX_MAX)
         return 1;
 
     uint64_t count = 0;
-    for(uint64_t i=0; i<16; i++)
+    for(uint64_t i=0; i<SIZE; i++)
         count += clu_list_body_count_res(lb->arr[i], index + 1);
 
     return count;
@@ -246,10 +253,10 @@ handler_p clu_list_body_get_handler_rec(list_body_p lb, int y, handler_p h, uint
 {
     assert(lb);
 
-    if(index == 64)
+    if(index == INDEX_MAX)
         return h;
 
-    for(uint64_t i=0; i<16; i++)
+    for(uint64_t i=0; i<SIZE; i++)
     {
         uint64_t count = clu_list_body_count_res(lb->arr[i], index + 1);
         if(y < count)
@@ -274,7 +281,7 @@ bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
     if(lb == NULL)
         return false;
 
-    if(index == 64)
+    if(index == INDEX_MAX)
         return true;
 
     return clu_list_body_contains_rec(lb->arr[GET(h, index)], h, index + 1);

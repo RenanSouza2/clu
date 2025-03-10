@@ -4,6 +4,7 @@
 #include "../body/header.h"
 #include "../../mem/header.h"
 #include "../../../utils/assert.h"
+#include "../../../utils/U64.h"
 
 
 #ifdef DEBUG
@@ -19,20 +20,20 @@ list_head_p clu_list_head_create_variadic_item(va_list *args)
     return clu_list_head_create(&tag, lb);
 }
 
-list_head_p clu_list_head_create_variadic(int n, va_list *args)
+list_head_p clu_list_head_create_variadic(uint64_t n, va_list *args)
 {
     if(n == 0)
         return NULL;
 
     list_head_p lh, lh_first;
     lh = lh_first = clu_list_head_create_variadic_item(args);
-    for(int i=1; i<n; i++)
+    for(uint64_t i=1; i<n; i++)
         lh = lh->lh = clu_list_head_create_variadic_item(args);
 
     return lh_first;
 }
 
-list_head_p clu_list_head_create_immed(int n, ...)
+list_head_p clu_list_head_create_immed(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
@@ -43,17 +44,17 @@ list_head_p clu_list_head_create_immed(int n, ...)
 
 bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
 {
-    for(int i; lh_1 && lh_2; i++)
+    for(uint64_t i=0; lh_1 && lh_2; i++)
     {
         if(!clu_tag(&lh_1->tag, &lh_2->tag))
         {
-            printf("\n\tLIST HEAD ASSERT ERROR\t| TAG MISMATCH | INDEX %d ", i);
+            printf("\n\tLIST HEAD ASSERT ERROR\t| TAG MISMATCH | INDEX " U64P() "", i);
             return false;
         }
 
         if(!clu_list_body_str(lh_1->lb, lh_2->lb))
         {
-            printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | %d", i);
+            printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | " U64P() "", i);
             return false;
         }
 
@@ -76,7 +77,7 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
     return true;
 }
 
-bool clu_list_head_immed(list_head_p lh, int n, ...)
+bool clu_list_head_immed(list_head_p lh, uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
@@ -111,8 +112,8 @@ void clu_list_head_report(list_head_p lh, char tag[], bool full)
         }
         else
         {
-            int count = clu_list_body_count(lh->lb);
-            printf("\n%s: %d", lh->tag.str, count);
+            uint64_t count = clu_list_body_count(lh->lb);
+            printf("\n%s: " U64P() "", lh->tag.str, count);
         }
     }
 }
@@ -138,8 +139,8 @@ list_head_p clu_list_head_create_handler(tag_p tag, handler_p h)
 {
     assert(h);
 
-    list_body_p lb = clu_list_body_create(h);
-    list_head_p lh = clu_list_head_create(tag, lb);
+    list_head_p lh = clu_list_head_create(tag, NULL);
+    clu_list_body_insert(&lh->lb, h);
     return lh;
 }
 
@@ -196,16 +197,16 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 
 
 
-int clu_list_head_count(list_head_p lh)
+uint64_t clu_list_head_count(list_head_p lh)
 {
-    int i = 0;
+    uint64_t i = 0;
     for(; lh; i++)
         lh = lh->lh;
 
     return i;
 }
 
-list_body_p clu_list_head_get_body(list_head_p lh, int x)
+list_body_p clu_list_head_get_body(list_head_p lh, uint64_t x)
 {
     if(lh == NULL)
         return NULL;

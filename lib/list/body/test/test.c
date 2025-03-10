@@ -3,68 +3,74 @@
 #include "../debug.h"
 #include "../../../mem/header.h"
 #include "../../../../utils/assert.h"
+#include "../../../../utils/U64.h"
 
 
+
+void test_offset(bool show)
+{
+    printf("\n\t%s", __func__);
+
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    uint64_t res = OFFSET(7);
+    assert(uint64(res, 0));
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    res = OFFSET(0);
+    assert(uint64(res, 56));
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    res = OFFSET(5);
+    assert(uint64(res, 16));
+}
+
+void test_get(bool show)
+{
+    printf("\n\t%s", __func__);
+
+    handler_p h = HD(0x0001020304050607);
+
+    for(uint64_t index=0; index<7; index++)
+    {
+        if(show) printf("\n\t\t%s " U64P(2) "\t\t", __func__, index + 1);
+        uint64_t key = GET(h, index);
+        assert(uint64(key, index));
+    }
+
+    assert(clu_mem_internal_empty());
+}
+
+void test_set(bool show)
+{
+    printf("\n\t%s", __func__);
+
+
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    handler_p h = HD(0);
+    handler_p h_res = SET(h, 7, 0xf);
+    assert(h_res == HD(0xf));
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    h = HD(0);
+    h_res = SET(h, 0, 0xab);
+    assert(h_res == HD(0xab00000000000000));
+
+    assert(clu_mem_internal_empty());
+}
 
 void test_list_body_create(bool show)
 {
     printf("\n\t%s", __func__);
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = clu_list_body_create(HD(1));
-    assert(lb->h  == HD(1));
-    assert(lb->lb == NULL);
+    list_body_p lb = clu_list_body_create();
+    for(uint64_t i=0; i<16; i++)
+        assert(lb->arr[i] == NULL);
+
     free(lb, list_body);
 
     assert(clu_mem_internal_empty());
 }
-
-void test_list_body_create_immed(bool show)
-{
-    printf("\n\t%s", __func__);
-
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = clu_list_body_create_immed(0);
-    assert(lb == NULL);
-
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb = clu_list_body_create_immed(1, HD(1));
-    assert(lb != NULL);
-    assert(lb->h == HD(1));
-    assert(lb->lb == NULL);
-    free(lb, list_body);
-
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    assert(lb != NULL);
-    assert(lb->h == HD(1));
-    assert(lb->lb != NULL);
-    assert(lb->lb->h == HD(2));
-    assert(lb->lb->lb == NULL);
-    free(lb->lb, list_body);
-    free(lb, list_body);
-
-    assert(clu_mem_internal_empty());
-}
-
-void test_list_body_pop(bool show)
-{
-    printf("\n\t%s", __func__);
-
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = clu_list_body_create_immed(1, HD(1));
-    lb = clu_list_body_pop(lb);
-    assert(lb == NULL);
-
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    lb = clu_list_body_pop(lb);
-    assert(clu_list_body_immed(lb, 1, HD(2)));
-
-    assert(clu_mem_internal_empty());
-}
-
-
 
 void test_list_body_insert(bool show)
 {
@@ -124,20 +130,20 @@ void test_list_body_count(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_body_p lb = clu_list_body_create_immed(0);
-    int res = clu_list_body_count(lb);
-    assert(int_t(res, 0));
+    uint64_t res = clu_list_body_count(lb);
+    assert(uint64(res, 0));
     clu_list_body_free(lb);
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     lb = clu_list_body_create_immed(1, HD(1));
     res = clu_list_body_count(lb);
-    assert(int_t(res, 1));
+    assert(uint64(res, 1));
     clu_list_body_free(lb);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     lb = clu_list_body_create_immed(2, HD(1), HD(2));
     res = clu_list_body_count(lb);
-    assert(int_t(res, 2));
+    assert(uint64(res, 2));
     clu_list_body_free(lb);
 
     assert(clu_mem_internal_empty());
@@ -210,10 +216,11 @@ void test_list_body()
 
     bool show = false;
 
-    test_list_body_create(show);
-    test_list_body_create_immed(show);
-    test_list_body_pop(show);
+    test_offset(show);
+    test_get(show);
+    test_set(show);
 
+    test_list_body_create(show);
     test_list_body_insert(show);
     test_list_body_remove(show);
 

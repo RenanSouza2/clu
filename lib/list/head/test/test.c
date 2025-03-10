@@ -62,24 +62,18 @@ void test_list_head_create_variadic(bool show)
         tag_1, 1, HD(1)
     );
     assert(lh != NULL);
-    assert(lh->lb != NULL);
-    assert(lh->lb->h == HD(1));
-    assert(lh->lb->lb == NULL);
+    assert(clu_list_body_immed(lh->lb, 1, HD(1)))
     assert(lh->lh == NULL);
-    clu_list_head_free(&lh);
+    while(lh) lh = clu_list_head_pop(lh);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     lh = clu_list_head_create_immed(1,
         tag_1, 2, HD(1), HD(2)
     );
     assert(lh != NULL);
-    assert(lh->lb != NULL);
-    assert(lh->lb->h == HD(1));
-    assert(lh->lb->lb != NULL);
-    assert(lh->lb->lb->h == HD(2));
-    assert(lh->lb->lb->lb == NULL);
+    assert(clu_list_body_immed(lh->lb, 2, HD(1), HD(2)))
     assert(lh->lh == NULL);
-    clu_list_head_free(&lh);
+    while(lh) lh = clu_list_head_pop(lh);
 
     if(show) printf("\n\t\t%s 4\t\t", __func__);
     lh = clu_list_head_create_immed(2,
@@ -87,14 +81,11 @@ void test_list_head_create_variadic(bool show)
         tag_2, 1, HD(2)
     );
     assert(lh != NULL);
-    assert(lh->lb != NULL);
-    assert(lh->lb->h == HD(1));
-    assert(lh->lb->lb == NULL);
+    assert(clu_list_body_immed(lh->lb, 1, HD(1)));
     assert(lh->lh != NULL);
-    assert(lh->lh->lb->h == HD(2));
-    assert(lh->lh->lb->lb == NULL);
+    assert(clu_list_body_immed(lh->lh->lb, 1, HD(2)));
     assert(lh->lh->lh == NULL);
-    clu_list_head_free(&lh);
+    while(lh) lh = clu_list_head_pop(lh);
 
     assert(clu_mem_internal_empty());
 }
@@ -311,15 +302,15 @@ void test_list_head_count(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_head_p lh = clu_list_head_create_immed(0);
-    int count = clu_list_head_count(lh);
-    assert(int_t(count, 0));
+    uint64_t count = clu_list_head_count(lh);
+    assert(uint64(count, 0));
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     lh = clu_list_head_create_immed(1,
         tag_1, 1, HD(1)
     );
     count = clu_list_head_count(lh);
-    assert(int_t(count, 1));
+    assert(uint64(count, 1));
     clu_list_head_free(&lh);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
@@ -328,7 +319,7 @@ void test_list_head_count(bool show)
         tag_2, 1, HD(2)
     );
     count = clu_list_head_count(lh);
-    assert(int_t(count, 2));
+    assert(uint64(count, 2));
     clu_list_head_free(&lh);
 
     assert(clu_mem_internal_empty());
@@ -357,7 +348,7 @@ void test_list_head_get_body(bool show)
     );
     lb = clu_list_head_get_body(lh, 0);
     assert(lb != NULL);
-    assert(lb->h == HD(1));
+    assert(clu_list_body_contains(lb, HD(1)));
     clu_list_head_free(&lh);
 
     if(show) printf("\n\t\t%s 4\t\t", __func__);
@@ -383,7 +374,7 @@ void test_list_head_get_body(bool show)
     );
     lb = clu_list_head_get_body(lh, 0);
     assert(lb != NULL);
-    assert(lb->h == HD(1));
+    assert(clu_list_body_contains(lb, HD(1)));
     clu_list_head_free(&lh);
 
     if(show) printf("\n\t\t%s 7\t\t", __func__);
@@ -393,7 +384,7 @@ void test_list_head_get_body(bool show)
     );
     lb = clu_list_head_get_body(lh, 1);
     assert(lb != NULL);
-    assert(lb->h == HD(2));
+    assert(clu_list_body_contains(lb, HD(2)));
     clu_list_head_free(&lh);
 
     if(show) printf("\n\t\t%s 8\t\t", __func__);

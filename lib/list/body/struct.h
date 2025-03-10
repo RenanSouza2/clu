@@ -3,10 +3,13 @@
 
 #include "header.h"
 
+#define SIZE 256
+#define CHUNK 8
+#define INDEX_MAX 8
+
 STRUCT(list_body)
 {
-    handler_p h;
-    list_body_p lb;
+    list_body_p arr[SIZE];
 };
 
 #endif

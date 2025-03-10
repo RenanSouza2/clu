@@ -159,7 +159,7 @@ list_body_p clu_list_body_insert_rec_2(handler_p h, uint64_t index)
 
     if(index < 64)
         lb->arr[GET(h, index)] = clu_list_body_insert_rec_2(h, index + 1);
-    
+
     return lb;
 }
 

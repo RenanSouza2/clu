@@ -44,7 +44,7 @@ void test_set(bool show)
 {
     printf("\n\t%s", __func__);
 
-    
+
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     handler_p h = HD(0);
     handler_p h_res = SET(h, 15, 0xf);

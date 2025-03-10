@@ -12,25 +12,25 @@ void test_offset(bool show)
     printf("\n\t%s", __func__);
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    uint64_t res = OFFSET(15);
+    uint64_t res = OFFSET(7);
     assert(uint64(res, 0));
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     res = OFFSET(0);
-    assert(uint64(res, 60));
+    assert(uint64(res, 56));
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     res = OFFSET(5);
-    assert(uint64(res, 40));
+    assert(uint64(res, 16));
 }
 
 void test_get(bool show)
 {
     printf("\n\t%s", __func__);
 
-    handler_p h = HD(0x0123456789abcdef);
+    handler_p h = HD(0x0001020304050607);
 
-    for(uint64_t index=0; index<16; index++)
+    for(uint64_t index=0; index<7; index++)
     {
         if(show) printf("\n\t\t%s " U64P(2) "\t\t", __func__, index + 1);
         uint64_t key = GET(h, index);
@@ -47,13 +47,13 @@ void test_set(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     handler_p h = HD(0);
-    handler_p h_res = SET(h, 15, 0xf);
+    handler_p h_res = SET(h, 7, 0xf);
     assert(h_res == HD(0xf));
 
-    // if(show) printf("\n\t\t%s 2\t\t", __func__);
-    // h = HD(0);
-    // h_res = SET(h, 0, 0xf);
-    // assert(h_res == HD(0xf000000000000000));
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    h = HD(0);
+    h_res = SET(h, 0, 0xf);
+    assert(h_res == HD(0x0f00000000000000));
 
     assert(clu_mem_internal_empty());
 }

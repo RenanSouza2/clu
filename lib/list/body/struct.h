@@ -3,9 +3,9 @@
 
 #include "header.h"
 
-#define SIZE 16
-#define CHUNK 4
-#define INDEX_MAX 16
+#define SIZE 256
+#define CHUNK 8
+#define INDEX_MAX 8
 
 STRUCT(list_body)
 {

@@ -52,8 +52,8 @@ void test_set(bool show)
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     h = HD(0);
-    h_res = SET(h, 0, 0xf);
-    assert(h_res == HD(0x0f00000000000000));
+    h_res = SET(h, 0, 0xab);
+    assert(h_res == HD(0xab00000000000000));
 
     assert(clu_mem_internal_empty());
 }
@@ -214,7 +214,7 @@ void test_list_body()
 {
     printf("\n%s", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_offset(show);
     test_get(show);

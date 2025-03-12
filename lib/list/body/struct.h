@@ -9,6 +9,7 @@
 
 STRUCT(list_body)
 {
+    handler_p h;
     list_body_p arr[SIZE];
 };
 

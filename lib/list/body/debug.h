@@ -24,6 +24,4 @@ bool clu_list_body_immed(list_body_p lb, ...);
 #define GET(HANDLER, INDEX) ((U64(HANDLER) >> OFFSET(INDEX)) & U64(0xff))
 #define SET(HANDLER, INDEX, KEY) ((handler_p)((U64(HANDLER) & ~(U64(0xff) << OFFSET(INDEX))) | U64(KEY) << OFFSET(INDEX)))
 
-list_body_p clu_list_body_pop(list_body_p lb);
-
 #endif

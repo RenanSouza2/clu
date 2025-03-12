@@ -144,7 +144,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 
 
 
-void clu_mem_report_inner(char tag[], bool full)
+void clu_mem_report_opts(char tag[], bool full)
 {
     printf("\n----------------------");
     clu_list_head_report(lh_root_allocated, tag, full);
@@ -153,12 +153,12 @@ void clu_mem_report_inner(char tag[], bool full)
 
 void clu_mem_report(char tag[])
 {
-    clu_mem_report_inner(tag, false);
+    clu_mem_report_opts(tag, false);
 }
 
 void clu_mem_report_full(char tag[])
 {
-    clu_mem_report_inner(tag, true);
+    clu_mem_report_opts(tag, true);
 }
 
 
@@ -186,7 +186,7 @@ bool clu_mem_empty()
 {
     if(lh_root_allocated)
     {
-        clu_mem_report("ASSERT FAIL");
+        clu_mem_report("ASSERT EMPTY FAIL");
         return false;
     }
 

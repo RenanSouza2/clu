@@ -171,14 +171,15 @@ uint64_t clu_get_count_x()
 uint64_t clu_get_count_y(uint64_t x)
 {
     list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
-    return clu_list_body_count(lb);
+    return lb ? clu_list_body_count(lb) : 0;
 }
 
-handler_p clu_mem_get_pointer(uint64_t x, uint64_t y)
+handler_p clu_get_pointer(uint64_t x, uint64_t y)
 {
     list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
-    return clu_list_body_get_handler(lb, y);
+    return lb ? clu_list_body_get_handler(lb, y) : NULL;
 }
+
 
 
 bool clu_mem_empty()

@@ -21,7 +21,7 @@ void clu_mem_report_full(char tag[]);
 
 uint64_t clu_get_count_x();
 uint64_t clu_get_count_y(uint64_t x);
-handler_p clu_mem_get_pointer(uint64_t x, uint64_t y);
+handler_p clu_get_pointer(uint64_t x, uint64_t y);
 
 bool clu_mem_empty();
 bool clu_is_allocated(handler_p h);

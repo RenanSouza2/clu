@@ -163,6 +163,24 @@ void clu_mem_report_full(char tag[])
 
 
 
+uint64_t clu_get_count_x()
+{
+    return clu_list_head_count(lh_root_allocated);
+}
+
+uint64_t clu_get_count_y(uint64_t x)
+{
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
+    return clu_list_body_count(lb);
+}
+
+handler_p clu_mem_get_pointer(uint64_t x, uint64_t y)
+{
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
+    return clu_list_body_get_handler(lb, y);
+}
+
+
 bool clu_mem_empty()
 {
     if(lh_root_allocated)
@@ -174,25 +192,6 @@ bool clu_mem_empty()
     clu_list_head_free(&lh_root_freed);
     return true;
 }
-
-int clu_mem_count_x()
-{
-    return clu_list_head_count(lh_root_allocated);
-}
-
-int clu_mem_count_y(int x)
-{
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
-    return clu_list_body_count(lb);
-}
-
-handler_p clu_mem_get_pointer(int x, int y)
-{
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
-    return clu_list_body_get_handler(lb, y);
-}
-
-
 
 bool clu_is_allocated(handler_p h)
 {

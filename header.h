@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "./utils/assert.h"
 
@@ -18,9 +19,11 @@ void clu_handler_free(handler_p h, char format[], ...);
 void clu_mem_report(char tag[]);
 void clu_mem_report_full(char tag[]);
 
+uint64_t clu_get_count_x();
+uint64_t clu_get_count_y(uint64_t x);
+handler_p clu_mem_get_pointer(uint64_t x, uint64_t y);
+
 bool clu_mem_empty();
-int clu_mem_count(int x);
-handler_p clu_mem_get_pointer(int x, int y);
 bool clu_is_allocated(handler_p h);
 bool clu_is_safe(handler_p h);
 bool clu_is_freed(handler_p h);

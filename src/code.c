@@ -144,6 +144,22 @@ void clu_handler_free(handler_p h, char format[], ...)
 
 
 
+void clu_handler_register(handler_p h, char format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    clu_handler_allocate(h, format, args, 1, "custom");
+}
+
+void clu_handler_unregister(handler_p h, char format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    clu_handler_deallocate(h, format, args);
+}
+
+
+
 void clu_mem_report_opts(char tag[], bool full)
 {
     printf("\n----------------------");
@@ -174,7 +190,7 @@ uint64_t clu_get_count_y(uint64_t x)
     return lb ? clu_list_body_count(lb) : 0;
 }
 
-handler_p clu_get_pointer(uint64_t x, uint64_t y)
+handler_p clu_get_handler(uint64_t x, uint64_t y)
 {
     list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
     return lb ? clu_list_body_get_handler(lb, y) : NULL;

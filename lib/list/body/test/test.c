@@ -104,7 +104,7 @@ void test_list_body_remove(bool show)
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_body_p lb = clu_list_body_create_immed(0);
     bool res = clu_list_body_remove(&lb, HD(1));
-    assert(clu_list_body_remove(&lb, HD(1)) == false);
+    assert(res == false);
     assert(clu_list_body_immed(lb, 0));
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
@@ -118,6 +118,12 @@ void test_list_body_remove(bool show)
     res = clu_list_body_remove(&lb, HD(1));
     assert(res == true);
     assert(clu_list_body_immed(lb, 0));
+
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    lb = clu_list_body_create_immed(2, HD(1), HD(2));
+    res = clu_list_body_remove(&lb, HD(1));
+    assert(res == true);
+    assert(clu_list_body_immed(lb, 1, HD(2)));
 
     assert(clu_mem_internal_empty());
 }

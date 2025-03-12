@@ -463,7 +463,7 @@ void test_list_head()
 {
     printf("\n%s", __func__);
 
-    bool show = false;
+    bool show = true;
 
     test_list_head_create(show);
     test_list_head_pop(show);

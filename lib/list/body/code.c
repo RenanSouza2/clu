@@ -74,10 +74,28 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
         return false;
     }
 
-    if(lb_1->h != lb_2->h)
+    if(lb_1->h != NULL)
     {
-        printf("\n\n\tCLU LIST BODY ASSERT ERROR\t| POINTER H MISMATCH | %p %p", lb_1->h, lb_2->h);
-        return false;
+        for(uint64_t i=0; i<16; i++)
+        if(lb_1->arr[i])
+        {
+            printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
+            return false;
+        }
+
+        if(lb_1->h != lb_2->h)
+        {
+            printf("\n\n\tLIST BODY ASSERT ERROR\t| POINTER H MISMATCH | %p %p", lb_1->h, lb_2->h);
+            return false;
+        }
+
+        return true;
+    }
+
+    if(lb_2->h != NULL)
+    {
+        uint64_t key = GET(lb_2->h, index);
+        return clu_list_body_str_rec(lb_1->arr[key], lb_2, SET(h, index, key), index + 1);
     }
 
     for(uint64_t i=0; i<16; i++)

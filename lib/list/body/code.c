@@ -74,6 +74,30 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
         return false;
     }
 
+    if(lb_1->h != NULL)
+    {
+        for(uint64_t i=0; i<16; i++)
+        if(lb_1->arr[i])
+        {
+            printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
+            return false;
+        }
+
+        if(lb_1->h != lb_2->h)
+        {
+            printf("\n\n\tLIST BODY ASSERT ERROR\t| POINTER H MISMATCH | %p %p", lb_1->h, lb_2->h);
+            return false;
+        }
+
+        return true;
+    }
+
+    if(lb_2->h != NULL)
+    {
+        uint64_t key = GET(lb_2->h, index);
+        return clu_list_body_str_rec(lb_1->arr[key], lb_2, SET(h, index, key), index + 1);
+    }
+
     for(uint64_t i=0; i<16; i++)
         if(!clu_list_body_str_rec(lb_1->arr[i], lb_2->arr[i], SET(h, index, i), index + 1))
             return false;
@@ -109,34 +133,31 @@ bool clu_list_body_immed(list_body_p lb, ...)
 
 
 
-void clu_list_body_display_rec(list_body_p lb, handler_p h, uint64_t index)
+void clu_list_body_display(list_body_p lb)
 {
     if(lb == NULL)
         return;
 
-    if(index == INDEX_MAX)
+    if(lb->h)
     {
-        printf("\n\t%p\t", h);
+        printf("\n\t%p\t", lb->h);
         return;
     }
 
     for(uint64_t i=0; i<SIZE; i++)
-        clu_list_body_display_rec(lb->arr[i], SET(h, index, i), index + 1);
-}
-
-void clu_list_body_display(list_body_p lb)
-{
-    clu_list_body_display_rec(lb, NULL, 0);
+        clu_list_body_display(lb->arr[i]);
 }
 
 
 
-list_body_p clu_list_body_create()
+
+list_body_p clu_list_body_create(handler_p h)
 {
     list_body_p lb = calloc(1, sizeof(list_body_t));
     assert(lb);
     INC(list_body);
 
+    lb->h = h;
     return lb;
 }
 
@@ -153,45 +174,35 @@ void clu_list_body_free(list_body_p lb)
 
 
 
-list_body_p clu_list_body_insert_rec_2(handler_p h, uint64_t index)
-{
-    list_body_p lb = clu_list_body_create();
-
-    if(index < INDEX_MAX)
-        lb->arr[GET(h, index)] = clu_list_body_insert_rec_2(h, index + 1);
-
-    return lb;
-}
-
-bool clu_list_body_insert_rec_1(list_body_p *lb_root, handler_p h, uint64_t index)
+bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 {
     assert(lb_root);
 
     list_body_p lb = *lb_root;
     uint64_t key = GET(h, index);
 
-    if(index == INDEX_MAX)
+    if(lb == NULL)
     {
-        if(lb != NULL)
-            return false;
-
-        *lb_root = clu_list_body_create();
+        *lb_root = lb = clu_list_body_create(h);
         return true;
     }
 
-    if(lb != NULL)
-        return clu_list_body_insert_rec_1(&lb->arr[key], h, index + 1);
+    if(lb->h)
+    {
+        if(lb->h == h)
+            return false;
 
-    *lb_root = lb = clu_list_body_create();
-    lb->arr[key] = clu_list_body_insert_rec_2(h, index + 1);
-    return true;
+        assert(clu_list_body_insert_rec(&lb->arr[GET(lb->h, index)], lb->h, index + 1));
+        lb->h = NULL;
+    }
+
+    return clu_list_body_insert_rec(&lb->arr[key], h, index + 1);
 }
 
 bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
 {
-    return clu_list_body_insert_rec_1(lb_root, h, 0);
+    return clu_list_body_insert_rec(lb_root, h, 0);
 }
-
 
 bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 {
@@ -201,8 +212,11 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
     if(lb == NULL)
         return false;
 
-    if(index == INDEX_MAX)
+    if(lb->h)
     {
+        if(lb->h != h)
+            return false;
+
         free(lb, list_body);
         *lb_root = NULL;
         return true;
@@ -229,38 +243,39 @@ bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 
 
 
-uint64_t clu_list_body_count_res(list_body_p lb, uint64_t index)
+uint64_t clu_list_body_count(list_body_p lb)
 {
     if(lb == NULL)
         return 0;
 
-    if(index == INDEX_MAX)
+    if(lb->h)
         return 1;
 
     uint64_t count = 0;
     for(uint64_t i=0; i<SIZE; i++)
-        count += clu_list_body_count_res(lb->arr[i], index + 1);
+        count += clu_list_body_count(lb->arr[i]);
 
     return count;
 }
 
-uint64_t clu_list_body_count(list_body_p lb)
-{
-    return clu_list_body_count_res(lb, 0);
-}
-
-handler_p clu_list_body_get_handler_rec(list_body_p lb, int y, handler_p h, uint64_t index, bool revert)
+handler_p clu_list_body_get_handler_rec(list_body_p lb, int y, uint64_t index, bool revert)
 {
     assert(lb);
 
-    if(index == INDEX_MAX)
-        return h;
+    if(lb->h)
+    {
+        if(y == 0)
+            return lb->h;
+
+        assert(!revert);
+        return NULL;
+    }
 
     for(uint64_t i=0; i<SIZE; i++)
     {
-        uint64_t count = clu_list_body_count_res(lb->arr[i], index + 1);
+        uint64_t count = clu_list_body_count(lb->arr[i]);
         if(y < count)
-            return clu_list_body_get_handler_rec(lb->arr[i], y, SET(h, index, i),index + 1, true);
+            return clu_list_body_get_handler_rec(lb->arr[i], y, index + 1, true);
 
         y -= count;
     }
@@ -273,7 +288,7 @@ handler_p clu_list_body_get_handler(list_body_p lb, int y)
 {
     assert(lb);
 
-    return clu_list_body_get_handler_rec(lb, y, NULL, 0, false);
+    return clu_list_body_get_handler_rec(lb, y, 0, false);
 }
 
 bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
@@ -281,8 +296,8 @@ bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
     if(lb == NULL)
         return false;
 
-    if(index == INDEX_MAX)
-        return true;
+    if(lb->h)
+        return lb->h == h;
 
     return clu_list_body_contains_rec(lb->arr[GET(h, index)], h, index + 1);
 }

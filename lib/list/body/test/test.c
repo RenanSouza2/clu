@@ -12,25 +12,25 @@ void test_offset(bool show)
     printf("\n\t%s", __func__);
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    uint64_t res = OFFSET(7);
-    assert(uint64(res, 0));
+    uint64_t res = OFFSET(15);
+    assert(uint64(res, 60));
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     res = OFFSET(0);
-    assert(uint64(res, 56));
+    assert(uint64(res, 0));
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     res = OFFSET(5);
-    assert(uint64(res, 16));
+    assert(uint64(res, 20));
 }
 
 void test_get(bool show)
 {
     printf("\n\t%s", __func__);
 
-    handler_p h = HD(0x0001020304050607);
+    handler_p h = HD(0xfedcba9876543210);
 
-    for(uint64_t index=0; index<7; index++)
+    for(uint64_t index=0; index<16; index++)
     {
         if(show) printf("\n\t\t%s " U64P(2) "\t\t", __func__, index + 1);
         uint64_t key = GET(h, index);
@@ -47,13 +47,13 @@ void test_set(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     handler_p h = HD(0);
-    handler_p h_res = SET(h, 7, 0xf);
-    assert(h_res == HD(0xf));
+    handler_p h_res = SET(h, 15, 0xa);
+    assert(h_res == HD(0xa000000000000000));
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     h = HD(0);
-    h_res = SET(h, 0, 0xab);
-    assert(h_res == HD(0xab00000000000000));
+    h_res = SET(h, 0, 0xb);
+    assert(h_res == HD(0xb));
 
     assert(clu_mem_internal_empty());
 }
@@ -104,7 +104,7 @@ void test_list_body_remove(bool show)
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_body_p lb = clu_list_body_create_immed(0);
     bool res = clu_list_body_remove(&lb, HD(1));
-    assert(clu_list_body_remove(&lb, HD(1)) == false);
+    assert(res == false);
     assert(clu_list_body_immed(lb, 0));
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
@@ -118,6 +118,12 @@ void test_list_body_remove(bool show)
     res = clu_list_body_remove(&lb, HD(1));
     assert(res == true);
     assert(clu_list_body_immed(lb, 0));
+
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    lb = clu_list_body_create_immed(2, HD(1), HD(2));
+    res = clu_list_body_remove(&lb, HD(1));
+    assert(res == true);
+    assert(clu_list_body_immed(lb, 1, HD(2)));
 
     assert(clu_mem_internal_empty());
 }

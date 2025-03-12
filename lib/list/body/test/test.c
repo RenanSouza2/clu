@@ -220,7 +220,7 @@ void test_list_body()
 {
     printf("\n%s", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_offset(show);
     test_get(show);

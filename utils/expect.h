@@ -8,6 +8,7 @@
 #define EXPECT                                          \
     {                                                   \
         int pid = fork();                               \
+        asseert(fork >= 0);                             \
         if(pid)                                         \
         {                                               \
             int status;                                 \

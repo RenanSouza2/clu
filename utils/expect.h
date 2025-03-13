@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#define TEST_REVERT_OPEN                                \
+#define EXPECT                                          \
     {                                                   \
         int pid = fork();                               \
         if(pid)                                         \
@@ -19,7 +19,7 @@
             assert(freopen("/dev/null", "w", stdout));  \
             assert(freopen("/dev/null", "w", stderr));
 
-#define TEST_REVERT_CLOSE   \
+#define TO_REVERT           \
             exit(0);        \
         }                   \
     }

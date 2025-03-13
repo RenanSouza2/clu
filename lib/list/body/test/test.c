@@ -63,7 +63,8 @@ void test_list_body_create(bool show)
     printf("\n\t%s", __func__);
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = clu_list_body_create();
+    list_body_p lb = clu_list_body_create(HD(1));
+    assert(lb->h == HD(1));
     for(uint64_t i=0; i<16; i++)
         assert(lb->arr[i] == NULL);
 

@@ -10,7 +10,6 @@ PLACEHOLDER(list_body);
 
 void clu_list_body_display(list_body_p lb);
 
-list_body_p clu_list_body_create();
 void clu_list_body_free(list_body_p lb);
 
 bool clu_list_body_insert(list_body_p *lb_root, handler_p h);

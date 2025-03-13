@@ -19,4 +19,6 @@ bool clu_list_body_immed(list_body_p lb, ...);
 
 #endif
 
+list_body_p clu_list_body_create(handler_p h);
+
 #endif

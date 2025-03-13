@@ -8,7 +8,7 @@
 #define TEST_REVERT_OPEN                                \
     {                                                   \
         int pid = fork();                               \
-        asseert(fork >= 0);                             \
+        assert(fork >= 0);                              \
         if(pid)                                         \
         {                                               \
             int status;                                 \

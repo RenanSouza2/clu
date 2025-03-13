@@ -258,7 +258,7 @@ uint64_t clu_list_body_count(list_body_p lb)
     return count;
 }
 
-handler_p clu_list_body_get_handler_rec(list_body_p lb, int y, uint64_t index, bool revert)
+handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t y, uint64_t index, bool revert)
 {
     assert(lb);
 
@@ -284,7 +284,7 @@ handler_p clu_list_body_get_handler_rec(list_body_p lb, int y, uint64_t index, b
     return NULL;
 }
 
-handler_p clu_list_body_get_handler(list_body_p lb, int y)
+handler_p clu_list_body_get_handler(list_body_p lb, uint64_t y)
 {
     assert(lb);
 

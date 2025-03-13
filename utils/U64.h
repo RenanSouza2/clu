@@ -2,6 +2,8 @@
 
 #ifdef __linux__
 
+#include <stdint.h>
+
 #define U64P(C) "%" #C "lu"
 #define U64PX "%016lx"
 

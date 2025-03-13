@@ -1,17 +1,19 @@
 #include <stdio.h>
 
+#include "../../utils/U64.h"
+
 #include "header.h"
 
 #ifdef DEBUG
 
-int list_head_alive;
-int list_body_alive;
+uint64_t list_head_alive;
+uint64_t list_body_alive;
 
 void clu_mem_internal_display()
 {
     printf("\n");
-    printf("\n\tlist_head_alive: %d", list_head_alive);
-    printf("\n\tlist_body_alive: %d", list_body_alive);
+    printf("\n\tlist_head_alive: " U64P() "", list_head_alive);
+    printf("\n\tlist_body_alive: " U64P() "", list_body_alive);
     printf("\n");
 }
 

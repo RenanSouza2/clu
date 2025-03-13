@@ -165,6 +165,7 @@ void clu_mem_report_opts(char tag[], bool full)
     printf("\n----------------------");
     clu_list_head_report(lh_root_allocated, tag, full);
     printf("\n----------------------");
+    printf("\n");
 }
 
 void clu_mem_report(char tag[])

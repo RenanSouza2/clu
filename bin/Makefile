@@ -1,4 +1,4 @@
-FLAGS = -c -Wall -Wextra -Werror -Wfatal-errors -O3 -O3
+FLAGS = -c -Wall -Wextra -Werror -Wfatal-errors -O3
 
 OBJ = ../lib/lib.o
 SRC = ../src/code.o

@@ -2,8 +2,9 @@
 
 #include "../debug.h"
 #include "../../../mem/header.h"
-#include "../../../../utils/assert.h"
 #include "../../../../utils/U64.h"
+#include "../../../../utils/assert.h"
+#include "../../../../utils/test_revert.h"
 
 
 
@@ -11,17 +12,18 @@ void test_offset(bool show)
 {
     printf("\n\t%s", __func__);
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    uint64_t res = OFFSET(15);
-    assert(uint64(res, 60));
+    #define TEST_OFFSET(TAG, IN, RES)   \
+    {   \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        uint64_t res = OFFSET(IN);  \
+        assert(uint64(res, RES));   \
+    }
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    res = OFFSET(0);
-    assert(uint64(res, 0));
+    TEST_OFFSET(1, 15, 60);
+    TEST_OFFSET(2, 0, 0);
+    TEST_OFFSET(3, 5, 20);
 
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    res = OFFSET(5);
-    assert(uint64(res, 20));
+    #undef TEST_OFFSET
 }
 
 void test_get(bool show)
@@ -95,6 +97,17 @@ void test_list_body_insert(bool show)
     assert(res == false);
     assert(clu_list_body_immed(lb, 1, HD(1)));
 
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    TEST_REVERT_OPEN
+    clu_list_body_insert(&lb, HD(1));
+    TEST_REVERT_CLOSE
+
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    lb = clu_list_body_create_immed(0);
+    TEST_REVERT_OPEN
+    clu_list_body_insert(&lb, NULL);
+    TEST_REVERT_CLOSE
+
     assert(clu_mem_internal_empty());
 }
 
@@ -125,6 +138,17 @@ void test_list_body_remove(bool show)
     res = clu_list_body_remove(&lb, HD(1));
     assert(res == true);
     assert(clu_list_body_immed(lb, 1, HD(2)));
+
+    if(show) printf("\n\t\t%s 5\t\t", __func__);
+    TEST_REVERT_OPEN
+    clu_list_body_remove(NULL, HD(1));
+    TEST_REVERT_CLOSE
+
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    lb = clu_list_body_create_immed(0);
+    TEST_REVERT_OPEN
+    clu_list_body_remove(&lb, NULL);
+    TEST_REVERT_CLOSE
 
     assert(clu_mem_internal_empty());
 }
@@ -162,35 +186,35 @@ void test_list_body_get_handler(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = clu_list_body_create_immed(1, HD(1));
+    #define TEST_LIST_BODY_GET_HANDLER(TAG, INDEX, RES, ...)        \
+    {                                                               \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);          \
+        list_body_p lb = clu_list_body_create_immed(__VA_ARGS__);   \
+        handler_p h = clu_list_body_get_handler(lb, INDEX);         \
+        assert(h == RES);                                           \
+        clu_list_body_free(lb);                                     \
+    }
+
+    TEST_LIST_BODY_GET_HANDLER(1, 0, HD(1), 1, HD(1));
+    TEST_LIST_BODY_GET_HANDLER(2, 1, NULL, 1, HD(1));
+    TEST_LIST_BODY_GET_HANDLER(3, 0, HD(1), 2, HD(1), HD(2));
+    TEST_LIST_BODY_GET_HANDLER(4, 1, HD(2), 2, HD(1), HD(2));
+    TEST_LIST_BODY_GET_HANDLER(5, 2, NULL, 2, HD(1), HD(2));
+    TEST_LIST_BODY_GET_HANDLER(6, 3, NULL, 2, HD(1), HD(2));
+
+    #undef TEST_LIST_BODY_GET_HANDLER
+
+    if(show) printf("\n\t\t%s 7\t\t", __func__);
+    list_body_p lb = clu_list_body_create_immed(2, HD(1), HD(2));
+    assert(clu_list_body_remove(&lb, HD(2)));
     handler_p h = clu_list_body_get_handler(lb, 0);
     assert(h == HD(1));
     clu_list_body_free(lb);
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb = clu_list_body_create_immed(1, HD(1));
-    h = clu_list_body_get_handler(lb, 1);
-    assert(h == NULL);
-    clu_list_body_free(lb);
-
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    h = clu_list_body_get_handler(lb, 0);
-    assert(h == HD(1));
-    clu_list_body_free(lb);
-
-    if(show) printf("\n\t\t%s 4\t\t", __func__);
-    lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    h = clu_list_body_get_handler(lb, 1);
-    assert(h == HD(2));
-    clu_list_body_free(lb);
-
-    if(show) printf("\n\t\t%s 5\t\t", __func__);
-    lb = clu_list_body_create_immed(2, HD(1), HD(2));
-    h = clu_list_body_get_handler(lb, 2);
-    assert(h == NULL);
-    clu_list_body_free(lb);
+    if(show) printf("\n\t\t%s 8\t\t", __func__);
+    TEST_REVERT_OPEN
+    clu_list_body_get_handler(NULL, 0);
+    TEST_REVERT_CLOSE
 
     assert(clu_mem_internal_empty());
 }

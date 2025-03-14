@@ -5,6 +5,7 @@
 #include "../../../mem/header.h"
 #include "../../../tag/debug.h"
 #include "../../../../utils/assert.h"
+#include "../../../../utils/test_revert.h"
 
 
 
@@ -15,9 +16,9 @@ void test_list_head_create(bool show)
     tag_t tag = clu_tag_format("test");
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create(&tag, LB(1));
+    list_head_p lh = clu_list_head_create(&tag);
     assert(clu_tag(&lh->tag, &tag));
-    assert(lh->lb == LB(1));
+    assert(lh->lb == NULL);
     assert(lh->lh == NULL);
     free(lh, list_head);
 
@@ -31,17 +32,24 @@ void test_list_head_pop(bool show)
     tag_t tag = clu_tag_format("test");
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create(&tag, LB(1));
+    list_head_p lh = clu_list_head_create(&tag);
     lh = clu_list_head_pop(lh);
     assert(lh == NULL);
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lh = clu_list_head_create(&tag, LB(1));
-    lh->lh = clu_list_head_create(&tag, LB(2));
+    lh = clu_list_head_create(&tag);
+    lh->lb = LB(1);
+    lh->lh = clu_list_head_create(&tag);
+    lh->lh->lb = LB(2);
     lh = clu_list_head_pop(lh);
     assert(lh != NULL);
     assert(lh->lb == LB(2));
     free(lh, list_head);
+    
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    TEST_REVERT_OPEN
+    clu_list_head_pop(NULL);
+    TEST_REVERT_CLOSE
 
     assert(clu_mem_internal_empty());
 }
@@ -90,21 +98,6 @@ void test_list_head_create_variadic(bool show)
     assert(clu_mem_internal_empty());
 }
 
-void test_list_head_create_handler(bool show)
-{
-    printf("\n\t%s\t\t", __func__);
-
-    tag_t tag = clu_tag_format("test");
-
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create_handler(&tag, HD(1));
-    assert(clu_list_head_immed(lh, 1,
-        tag, 1, HD(1)
-    ));
-
-    assert(clu_mem_internal_empty());
-}
-
 
 
 void test_list_head_insert(bool show)
@@ -114,7 +107,7 @@ void test_list_head_insert(bool show)
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    if(show) printf("\n\t\t%s  1\t\t", __func__);
     list_head_p lh = clu_list_head_create_immed(0);
     bool res = clu_list_head_insert(&lh, &tag_1, HD(1));
     assert(res == true);
@@ -122,7 +115,7 @@ void test_list_head_insert(bool show)
         tag_1, 1, HD(1)
     ));
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    if(show) printf("\n\t\t%s  2\t\t", __func__);
     lh = clu_list_head_create_immed(1,
         tag_1, 1, HD(1)
     );
@@ -132,7 +125,7 @@ void test_list_head_insert(bool show)
         tag_1, 1, HD(1)
     ));
 
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    if(show) printf("\n\t\t%s  3\t\t", __func__);
     lh = clu_list_head_create_immed(1,
         tag_1, 1, HD(1)
     );
@@ -142,7 +135,7 @@ void test_list_head_insert(bool show)
         tag_1, 2, HD(1), HD(2)
     ));
 
-    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    if(show) printf("\n\t\t%s  4\t\t", __func__);
     lh = clu_list_head_create_immed(1,
         tag_1, 2, HD(1), HD(2)
     );
@@ -153,7 +146,7 @@ void test_list_head_insert(bool show)
         tag_2, 1, HD(3)
     ));
 
-    if(show) printf("\n\t\t%s 5\t\t", __func__);
+    if(show) printf("\n\t\t%s  5\t\t", __func__);
     lh = clu_list_head_create_immed(2,
         tag_1, 2, HD(1), HD(2),
         tag_2, 1, HD(3)
@@ -165,7 +158,7 @@ void test_list_head_insert(bool show)
         tag_2, 1, HD(3)
     ));
 
-    if(show) printf("\n\t\t%s 6\t\t", __func__);
+    if(show) printf("\n\t\t%s  6\t\t", __func__);
     lh = clu_list_head_create_immed(2,
         tag_1, 3, HD(1), HD(2), HD(4),
         tag_2, 1, HD(3)
@@ -177,7 +170,7 @@ void test_list_head_insert(bool show)
         tag_2, 2, HD(3), HD(5)
     ));
 
-    if(show) printf("\n\t\t%s 7\t\t", __func__);
+    if(show) printf("\n\t\t%s  7\t\t", __func__);
     lh = clu_list_head_create_immed(2,
         tag_1, 3, HD(1), HD(2), HD(4),
         tag_2, 2, HD(3), HD(5)
@@ -188,6 +181,23 @@ void test_list_head_insert(bool show)
         tag_1, 3, HD(1), HD(2), HD(4),
         tag_2, 2, HD(3), HD(5)
     ));
+
+    if(show) printf("\n\t\t%s  8\t\t", __func__);
+    TEST_REVERT_OPEN
+    clu_list_head_insert(NULL, &tag_1, HD(1));
+    TEST_REVERT_CLOSE
+
+    if(show) printf("\n\t\t%s  9\t\t", __func__);
+    lh = clu_list_head_create_immed(0);
+    TEST_REVERT_OPEN
+    clu_list_head_insert(&lh, NULL, HD(1));
+    TEST_REVERT_CLOSE
+
+    if(show) printf("\n\t\t%s 10\t\t", __func__);
+    lh = clu_list_head_create_immed(0);
+    TEST_REVERT_OPEN
+    clu_list_head_insert(&lh, &tag_1, NULL);
+    TEST_REVERT_CLOSE
 
     assert(clu_mem_internal_empty());
 }
@@ -280,13 +290,24 @@ void test_list_head_remove(bool show)
         tag_2, 1, HD(3)
     ));
 
-    if(show) printf("\n\t\t%s 6", __func__);
+    if(show) printf("\n\t\t%s 7", __func__);
     lh = clu_list_head_create_immed(1,
         tag_2, 1, HD(3)
     );
     res = clu_list_head_remove(&lh, HD(3));
     assert(res == true);
     assert(lh == NULL);
+    
+    if(show) printf("\n\t\t%s 8", __func__);
+    TEST_REVERT_OPEN
+    clu_list_head_remove(NULL, HD(1));
+    TEST_REVERT_CLOSE
+    
+    if(show) printf("\n\t\t%s 9", __func__);
+    lh = clu_list_head_create_immed(0);
+    TEST_REVERT_OPEN
+    clu_list_head_remove(&lh, NULL);
+    TEST_REVERT_CLOSE
 
     assert(clu_mem_internal_empty());
 }
@@ -469,7 +490,6 @@ void test_list_head()
     test_list_head_pop(show);
     test_list_head_create_variadic(show);
 
-    test_list_head_create_handler(show);
     test_list_head_insert(show);
     test_list_head_remove(show);
 

@@ -176,8 +176,6 @@ void clu_list_body_free(list_body_p lb)
 
 bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 {
-    assert(lb_root);
-
     list_body_p lb = *lb_root;
     uint64_t key = GET(h, index);
 
@@ -201,13 +199,14 @@ bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 
 bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
 {
+    assert(lb_root);
+    assert(h);    
+
     return clu_list_body_insert_rec(lb_root, h, 0);
 }
 
 bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 {
-    assert(lb_root);
-
     list_body_p lb = *lb_root;
     if(lb == NULL)
         return false;
@@ -237,6 +236,7 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
+    assert(h);
 
     return clu_list_body_remove_rec(lb_root, h, 0);
 }
@@ -258,13 +258,13 @@ uint64_t clu_list_body_count(list_body_p lb)
     return count;
 }
 
-handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t y, uint64_t index, bool revert)
+handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, uint64_t index, bool revert)
 {
     assert(lb);
 
     if(lb->h)
     {
-        if(y == 0)
+        if(j == 0)
             return lb->h;
 
         assert(!revert);
@@ -274,21 +274,21 @@ handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t y, uint64_t ind
     for(uint64_t i=0; i<SIZE; i++)
     {
         uint64_t count = clu_list_body_count(lb->arr[i]);
-        if(y < count)
-            return clu_list_body_get_handler_rec(lb->arr[i], y, index + 1, true);
+        if(j < count)
+            return clu_list_body_get_handler_rec(lb->arr[i], j, index + 1, true);
 
-        y -= count;
+        j -= count;
     }
 
     assert(!revert);
     return NULL;
 }
 
-handler_p clu_list_body_get_handler(list_body_p lb, uint64_t y)
+handler_p clu_list_body_get_handler(list_body_p lb, uint64_t j)
 {
     assert(lb);
 
-    return clu_list_body_get_handler_rec(lb, y, 0, false);
+    return clu_list_body_get_handler_rec(lb, j, 0, false);
 }
 
 bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)

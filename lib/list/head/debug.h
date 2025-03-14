@@ -13,8 +13,7 @@ bool clu_list_head_immed(list_head_p lh, uint64_t n, ...);
 
 #endif
 
-list_head_p clu_list_head_create(tag_p tag, list_body_p lb);
-list_head_p clu_list_head_create_handler(tag_p tag, handler_p h);
+list_head_p clu_list_head_create(tag_p tag);
 list_head_p clu_list_head_pop(list_head_p lh);
 
 #endif

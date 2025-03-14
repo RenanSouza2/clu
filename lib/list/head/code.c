@@ -15,9 +15,10 @@
 list_head_p clu_list_head_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
-    list_body_p lb = clu_list_body_create_variadic(args);
-    assert(lb);
-    return clu_list_head_create(&tag, lb);
+    list_head_p lh = clu_list_head_create(&tag);
+    lh->lb = clu_list_body_create_variadic(args);
+    assert(lh->lb);
+    return lh;
 }
 
 list_head_p clu_list_head_create_variadic(uint64_t n, va_list *args)
@@ -120,33 +121,20 @@ void clu_list_head_report(list_head_p lh, char tag[], bool full)
 
 
 
-list_head_p clu_list_head_create(tag_p tag, list_body_p lb)
+list_head_p clu_list_head_create(tag_p tag)
 {
     list_head_p lh = calloc(1, sizeof(list_head_t));
     assert(lh);
     INC(list_head);
 
-    *lh = (list_head_t)
-    {
-        .tag = *tag,
-        .lb = lb,
-        .lh = NULL
-    };
-    return lh;
-}
-
-list_head_p clu_list_head_create_handler(tag_p tag, handler_p h)
-{
-    assert(h);
-
-    list_head_p lh = clu_list_head_create(tag, NULL);
-    clu_list_body_insert(&lh->lb, h);
+    lh->tag = *tag;
     return lh;
 }
 
 list_head_p clu_list_head_pop(list_head_p lh)
 {
     assert(lh);
+
     list_head_p lh_aux = lh->lh;
     free(lh, list_head);
     return lh_aux;
@@ -165,13 +153,12 @@ void clu_list_head_free(list_head_p *lh_root)
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
 {
     assert(lh_root);
+    assert(tag);
+    assert(h);
 
     list_head_p lh = *lh_root;
     if(lh == NULL)
-    {
-        *lh_root = clu_list_head_create_handler(tag, h);
-        return true;
-    }
+        lh = *lh_root = clu_list_head_create(tag);
 
     if(clu_tag_eq(&lh->tag, tag))
         return clu_list_body_insert(&lh->lb, h);
@@ -182,6 +169,7 @@ bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
 bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
 {
     assert(lh_root);
+    assert(h);
 
     list_head_p lh = *lh_root;
     if(lh == NULL) return false;
@@ -206,18 +194,18 @@ uint64_t clu_list_head_count(list_head_p lh)
     return i;
 }
 
-list_body_p clu_list_head_get_body(list_head_p lh, uint64_t x)
+list_body_p clu_list_head_get_body(list_head_p lh, uint64_t i)
 {
     if(lh == NULL)
         return NULL;
 
-    if(x == 0)
+    if(i == 0)
         return lh->lb;
 
-    return clu_list_head_get_body(lh->lh, x-1);
+    return clu_list_head_get_body(lh->lh, i-1);
 }
 
-bool clu_list_head_contains(list_head_p lh, handler_p h) // TODO test
+bool clu_list_head_contains(list_head_p lh, handler_p h)
 {
     for(; lh; lh = lh->lh)
         if(clu_list_body_contains(lh->lb, h))

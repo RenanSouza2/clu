@@ -23,8 +23,8 @@ void clu_mem_report(char tag[]);
 void clu_mem_report_full(char tag[]);
 
 uint64_t clu_get_count_x();
-uint64_t clu_get_count_y(uint64_t x);
-handler_p clu_get_handler(uint64_t x, uint64_t y);
+uint64_t clu_get_count_y(uint64_t i);
+handler_p clu_get_handler(uint64_t i, uint64_t j);
 
 bool clu_mem_empty();
 bool clu_is_allocated(handler_p h);

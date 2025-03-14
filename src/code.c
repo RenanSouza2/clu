@@ -186,16 +186,16 @@ uint64_t clu_get_count_x()
     return clu_list_head_count(lh_root_allocated);
 }
 
-uint64_t clu_get_count_y(uint64_t x)
+uint64_t clu_get_count_y(uint64_t i)
 {
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
     return lb ? clu_list_body_count(lb) : 0;
 }
 
-handler_p clu_get_handler(uint64_t x, uint64_t y)
+handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
-    return lb ? clu_list_body_get_handler(lb, y) : NULL;
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
+    return lb ? clu_list_body_get_handler(lb, j) : NULL;
 }
 
 

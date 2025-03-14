@@ -162,6 +162,7 @@ void clu_handler_unregister(handler_p h, char format[], ...)
 
 void clu_mem_report_opts(char tag[], bool full)
 {
+    printf("\n");
     printf("\n----------------------");
     clu_list_head_report(lh_root_allocated, tag, full);
     printf("\n----------------------");
@@ -203,7 +204,7 @@ bool clu_mem_empty()
 {
     if(lh_root_allocated)
     {
-        clu_mem_report("ASSERT EMPTY FAIL");
+        clu_mem_report("ASSERT FAIL | MEMORY NOT EMPTY");
         return false;
     }
 

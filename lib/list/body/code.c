@@ -98,6 +98,44 @@ list_body_p clu_list_body_create_immed_list(uint64_t n, ...)
 
 
 
+
+void clu_list_body_display_str_rec(list_body_p lb, uint64_t index)
+{
+    assert(lb);
+
+    if(lb->h)
+    {
+        if(index) printf("\t");
+        printf("h: %p", lb->h);
+        return;
+    }
+
+    for(uint64_t i=0; i<SIZE; i++)
+        if(lb->arr[i])
+        {
+            printf("\n");
+            for(uint64_t k=0; k<index; k++)
+                printf("\t");
+            printf("i: " U64P() "", i);
+            clu_list_body_display_str_rec(lb->arr[i], index + 1);
+        }
+}
+
+void clu_list_body_display_str(list_body_p lb)
+{
+    if(lb == NULL)
+    {
+        printf("\nEMPTY LIST");
+        return;
+    }
+
+    printf("\n");
+    clu_list_body_display_str_rec(lb, 0);
+    printf("\n");
+}
+
+
+
 bool uint64(uint64_t i1, uint64_t i2)
 {
     if(i1 != i2)
@@ -189,41 +227,6 @@ bool clu_list_body_immed_list(list_body_p lb, ...)
 #endif
 
 
-
-void clu_list_body_display_str_rec(list_body_p lb, uint64_t index)
-{
-    assert(lb);
-
-    if(lb->h)
-    {
-        if(index) printf("\t");
-        printf("h: %p", lb->h);
-        return;
-    }
-
-    for(uint64_t i=0; i<SIZE; i++)
-        if(lb->arr[i])
-        {
-            printf("\n");
-            for(uint64_t k=0; k<index; k++)
-                printf("\t");
-            printf("i: " U64P() "", i);
-            clu_list_body_display_str_rec(lb->arr[i], index + 1);
-        }
-}
-
-void clu_list_body_display_str(list_body_p lb)
-{
-    if(lb == NULL)
-    {
-        printf("\nEMPTY LIST");
-        return;
-    }
-
-    printf("\n");
-    clu_list_body_display_str_rec(lb, 0);
-    printf("\n");
-}
 
 void clu_list_body_display(list_body_p lb)
 {

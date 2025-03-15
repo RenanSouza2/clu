@@ -12,34 +12,63 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-
-
-list_body_p clu_list_body_create_variadic_n(uint64_t n, va_list *args)
+list_body_p clu_list_body_create_variadic_rec(va_list *args)
 {
-    if(n == 0)
-        return NULL;
+    handler_p h = va_arg(*args, handler_p);
+    list_body_p lb = clu_list_body_create(h);
+    if(h)
+        return lb;
 
-    list_body_p lb = NULL;
+    uint64_t n = va_arg(*args, uint64_t);
     for(uint64_t i=0; i<n; i++)
     {
-        handler_p h = va_arg(*args, handler_p);
-        assert(clu_list_body_insert(&lb, h));
+        uint64_t k = va_arg(*args, uint64_t);
+        lb->arr[k] = clu_list_body_create_variadic_rec(args);
     }
-
     return lb;
+}
+
+list_body_p clu_list_body_create_variadic_empty(bool empty, va_list *args)
+{
+    if(empty)
+        return clu_list_body_create(NULL);
+
+    return clu_list_body_create_variadic_rec(args);
 }
 
 list_body_p clu_list_body_create_variadic(va_list *args)
 {
-    uint64_t n = va_arg(*args, uint64_t);
-    return clu_list_body_create_variadic_n(n, args);
+    bool empty = va_arg(*args, int);
+    return clu_list_body_create_variadic_empty(empty, args);
 }
 
-list_body_p clu_list_body_create_immed(uint64_t n, ...)
+list_body_p clu_list_body_create_immed(bool empty, ...)
+{
+    va_list args;
+    va_start(args, empty);
+    return  clu_list_body_create_variadic_empty(empty, &args);
+}
+
+void clu_list_body_create_immed_vec(list_body_p lb[], uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    return clu_list_body_create_variadic_n(n, &args);
+    for(uint64_t i=0; i<n; i++)
+        lb[i] =  clu_list_body_create_variadic(&args);
+}
+
+list_body_p clu_list_body_create_immed_list(uint64_t n, ...)
+{
+    va_list args;
+    va_start(args, n);
+
+    list_body_p lb = NULL;
+    for(uint64_t i=0; i<n; i++)
+    {
+        handler_p h = va_arg(args, handler_p);
+        assert(clu_list_body_insert(&lb, h));
+    }
+    return lb;
 }
 
 

@@ -138,7 +138,7 @@ void test_list_head_insert(bool show)
     TEST_LIST_HEAD_INSERT( 5, tag_1, HD(4), true,
         2,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 1, HD(3), 0,
-        2,  tag_1, 2, HD(1), HD(2), HD(4), 0,
+        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0
     );
 

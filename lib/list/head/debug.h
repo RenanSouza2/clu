@@ -8,7 +8,9 @@
 #define LH(POINTER) ((list_head_p)(POINTER))
 
 list_head_p clu_list_head_create_immed(uint64_t n, ...);
+void clu_list_head_create_vec_immed(list_head_p lh[], uint64_t n, ...);
 
+bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2);
 bool clu_list_head_immed(list_head_p lh, uint64_t n, ...);
 
 #endif

@@ -73,8 +73,8 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
             return false;
         }
 
-        lh_1 = lh_1->lh;
-        lh_2 = lh_2->lh;
+        lh_1 = clu_list_head_pop(lh_1);
+        lh_2 = clu_list_head_pop(lh_2);
     }
 
     if(lh_2)
@@ -97,12 +97,7 @@ bool clu_list_head_immed(list_head_p lh, uint64_t n, ...)
     va_list args;
     va_start(args, n);
     list_head_p lh_2 = clu_list_head_create_variadic_n(n, &args);
-
-    bool res = clu_list_head_str(lh, lh_2);
-
-    clu_list_head_free(lh);
-    clu_list_head_free(lh_2);
-    return res;
+    return clu_list_head_str(lh, lh_2);
 }
 
 #endif

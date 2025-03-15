@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-list_body_p clu_list_body_create_variadic_rec(va_list *args)
+list_body_p clu_list_body_create_variadic_tree_rec(va_list *args)
 {
     handler_p h = va_arg(*args, handler_p);
     list_body_p lb = clu_list_body_create(h);
@@ -23,52 +23,72 @@ list_body_p clu_list_body_create_variadic_rec(va_list *args)
     for(uint64_t i=0; i<n; i++)
     {
         uint64_t k = va_arg(*args, uint64_t);
-        lb->arr[k] = clu_list_body_create_variadic_rec(args);
+        lb->arr[k] = clu_list_body_create_variadic_tree_rec(args);
     }
     return lb;
 }
 
-list_body_p clu_list_body_create_variadic_empty(bool empty, va_list *args)
+list_body_p clu_list_body_create_variadic_tree_content(bool content, va_list *args)
 {
-    if(empty)
-        return clu_list_body_create(NULL);
+    if(!content)
+        return NULL;
 
-    return clu_list_body_create_variadic_rec(args);
+    return clu_list_body_create_variadic_tree_rec(args);
 }
 
-list_body_p clu_list_body_create_variadic(va_list *args)
+list_body_p clu_list_body_create_variadic_tree(va_list *args)
 {
-    bool empty = va_arg(*args, int);
-    return clu_list_body_create_variadic_empty(empty, args);
+    bool content = va_arg(*args, int);
+    return clu_list_body_create_variadic_tree_content(content, args);
 }
 
-list_body_p clu_list_body_create_immed(bool empty, ...)
+list_body_p clu_list_body_create_immed_tree(bool content, ...)
 {
     va_list args;
-    va_start(args, empty);
-    return  clu_list_body_create_variadic_empty(empty, &args);
+    va_start(args, content);
+    return  clu_list_body_create_variadic_tree_content(content, &args);
 }
 
-void clu_list_body_create_immed_vec(list_body_p lb[], uint64_t n, ...)
+void clu_list_body_create_vec_immed_tree(list_body_p lb[], uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
     for(uint64_t i=0; i<n; i++)
-        lb[i] =  clu_list_body_create_variadic(&args);
+        lb[i] =  clu_list_body_create_variadic_tree(&args);
+}
+
+
+
+list_body_p clu_list_body_create_variadic_list_n(uint64_t n, va_list *args)
+{
+    list_body_p lb = NULL;
+    for(uint64_t i=0; i<n; i++)
+    {
+        handler_p h = va_arg(*args, handler_p);
+        assert(clu_list_body_insert(&lb, h));
+    }
+
+    uint64_t n_remove = va_arg(*args, uint64_t);
+    assert(n_remove < n);
+    for(uint64_t i=0; i<n_remove; i++)
+    {
+        handler_p h = va_arg(*args, handler_p);
+        assert(clu_list_body_remove(&lb, h));
+    }
+    return lb;
+}
+
+list_body_p clu_list_body_create_variadic_list(va_list *args)
+{
+    uint64_t n = va_arg(*args, uint64_t);
+    return clu_list_body_create_variadic_list_n(n, args);
 }
 
 list_body_p clu_list_body_create_immed_list(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-
-    list_body_p lb = NULL;
-    for(uint64_t i=0; i<n; i++)
-    {
-        handler_p h = va_arg(args, handler_p);
-        assert(clu_list_body_insert(&lb, h));
-    }
-    return lb;
+    return clu_list_body_create_variadic_list_n(n, &args);
 }
 
 
@@ -90,7 +110,7 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
     {
         if(lb_2 != NULL)
         {
-            printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 EMPTY L2 NOT | %p " U64P() "", h, index);
+            printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
             return false;
         }
 
@@ -99,32 +119,32 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
 
     if(lb_2 == NULL)
     {
-        printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 NOT EMPTY L2 IS | %p " U64P() "", h, index);
+        printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
+        return false;
+    }
+
+    if(lb_1->h != lb_2->h)
+    {
+        printf("\n\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 1 | %p %p | H %p | I " U64P() "", lb_1->h, lb_2->h, h, index);
         return false;
     }
 
     if(lb_1->h != NULL)
     {
-        for(uint64_t i=0; i<16; i++)
-        if(lb_1->arr[i])
+        if(lb_1->h != h)
         {
-            printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
+            printf("\n\n\tLIST BODY ASSERTION ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
             return false;
         }
 
-        if(lb_1->h != lb_2->h)
-        {
-            printf("\n\n\tLIST BODY ASSERT ERROR\t| POINTER H MISMATCH | %p %p", lb_1->h, lb_2->h);
-            return false;
-        }
+        for(uint64_t i=0; i<16; i++)
+            if(lb_1->arr[i])
+            {
+                printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
+                return false;
+            }
 
         return true;
-    }
-
-    if(lb_2->h != NULL)
-    {
-        uint64_t key = GET(lb_2->h, index);
-        return clu_list_body_str_rec(lb_1->arr[key], lb_2, SET(h, index, key), index + 1);
     }
 
     for(uint64_t i=0; i<16; i++)
@@ -139,22 +159,27 @@ bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
     return clu_list_body_str_rec(lb_1, lb_2, NULL, 0);
 }
 
-bool clu_list_body_variadic(list_body_p lb, va_list *args)
+bool clu_list_body_immed_tree(list_body_p lb, ...)
 {
-    list_body_p lb_2 = clu_list_body_create_variadic(args);
+    va_list args;
+    va_start(args, lb);
+    list_body_p lb_2 = clu_list_body_create_variadic_tree(&args);
     bool res = clu_list_body_str(lb, lb_2);
 
+    clu_list_body_free(lb);
     clu_list_body_free(lb_2);
     return res;
 }
 
-bool clu_list_body_immed(list_body_p lb, ...)
+bool clu_list_body_immed_list(list_body_p lb, ...)
 {
     va_list args;
     va_start(args, lb);
-    bool res = clu_list_body_variadic(lb, &args);
+    list_body_p lb_2 = clu_list_body_create_variadic_list(&args);
+    bool res = clu_list_body_str(lb, lb_2);
 
     clu_list_body_free(lb);
+    clu_list_body_free(lb_2);
     return res;
 }
 

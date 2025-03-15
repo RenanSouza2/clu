@@ -208,7 +208,7 @@ bool clu_mem_empty()
         return false;
     }
 
-    clu_list_head_free(&lh_root_freed);
+    lh_root_freed = clu_list_head_free(lh_root_freed);
     return true;
 }
 

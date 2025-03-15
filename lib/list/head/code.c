@@ -86,8 +86,8 @@ bool clu_list_head_immed(list_head_p lh, uint64_t n, ...)
 
     bool res = clu_list_head_str(lh, lh_2);
 
-    clu_list_head_free(&lh);
-    clu_list_head_free(&lh_2);
+    clu_list_head_free(lh);
+    clu_list_head_free(lh_2);
     return res;
 }
 
@@ -142,12 +142,12 @@ list_head_p clu_list_head_pop(list_head_p lh)
 
 
 
-void clu_list_head_free(list_head_p *lh_root)
+list_head_p clu_list_head_free(list_head_p lh_root)
 {
-    for(list_head_p lh = *lh_root; lh; lh = clu_list_head_pop(lh))
+    for(list_head_p lh = lh_root; lh; lh = clu_list_head_pop(lh))
         clu_list_body_free(lh->lb);
 
-    *lh_root = NULL;
+    return NULL;
 }
 
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)

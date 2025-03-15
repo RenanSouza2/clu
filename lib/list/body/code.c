@@ -64,6 +64,8 @@ void clu_list_body_create_vec_immed_tree(list_body_p lb[], uint64_t n, ...)
 
 list_body_p clu_list_body_create_variadic_list_n(uint64_t n, va_list *args)
 {
+    assert(n > 0);
+
     list_body_p lb = NULL;
     for(uint64_t i=0; i<n; i++)
     {
@@ -158,11 +160,6 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
     return true;
 }
 
-bool clu_list_body_str_keep(list_body_p lb_1, list_body_p lb_2)
-{
-    return clu_list_body_str_rec(lb_1, lb_2, NULL, 0);
-}
-
 bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
 {
     bool res = clu_list_body_str_rec(lb_1, lb_2, NULL, 0);
@@ -176,11 +173,7 @@ bool clu_list_body_immed_tree(list_body_p lb, ...)
     va_list args;
     va_start(args, lb);
     list_body_p lb_2 = clu_list_body_create_variadic_tree(&args);
-    bool res = clu_list_body_str(lb, lb_2);
-
-    clu_list_body_free(lb);
-    clu_list_body_free(lb_2);
-    return res;
+    return clu_list_body_str(lb, lb_2);
 }
 
 bool clu_list_body_immed_list(list_body_p lb, ...)
@@ -188,9 +181,7 @@ bool clu_list_body_immed_list(list_body_p lb, ...)
     va_list args;
     va_start(args, lb);
     list_body_p lb_2 = clu_list_body_create_variadic_list(&args);
-    bool res = clu_list_body_str(lb, lb_2);
-
-    clu_list_body_free(lb);
+    bool res = clu_list_body_str_rec(lb, lb_2, NULL, 0);
     clu_list_body_free(lb_2);
     return res;
 }

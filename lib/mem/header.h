@@ -20,17 +20,16 @@ bool clu_mem_internal_empty();
         NAME##_alive--;         \
     }
 
-#define free(POINTER, NAME) \
+#define free(HANDLER, NAME) \
     {                       \
         DEC(NAME);          \
-        free(POINTER);      \
+        free(HANDLER);      \
     }
 
 #else
 
 #define INC(NAME)
-#define DEC(NAME)
-#define free(POINTER, NAME) free(POINTER)
+#define free(HANDLER, NAME) free(HANDLER)
 
 #endif
 

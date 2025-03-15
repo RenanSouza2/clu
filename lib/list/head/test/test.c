@@ -70,7 +70,7 @@ void test_list_head_create_variadic(bool show)
         tag_1, 1, HD(1)
     );
     assert(lh != NULL);
-    assert(clu_list_body_immed(lh->lb, 1, HD(1)))
+    assert(clu_list_body_immed_list(lh->lb, 1, HD(1)))
     assert(lh->lh == NULL);
     while(lh) lh = clu_list_head_pop(lh);
 
@@ -79,7 +79,7 @@ void test_list_head_create_variadic(bool show)
         tag_1, 2, HD(1), HD(2)
     );
     assert(lh != NULL);
-    assert(clu_list_body_immed(lh->lb, 2, HD(1), HD(2)))
+    assert(clu_list_body_immed_list(lh->lb, 2, HD(1), HD(2)))
     assert(lh->lh == NULL);
     while(lh) lh = clu_list_head_pop(lh);
 
@@ -89,9 +89,9 @@ void test_list_head_create_variadic(bool show)
         tag_2, 1, HD(2)
     );
     assert(lh != NULL);
-    assert(clu_list_body_immed(lh->lb, 1, HD(1)));
+    assert(clu_list_body_immed_list(lh->lb, 1, HD(1)));
     assert(lh->lh != NULL);
-    assert(clu_list_body_immed(lh->lh->lb, 1, HD(2)));
+    assert(clu_list_body_immed_list(lh->lh->lb, 1, HD(2)));
     assert(lh->lh->lh == NULL);
     while(lh) lh = clu_list_head_pop(lh);
 

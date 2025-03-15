@@ -90,6 +90,40 @@ void test_list_body_create_immed_tree(bool show)
     list_body_p lb = clu_list_body_create_immed_tree(false);
     assert(lb == NULL);
 
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    lb = clu_list_body_create_immed_tree(true, HD(1));
+    assert(lb != NULL);
+    assert(lb->h == HD(1));
+    clu_list_body_free(lb);
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    lb = clu_list_body_create_immed_tree(true, NULL, 2, 
+        1, HD(1),
+        2, HD(2)
+    );
+    assert(lb != NULL);
+    assert(lb->h == NULL);
+    assert(lb->arr[1] != NULL);
+    assert(lb->arr[1]->h == HD(1));
+    assert(lb->arr[2] != NULL);
+    assert(lb->arr[2]->h == HD(2));
+    clu_list_body_free(lb);
+
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    lb = clu_list_body_create_immed_tree(true, NULL, 1,
+        0, NULL, 2,
+            1, HD(0x10),
+            2, HD(0x20)
+    );
+    assert(lb != NULL);
+    assert(lb->h == NULL);
+    assert(lb->arr[0] != NULL);
+    assert(lb->arr[0]->arr[1] != NULL);
+    assert(lb->arr[0]->arr[1]->h == HD(0x10));
+    assert(lb->arr[0]->arr[2] != NULL);
+    assert(lb->arr[0]->arr[2]->h == HD(0x20));
+    clu_list_body_free(lb);
+
     assert(clu_mem_internal_empty());
 }
 
@@ -117,13 +151,13 @@ void test_list_body_insert(bool show)
         true, HD(1),
         true, HD(1)
     );
-    TEST_LIST_BODY_INSERT(3, HD(2), false,
+    TEST_LIST_BODY_INSERT(3, HD(2), true,
         true, HD(1),
         true, NULL, 2,
             1, HD(1),
-            2, HD(1)
+            2, HD(2)
     );
-    TEST_LIST_BODY_INSERT(4, HD(0x211), false,
+    TEST_LIST_BODY_INSERT(4, HD(0x211), true,
         true, HD(0x111),
         true, NULL, 1,
             1, NULL, 1,
@@ -157,7 +191,7 @@ void test_list_body_remove(bool show)
         list_body_p lb[2];                                          \
         if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);          \
         clu_list_body_create_vec_immed_tree(lb, 2, __VA_ARGS__);    \
-        bool res = clu_list_body_remove(&lb[0], HANDLER);              \
+        bool res = clu_list_body_remove(&lb[0], HANDLER);           \
         assert(res == RES);                                         \
         assert(clu_list_body_str(lb[0], lb[1]));                    \
     }
@@ -174,33 +208,33 @@ void test_list_body_remove(bool show)
         true, HD(1),
         true, HD(1)
     );
-    TEST_LIST_BODY_REMOVE(4, HD(2), false,
+    TEST_LIST_BODY_REMOVE(4, HD(2), true,
         true, NULL, 2,
             1, HD(1),
             2, HD(2),
-        true, 1,
+        true, NULL, 1,
             1, HD(1)
     );
     TEST_LIST_BODY_REMOVE(5, HD(1), true,
-        true, 1,
+        true, NULL, 1,
             1, HD(1),
         false
     );
-    TEST_LIST_BODY_REMOVE(6, HD(1), true,
+    TEST_LIST_BODY_REMOVE(6, HD(0x11), true,
         true, NULL, 1,
             1, NULL, 2,
                 1, HD(0x11),
                 2, HD(0x21),
         true, NULL, 1,
-            1, NULL, 2,
+            1, NULL, 1,
                 2, HD(0x21)
     );
     TEST_LIST_BODY_REMOVE(7, HD(1), false,
         true, NULL, 1,
-            1, NULL, 2,
+            1, NULL, 1,
                 2, HD(0x21),
         true, NULL, 1,
-            1, NULL, 2,
+            1, NULL, 1,
                 2, HD(0x21)
     );
 
@@ -310,7 +344,7 @@ void test_list_body()
 {
     printf("\n%s", __func__);
 
-    bool show = false;
+    bool show = true;
 
     test_offset(show);
     test_get(show);
@@ -319,12 +353,12 @@ void test_list_body()
     test_list_body_create(show);
     test_list_body_create_immed_tree(show);
 
-    // test_list_body_insert(show);
-    // test_list_body_remove(show);
+    test_list_body_insert(show);
+    test_list_body_remove(show);
 
-    // test_list_body_count(show);
-    // test_list_body_get_handler(show);
-    // test_list_body_contains(show);
+    test_list_body_count(show);
+    test_list_body_get_handler(show);
+    test_list_body_contains(show);
 
     assert(clu_mem_internal_empty());
 }

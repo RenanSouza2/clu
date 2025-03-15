@@ -9,6 +9,8 @@
 
 #define LB(POINTER) ((list_body_p)(POINTER))
 
+void clu_list_body_display_str(list_body_p lb);
+
 list_body_p clu_list_body_create_immed_tree(bool empty, ...);
 void clu_list_body_create_vec_immed_tree(list_body_p lb[], uint64_t n, ...);
 

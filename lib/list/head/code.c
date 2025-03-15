@@ -16,7 +16,7 @@ list_head_p clu_list_head_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
     list_head_p lh = clu_list_head_create(&tag);
-    lh->lb = clu_list_body_create_variadic(args);
+    lh->lb = clu_list_body_create_variadic_list(args);
     assert(lh->lb);
     return lh;
 }

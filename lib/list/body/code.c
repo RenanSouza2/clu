@@ -20,9 +20,12 @@ list_body_p clu_list_body_create_variadic_tree_rec(va_list *args)
         return lb;
 
     uint64_t n = va_arg(*args, uint64_t);
+    assert(n > 0);
+    assert(n <= SIZE);
     for(uint64_t i=0; i<n; i++)
     {
         uint64_t k = va_arg(*args, uint64_t);
+        assert(k < SIZE);
         lb->arr[k] = clu_list_body_create_variadic_tree_rec(args);
     }
     return lb;
@@ -131,11 +134,12 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
 
     if(lb_1->h != NULL)
     {
-        if(lb_1->h != h)
-        {
-            printf("\n\n\tLIST BODY ASSERTION ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
-            return false;
-        }
+        for(uint64_t i=0; i<index; i++)
+            if(!uint64(GET(lb_1->h, i), GET(h, i)))
+                {
+                    printf("\n\tLIST BODY ASSERTION ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
+                    return false;
+                }
 
         for(uint64_t i=0; i<16; i++)
             if(lb_1->arr[i])
@@ -154,9 +158,17 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
     return true;
 }
 
-bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
+bool clu_list_body_str_keep(list_body_p lb_1, list_body_p lb_2)
 {
     return clu_list_body_str_rec(lb_1, lb_2, NULL, 0);
+}
+
+bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
+{
+    bool res = clu_list_body_str_rec(lb_1, lb_2, NULL, 0);
+    clu_list_body_free(lb_1);
+    clu_list_body_free(lb_2);
+    return res;
 }
 
 bool clu_list_body_immed_tree(list_body_p lb, ...)
@@ -186,6 +198,41 @@ bool clu_list_body_immed_list(list_body_p lb, ...)
 #endif
 
 
+
+void clu_list_body_display_str_rec(list_body_p lb, uint64_t index)
+{
+    assert(lb);
+
+    if(lb->h)
+    {
+        if(index) printf("\t");
+        printf("h: %p", lb->h);
+        return;
+    }
+
+    for(uint64_t i=0; i<SIZE; i++)
+        if(lb->arr[i])
+        {
+            printf("\n");
+            for(uint64_t k=0; k<index; k++)
+                printf("\t");
+            printf("i: " U64P() "", i);
+            clu_list_body_display_str_rec(lb->arr[i], index + 1);
+        }
+}
+
+void clu_list_body_display_str(list_body_p lb)
+{
+    if(lb == NULL)
+    {
+        printf("\nEMPTY LIST");
+        return;
+    }
+
+    printf("\n");
+    clu_list_body_display_str_rec(lb, 0);
+    printf("\n");
+}
 
 void clu_list_body_display(list_body_p lb)
 {

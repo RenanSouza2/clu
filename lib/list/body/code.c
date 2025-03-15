@@ -405,5 +405,8 @@ bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
 
 bool clu_list_body_contains(list_body_p lb, handler_p h)
 {
+    assert(lb);
+    assert(h);
+
     return clu_list_body_contains_rec(lb, h, 0);
 }

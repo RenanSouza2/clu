@@ -238,6 +238,8 @@ void test_list_body_remove(bool show)
                 2, HD(0x21)
     );
 
+    #undef TEST_LIST_BODY_REMOVE
+
     if(show) printf("\n\t\t%s 8\t\t", __func__);
     TEST_REVERT_OPEN
     clu_list_body_remove(NULL, HD(1));
@@ -258,59 +260,94 @@ void test_list_body_count(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = clu_list_body_create_immed_tree(0);
-    uint64_t res = clu_list_body_count(lb);
-    assert(uint64(res, 0));
-    clu_list_body_free(lb);
+    #define TEST_LIST_BODY_COUNT(TAG, RES, ...)                         \
+    {                                                                   \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);              \
+        list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
+        uint64_t res = clu_list_body_count(lb);                         \
+        assert(uint64(res, RES));                                       \
+        clu_list_body_free(lb);                                         \
+    }
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb = clu_list_body_create_immed_tree(1, HD(1));
-    res = clu_list_body_count(lb);
-    assert(uint64(res, 1));
-    clu_list_body_free(lb);
+    TEST_LIST_BODY_COUNT(1, 0,
+        false
+    );
+    TEST_LIST_BODY_COUNT(2, 1,
+        true, HD(1)
+    );
+    TEST_LIST_BODY_COUNT(3, 1,
+        true, NULL, 1,
+            1, HD(1)
+    );
+    TEST_LIST_BODY_COUNT(4, 2,
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
 
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lb = clu_list_body_create_immed_tree(2, HD(1), HD(2));
-    res = clu_list_body_count(lb);
-    assert(uint64(res, 2));
-    clu_list_body_free(lb);
+    #undef TEST_LIST_BODY_COUNT
 
     assert(clu_mem_internal_empty());
 }
-
-
 
 void test_list_body_get_handler(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    #define TEST_LIST_BODY_GET_HANDLER(TAG, INDEX, RES, ...)        \
-    {                                                               \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);          \
-        list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);   \
-        handler_p h = clu_list_body_get_handler(lb, INDEX);         \
-        assert(h == RES);                                           \
-        clu_list_body_free(lb);                                     \
+    #define TEST_LIST_BODY_GET_HANDLER(TAG, INDEX, RES, ...)            \
+    {                                                                   \
+        if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG);             \
+        list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
+        handler_p h = clu_list_body_get_handler(lb, INDEX);             \
+        assert(h == RES);                                               \
+        clu_list_body_free(lb);                                         \
     }
 
-    TEST_LIST_BODY_GET_HANDLER(1, 0, HD(1), 1, HD(1));
-    TEST_LIST_BODY_GET_HANDLER(2, 1, NULL, 1, HD(1));
-    TEST_LIST_BODY_GET_HANDLER(3, 0, HD(1), 2, HD(1), HD(2));
-    TEST_LIST_BODY_GET_HANDLER(4, 1, HD(2), 2, HD(1), HD(2));
-    TEST_LIST_BODY_GET_HANDLER(5, 2, NULL, 2, HD(1), HD(2));
-    TEST_LIST_BODY_GET_HANDLER(6, 3, NULL, 2, HD(1), HD(2));
+    TEST_LIST_BODY_GET_HANDLER( 1, 0, HD(1),
+        true, HD(1)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 2, 1, NULL,
+        true, HD(1)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 3, 2, NULL,
+        true, HD(1)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 4, 0, HD(1),
+        true, NULL, 1,
+            1, HD(1)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 5, 1, NULL,
+        true, NULL, 1,
+            1, HD(1)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 6, 2, NULL,
+        true, NULL, 1,
+            1, HD(1)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 7, 0, HD(1),
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 8, 1, HD(2),
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+    TEST_LIST_BODY_GET_HANDLER( 9, 2, NULL,
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+    TEST_LIST_BODY_GET_HANDLER(10, 3, NULL,
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
 
     #undef TEST_LIST_BODY_GET_HANDLER
 
-    if(show) printf("\n\t\t%s 7\t\t", __func__);
-    list_body_p lb = clu_list_body_create_immed_tree(2, HD(1), HD(2));
-    assert(clu_list_body_remove(&lb, HD(2)));
-    handler_p h = clu_list_body_get_handler(lb, 0);
-    assert(h == HD(1));
-    clu_list_body_free(lb);
-
-    if(show) printf("\n\t\t%s 8\t\t", __func__);
+    if(show) printf("\n\t\t%s 11\t\t", __func__);
     TEST_REVERT_OPEN
     clu_list_body_get_handler(NULL, 0);
     TEST_REVERT_CLOSE
@@ -323,17 +360,57 @@ void test_list_body_contains(bool show)
 
     printf("\n\t%s\t\t", __func__);
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = clu_list_body_create_immed_tree(1, HD(1));
-    bool res = clu_list_body_contains(lb, HD(1));
-    assert(res == true);
-    clu_list_body_free(lb);
+    #define TEST_LIST_BODY_CONTANS(TAG, HANDLER, RES, ...)              \
+    {                                                                   \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);              \
+        list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
+        bool res = clu_list_body_contains(lb, HANDLER);                 \
+        assert(res == RES);                                             \
+        clu_list_body_free(lb);                                         \
+    }
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb = clu_list_body_create_immed_tree(1, HD(1));
-    res = clu_list_body_contains(lb, HD(2));
-    assert(res == false);
-    clu_list_body_free(lb);
+    TEST_LIST_BODY_CONTANS(1, HD(1), true,
+        true, HD(1)
+    );
+    TEST_LIST_BODY_CONTANS(2, HD(2), false,
+        true, HD(1)
+    );
+    TEST_LIST_BODY_CONTANS(3, HD(1), true,
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+    TEST_LIST_BODY_CONTANS(4, HD(2), true,
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+    TEST_LIST_BODY_CONTANS(5, HD(3), false,
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+
+    #undef TEST_LIST_BODY_CONTANS
+    
+    #define TEST_LIST_BODY_CONTANS(TAG, HANDLER, ...)                   \
+    {                                                                   \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);              \
+        list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
+        TEST_REVERT_OPEN                                                \
+        clu_list_body_contains(lb, HANDLER);                            \
+        TEST_REVERT_CLOSE                                               \
+        clu_list_body_free(lb);                                         \
+    }
+
+    TEST_LIST_BODY_CONTANS(6, HD(1),
+        false
+    );
+    TEST_LIST_BODY_CONTANS(7, NULL,
+        true, HD(1)
+    );
+
+    #undef TEST_LIST_BODY_CONTANS
 
     assert(clu_mem_internal_empty());
 }

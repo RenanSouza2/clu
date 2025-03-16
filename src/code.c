@@ -144,11 +144,29 @@ void clu_handler_free(handler_p h, char format[], ...)
 
 
 
+void clu_handler_register(handler_p h, char format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    clu_handler_allocate(h, format, args, 1, "custom");
+}
+
+void clu_handler_unregister(handler_p h, char format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    clu_handler_deallocate(h, format, args);
+}
+
+
+
 void clu_mem_report_opts(char tag[], bool full)
 {
+    printf("\n");
     printf("\n----------------------");
     clu_list_head_report(lh_root_allocated, tag, full);
     printf("\n----------------------");
+    printf("\n");
 }
 
 void clu_mem_report(char tag[])
@@ -168,16 +186,16 @@ uint64_t clu_get_count_x()
     return clu_list_head_count(lh_root_allocated);
 }
 
-uint64_t clu_get_count_y(uint64_t x)
+uint64_t clu_get_count_y(uint64_t i)
 {
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
     return lb ? clu_list_body_count(lb) : 0;
 }
 
-handler_p clu_get_pointer(uint64_t x, uint64_t y)
+handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, x);
-    return lb ? clu_list_body_get_handler(lb, y) : NULL;
+    list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
+    return lb ? clu_list_body_get_handler(lb, j) : NULL;
 }
 
 
@@ -186,11 +204,11 @@ bool clu_mem_empty()
 {
     if(lh_root_allocated)
     {
-        clu_mem_report("ASSERT EMPTY FAIL");
+        clu_mem_report("ASSERT FAIL | MEMORY NOT EMPTY");
         return false;
     }
 
-    clu_list_head_free(&lh_root_freed);
+    lh_root_freed = clu_list_head_free(lh_root_freed);
     return true;
 }
 

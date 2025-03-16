@@ -1,4 +1,4 @@
-FLAGS = -c -Wall -Werror -Wfatal-errors -O3 -O3
+FLAGS = -c -Wall -Wextra -Werror -Wfatal-errors -O3
 
 LIB_ROOT = ..
 DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))

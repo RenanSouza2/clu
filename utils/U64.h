@@ -1,5 +1,7 @@
 #ifndef __U64_H__
 
+#include <stdint.h>
+
 #ifdef __linux__
 
 #define U64P(C) "%" #C "lu"

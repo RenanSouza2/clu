@@ -1,5 +1,5 @@
-#ifndef __ROOT_H__
-#define __ROOT_H__
+#ifndef __CLU_H__
+#define __CLU_H__
 
 #ifdef DEBUG
 
@@ -16,12 +16,15 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...);
 handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...);
 void clu_handler_free(handler_p h, char format[], ...);
 
+void clu_handler_register(handler_p h, char format[], ...);
+void clu_handler_unregister(handler_p h, char format[], ...);
+
 void clu_mem_report(char tag[]);
 void clu_mem_report_full(char tag[]);
 
 uint64_t clu_get_count_x();
-uint64_t clu_get_count_y(uint64_t x);
-handler_p clu_get_pointer(uint64_t x, uint64_t y);
+uint64_t clu_get_count_y(uint64_t i);
+handler_p clu_get_handler(uint64_t i, uint64_t j);
 
 bool clu_mem_empty();
 bool clu_is_allocated(handler_p h);
@@ -31,15 +34,19 @@ bool clu_is_freed(handler_p h);
 void clu_set_log(bool _log_allocations);
 
 #define malloc(SIZE) clu_handler_malloc(SIZE, "f|%s|l|%d", __func__, __LINE__)
-#define calloc(AMT, SIZE) clu_handler_calloc(AMT, SIZE, "f|%s|l|%d", __func__, __LINE__)
-#define realloc(PTR, SIZE) clu_handler_realloc(PTR, SIZE, "f|%s|l|%d", __func__, __LINE__)
+#define calloc(AMOUNT, SIZE) clu_handler_calloc(AMOUNT, SIZE, "f|%s|l|%d", __func__, __LINE__)
+#define realloc(HANDLER, SIZE) clu_handler_realloc(PTR, SIZE, "f|%s|l|%d", __func__, __LINE__)
 #define free(HANDLER) clu_handler_free(HANDLER, "f|%s|l|%d", __func__, __LINE__)
 
-#define DBG_CHECK_PTR(H) assert(clu_is_safe(H));
+#define CLU_CHECK_PTR(HANDLER) assert(clu_is_safe(HANDLER));
+#define CLU_REGISTER(HANDLER) clu_handler_register(HANDLER, "f|%s|l|%d", __func__, __LINE__)
+#define CLU_UNREGISTER(HANDLER) clu_handler_unregister(HANDLER, "f|%s|l|%d", __func__, __LINE__)
 
 #else
 
-#define DBG_CHECK_PTR(H)
+#define CLU_CHECK_PTR(HANDLER)
+#define CLU_REGISTER(HANDLER)
+#define CLU_UNREGISTER(HANDLER)
 
 #endif // DEBUG
 

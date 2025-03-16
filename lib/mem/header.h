@@ -5,8 +5,10 @@
 
 #include <stdbool.h>
 
-extern int list_head_alive;
-extern int list_body_alive;
+#include "../../utils/U64.h"
+
+extern uint64_t list_head_alive;
+extern uint64_t list_body_alive;
 
 void clu_mem_internal_display();
 bool clu_mem_internal_empty();
@@ -18,17 +20,16 @@ bool clu_mem_internal_empty();
         NAME##_alive--;         \
     }
 
-#define free(POINTER, NAME) \
+#define free(HANDLER, NAME) \
     {                       \
         DEC(NAME);          \
-        free(POINTER);      \
+        free(HANDLER);      \
     }
 
 #else
 
 #define INC(NAME)
-#define DEC(NAME)
-#define free(POINTER, NAME) free(POINTER)
+#define free(HANDLER, NAME) free(HANDLER)
 
 #endif
 

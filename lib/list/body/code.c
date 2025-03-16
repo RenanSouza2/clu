@@ -45,7 +45,7 @@ list_body_p clu_list_body_create_variadic_tree(va_list *args)
     return clu_list_body_create_variadic_tree_content(content, args);
 }
 
-list_body_p clu_list_body_create_immed_tree(bool content, ...)
+list_body_p clu_list_body_create_immed_tree(int content, ...)
 {
     va_list args;
     va_start(args, content);

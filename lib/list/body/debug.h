@@ -11,7 +11,7 @@
 
 void clu_list_body_display_str(list_body_p lb);
 
-list_body_p clu_list_body_create_immed_tree(bool empty, ...);
+list_body_p clu_list_body_create_immed_tree(int empty, ...);
 void clu_list_body_create_vec_immed_tree(list_body_p lb[], uint64_t n, ...);
 
 list_body_p clu_list_body_create_variadic_list(va_list *args);

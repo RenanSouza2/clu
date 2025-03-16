@@ -303,7 +303,7 @@ void test_list_head_get_body(bool show)
 
     #define TEST_LIST_HEAD_GET_BODY(TAG, INDEX, HANDLER, ...)       \
     {                                                               \
-        if(show) printf("\n\t\t%s %D\t\t", __func__, TAG);          \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);          \
         list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
         list_body_p lb = clu_list_head_get_body(lh, INDEX);         \
         if(HANDLER) {assert(clu_list_body_contains(lb, HANDLER));}  \

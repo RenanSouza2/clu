@@ -45,7 +45,7 @@ void test_list_head_pop(bool show)
     assert(lh != NULL);
     assert(lh->lb == LB(2));
     free(lh, list_head);
-    
+
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     TEST_REVERT_OPEN
     clu_list_head_pop(NULL);
@@ -250,7 +250,7 @@ void test_list_head_remove(bool show)
     TEST_REVERT_OPEN
     clu_list_head_remove(NULL, HD(1));
     TEST_REVERT_CLOSE
-    
+
     if(show) printf("\n\t\t%s 9", __func__);
     list_head_p lh = clu_list_head_create_immed(0);
     TEST_REVERT_OPEN

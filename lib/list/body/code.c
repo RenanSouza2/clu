@@ -295,7 +295,7 @@ bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
-    assert(h);    
+    assert(h);
 
     return clu_list_body_insert_rec(lb_root, h, 0);
 }

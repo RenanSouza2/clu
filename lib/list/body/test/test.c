@@ -97,7 +97,7 @@ void test_list_body_create_immed_tree(bool show)
     clu_list_body_free(lb);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lb = clu_list_body_create_immed_tree(true, NULL, 2, 
+    lb = clu_list_body_create_immed_tree(true, NULL, 2,
         1, HD(1),
         2, HD(2)
     );
@@ -143,7 +143,7 @@ void test_list_body_insert(bool show)
         assert(clu_list_body_str(lb[0], lb[1]));                    \
     }
 
-    TEST_LIST_BODY_INSERT(1, HD(1), true, 
+    TEST_LIST_BODY_INSERT(1, HD(1), true,
         false,
         true, HD(1)
     );
@@ -392,7 +392,7 @@ void test_list_body_contains(bool show)
     );
 
     #undef TEST_LIST_BODY_CONTANS
-    
+
     #define TEST_LIST_BODY_CONTANS(TAG, HANDLER, ...)                   \
     {                                                                   \
         if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);              \

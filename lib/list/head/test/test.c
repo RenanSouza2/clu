@@ -141,30 +141,20 @@ void test_list_head_insert(bool show)
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0
     );
-
-    if(show) printf("\n\t\t%s  6\t\t", __func__);
-    list_head_p lh = clu_list_head_create_immed(2,
-        tag_1, 3, HD(1), HD(2), HD(4),
-        tag_2, 1, HD(3)
+    TEST_LIST_HEAD_INSERT( 6, tag_2, HD(5), true,
+        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+            tag_2, 1, HD(3), 0,
+        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+            tag_2, 2, HD(3), HD(5), 0
     );
-    bool res = clu_list_head_insert(&lh, &tag_2, HD(5));
-    assert(res == true);
-    assert(clu_list_head_immed(lh, 2,
-        tag_1, 3, HD(1), HD(2), HD(4),
-        tag_2, 2, HD(3), HD(5)
-    ));
-
-    if(show) printf("\n\t\t%s  7\t\t", __func__);
-    lh = clu_list_head_create_immed(2,
-        tag_1, 3, HD(1), HD(2), HD(4),
-        tag_2, 2, HD(3), HD(5)
+    TEST_LIST_HEAD_INSERT( 7, tag_2, HD(5), false,
+        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+            tag_2, 2, HD(3), HD(5), 0,
+        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+            tag_2, 2, HD(3), HD(5), 0
     );
-    res = clu_list_head_insert(&lh, &tag_2, HD(5));
-    assert(res == false);
-    assert(clu_list_head_immed(lh, 2,
-        tag_1, 3, HD(1), HD(2), HD(4),
-        tag_2, 2, HD(3), HD(5)
-    ));
+
+    #undef TEST_LIST_HEAD_INSERT
 
     if(show) printf("\n\t\t%s  8\t\t", __func__);
     TEST_REVERT_OPEN
@@ -172,7 +162,7 @@ void test_list_head_insert(bool show)
     TEST_REVERT_CLOSE
 
     if(show) printf("\n\t\t%s  9\t\t", __func__);
-    lh = clu_list_head_create_immed(0);
+    list_head_p lh = clu_list_head_create_immed(0);
     TEST_REVERT_OPEN
     clu_list_head_insert(&lh, NULL, HD(1));
     TEST_REVERT_CLOSE
@@ -195,6 +185,26 @@ void test_list_head_remove(bool show)
     tag_2 = clu_tag_format("test 2");
     tag_3 = clu_tag_format("test 3");
     tag_4 = clu_tag_format("test 4");
+
+    #define TEST_LIST_HEAD_REMOVE(TAG, HANDLER, RES, ...)   \
+    {   \
+        list_head_p lh[2];
+        if(show) printf("\n\t\t%s 1\t\t", __func__);
+        list_head_p lh = clu_list_head_create_immed(4,
+            tag_1, 2, HD(1), HD(2),
+            tag_2, 2, HD(3), HD(4),
+            tag_3, 1, HD(5),
+            tag_4, 1, HD(6)
+        );
+        bool res = clu_list_head_remove(&lh, HD(7));
+        assert(res == false);
+        assert(clu_list_head_immed(lh, 4,
+            tag_1, 2, HD(1), HD(2),
+            tag_2, 2, HD(3), HD(4),
+            tag_3, 1, HD(5),
+            tag_4, 1, HD(6)
+        ));
+    }
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_head_p lh = clu_list_head_create_immed(4,

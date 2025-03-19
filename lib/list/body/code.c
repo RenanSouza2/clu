@@ -176,10 +176,10 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
     {
         for(uint64_t i=0; i<index; i++)
             if(!uint64(GET(lb_1->h, i), GET(h, i)))
-                {
-                    printf("\n\tLIST BODY ASSERTION ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
-                    return false;
-                }
+            {
+                printf("\n\tLIST BODY ASSERTION ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
+                return false;
+            }
 
         for(uint64_t i=0; i<16; i++)
             if(lb_1->arr[i])
@@ -274,7 +274,7 @@ bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 
     if(lb == NULL)
     {
-        *lb_root = lb = clu_list_body_create(h);
+        *lb_root = clu_list_body_create(h);
         return true;
     }
 
@@ -314,7 +314,7 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
             return true;
 
     FREE(lb, list_body);
-    *lb_root = lb = NULL;
+    *lb_root = NULL;
     return true;
 }
 

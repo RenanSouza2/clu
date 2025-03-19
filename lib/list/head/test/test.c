@@ -20,7 +20,7 @@ void test_list_head_create(bool show)
     assert(clu_tag(&lh->tag, &tag));
     assert(lh->lb == NULL);
     assert(lh->lh == NULL);
-    free(lh, list_head);
+    FREE(lh, list_head);
 
     assert(clu_mem_internal_empty());
 }
@@ -44,7 +44,7 @@ void test_list_head_pop(bool show)
     lh = clu_list_head_pop(lh);
     assert(lh != NULL);
     assert(lh->lb == LB(2));
-    free(lh, list_head);
+    FREE(lh, list_head);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     TEST_REVERT_OPEN

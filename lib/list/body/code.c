@@ -245,12 +245,10 @@ void clu_list_body_display(list_body_p lb)
 
 
 
-
 list_body_p clu_list_body_create(handler_p h)
 {
-    list_body_p lb = calloc(1, sizeof(list_body_t));
-    assert(lb);
-    INC(list_body);
+    list_body_p lb;
+    CALLOC(lb, list_body);
 
     lb->h = h;
     return lb;
@@ -264,7 +262,7 @@ void clu_list_body_free(list_body_p lb)
     for(uint64_t i=0; i<SIZE; i++)
         clu_list_body_free(lb->arr[i]);
 
-    free(lb, list_body);
+    FREE(lb, list_body);
 }
 
 
@@ -311,7 +309,7 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
         if(lb->h != h)
             return false;
 
-        free(lb, list_body);
+        FREE(lb, list_body);
         *lb_root = NULL;
         return true;
     }
@@ -323,7 +321,7 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
         if(lb->arr[i])
             return true;
 
-    free(lb, list_body);
+    FREE(lb, list_body);
     *lb_root = lb = NULL;
     return true;
 }

@@ -290,14 +290,6 @@ bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
     return clu_list_body_insert_rec(&lb->arr[key], h, index + 1);
 }
 
-bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
-{
-    assert(lb_root);
-    assert(h);
-
-    return clu_list_body_insert_rec(lb_root, h, 0);
-}
-
 bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 {
     list_body_p lb = *lb_root;
@@ -326,6 +318,16 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
     return true;
 }
 
+
+
+bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
+{
+    assert(lb_root);
+    assert(h);
+
+    return clu_list_body_insert_rec(lb_root, h, 0);
+}
+
 bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
@@ -335,21 +337,6 @@ bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 }
 
 
-
-uint64_t clu_list_body_count(list_body_p lb)
-{
-    if(lb == NULL)
-        return 0;
-
-    if(lb->h)
-        return 1;
-
-    uint64_t count = 0;
-    for(uint64_t i=0; i<SIZE; i++)
-        count += clu_list_body_count(lb->arr[i]);
-
-    return count;
-}
 
 handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, uint64_t index, bool revert)
 {
@@ -377,13 +364,6 @@ handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, uint64_t ind
     return NULL;
 }
 
-handler_p clu_list_body_get_handler(list_body_p lb, uint64_t j)
-{
-    assert(lb);
-
-    return clu_list_body_get_handler_rec(lb, j, 0, false);
-}
-
 bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
 {
     if(lb == NULL)
@@ -393,6 +373,30 @@ bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
         return lb->h == h;
 
     return clu_list_body_contains_rec(lb->arr[GET(h, index)], h, index + 1);
+}
+
+
+
+uint64_t clu_list_body_count(list_body_p lb)
+{
+    if(lb == NULL)
+        return 0;
+
+    if(lb->h)
+        return 1;
+
+    uint64_t count = 0;
+    for(uint64_t i=0; i<SIZE; i++)
+        count += clu_list_body_count(lb->arr[i]);
+
+    return count;
+}
+
+handler_p clu_list_body_get_handler(list_body_p lb, uint64_t j)
+{
+    assert(lb);
+
+    return clu_list_body_get_handler_rec(lb, j, 0, false);
 }
 
 bool clu_list_body_contains(list_body_p lb, handler_p h)

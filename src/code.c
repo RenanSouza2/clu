@@ -198,7 +198,7 @@ bool clu_is_allocated(handler_p h)
     return clu_list_head_contains(lh_root_allocated, h);
 }
 
-bool clu_is_safe(handler_p h)
+bool clu_handler_is_safe(handler_p h)
 {
     return !h || clu_is_allocated(h);
 }
@@ -215,7 +215,7 @@ uint64_t clu_get_max_i()
     return clu_list_head_count(lh_root_allocated);
 }
 
-uint64_t clu_get_max_y(uint64_t i)
+uint64_t clu_get_max_j(uint64_t i)
 {
     list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
     return lb ? clu_list_body_count(lb) : 0;

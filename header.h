@@ -19,16 +19,16 @@ void clu_handler_free(handler_p h, char format[], ...);
 void clu_handler_register(handler_p h, char format[], ...);
 void clu_handler_unregister(handler_p h, char format[], ...);
 
-void clu_mem_report(char format[], ...);
-void clu_mem_report_full(char format[], ...);
+void clu_mem_report(char tag[]);
+void clu_mem_report_full(char tag[]);
 
 bool clu_mem_empty();
 bool clu_is_allocated(handler_p h);
-bool clu_is_safe(handler_p h);
+bool clu_handler_is_safe(handler_p h);
 bool clu_is_freed(handler_p h);
 
 uint64_t clu_get_max_i();
-uint64_t clu_get_max_y(uint64_t i);
+uint64_t clu_get_max_j(uint64_t i);
 handler_p clu_get_handler(uint64_t i, uint64_t j);
 
 void clu_set_log(bool _log_allocations);
@@ -38,13 +38,13 @@ void clu_set_log(bool _log_allocations);
 #define realloc(HANDLER, SIZE) clu_handler_realloc(PTR, SIZE, "f|%s|l|%d", __func__, __LINE__)
 #define free(HANDLER) clu_handler_free(HANDLER, "f|%s|l|%d", __func__, __LINE__)
 
-#define CLU_CHECK_PTR(HANDLER) assert(clu_is_safe(HANDLER));
+#define CLU_IS_SAFE(HANDLER) assert(clu_handler_is_safe(HANDLER));
 #define CLU_REGISTER(HANDLER) clu_handler_register(HANDLER, "f|%s|l|%d", __func__, __LINE__)
 #define CLU_UNREGISTER(HANDLER) clu_handler_unregister(HANDLER, "f|%s|l|%d", __func__, __LINE__)
 
 #else
 
-#define CLU_CHECK_PTR(HANDLER)
+#define CLU_IS_SAFE(HANDLER)
 #define CLU_REGISTER(HANDLER)
 #define CLU_UNREGISTER(HANDLER)
 

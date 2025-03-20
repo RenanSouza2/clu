@@ -26,6 +26,7 @@ list_body_p clu_list_body_create_variadic_tree_rec(va_list *args)
     {
         uint64_t k = va_arg(*args, uint64_t);
         assert(k < SIZE);
+        assert(lb->arr[k] == NULL);
         lb->arr[k] = clu_list_body_create_variadic_tree_rec(args);
     }
     return lb;
@@ -276,7 +277,7 @@ bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
 
     if(lb == NULL)
     {
-        *lb_root = lb = clu_list_body_create(h);
+        *lb_root = clu_list_body_create(h);
         return true;
     }
 
@@ -290,14 +291,6 @@ bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
     }
 
     return clu_list_body_insert_rec(&lb->arr[key], h, index + 1);
-}
-
-bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
-{
-    assert(lb_root);
-    assert(h);
-
-    return clu_list_body_insert_rec(lb_root, h, 0);
 }
 
 bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
@@ -328,12 +321,61 @@ bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
     return true;
 }
 
+
+
+bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
+{
+    assert(lb_root);
+    assert(h);
+
+    return clu_list_body_insert_rec(lb_root, h, 0);
+}
+
 bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
     assert(h);
 
     return clu_list_body_remove_rec(lb_root, h, 0);
+}
+
+
+
+handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, bool revert)
+{
+    assert(lb);
+
+    if(lb->h)
+    {
+        if(j == 0)
+            return lb->h;
+
+        assert(!revert);
+        return NULL;
+    }
+
+    for(uint64_t i=0; i<SIZE; i++)
+    {
+        uint64_t count = clu_list_body_count(lb->arr[i]);
+        if(j < count)
+            return clu_list_body_get_handler_rec(lb->arr[i], j, true);
+
+        j -= count;
+    }
+
+    assert(!revert);
+    return NULL;
+}
+
+bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
+{
+    if(lb == NULL)
+        return false;
+
+    if(lb->h)
+        return lb->h == h;
+
+    return clu_list_body_contains_rec(lb->arr[GET(h, index)], h, index + 1);
 }
 
 
@@ -353,48 +395,11 @@ uint64_t clu_list_body_count(list_body_p lb)
     return count;
 }
 
-handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, uint64_t index, bool revert)
-{
-    assert(lb);
-
-    if(lb->h)
-    {
-        if(j == 0)
-            return lb->h;
-
-        assert(!revert);
-        return NULL;
-    }
-
-    for(uint64_t i=0; i<SIZE; i++)
-    {
-        uint64_t count = clu_list_body_count(lb->arr[i]);
-        if(j < count)
-            return clu_list_body_get_handler_rec(lb->arr[i], j, index + 1, true);
-
-        j -= count;
-    }
-
-    assert(!revert);
-    return NULL;
-}
-
 handler_p clu_list_body_get_handler(list_body_p lb, uint64_t j)
 {
     assert(lb);
 
-    return clu_list_body_get_handler_rec(lb, j, 0, false);
-}
-
-bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
-{
-    if(lb == NULL)
-        return false;
-
-    if(lb->h)
-        return lb->h == h;
-
-    return clu_list_body_contains_rec(lb->arr[GET(h, index)], h, index + 1);
+    return clu_list_body_get_handler_rec(lb, j, false);
 }
 
 bool clu_list_body_contains(list_body_p lb, handler_p h)

@@ -1,6 +1,8 @@
-#ifndef __U64_H__
+#ifndef U64
 
 #include <stdint.h>
+
+#define U64(VALUE) ((uint64_t)(VALUE))
 
 #ifdef __linux__
 

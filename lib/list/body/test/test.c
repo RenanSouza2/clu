@@ -71,7 +71,7 @@ void test_list_body_create(bool show)
         assert(lb->h == HANDLER);                           \
         for(uint64_t i=0; i<16; i++)                        \
             assert(lb->arr[i] == NULL);                     \
-        free(lb, list_body);                                \
+        FREE(lb, list_body);                                \
     }
 
     TEST_LIST_BODY_CREATE(1, NULL);

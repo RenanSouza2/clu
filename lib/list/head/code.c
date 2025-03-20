@@ -132,9 +132,8 @@ void clu_list_head_report(list_head_p lh, char tag[], bool full)
 
 list_head_p clu_list_head_create(tag_p tag)
 {
-    list_head_p lh = calloc(1, sizeof(list_head_t));
-    assert(lh);
-    INC(list_head);
+    list_head_p lh;
+    CALLOC(lh, list_head);
 
     lh->tag = *tag;
     return lh;
@@ -145,7 +144,7 @@ list_head_p clu_list_head_pop(list_head_p lh)
     assert(lh);
 
     list_head_p lh_aux = lh->lh;
-    free(lh, list_head);
+    FREE(lh, list_head);
     return lh_aux;
 }
 

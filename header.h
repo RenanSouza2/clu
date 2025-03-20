@@ -19,17 +19,17 @@ void clu_handler_free(handler_p h, char format[], ...);
 void clu_handler_register(handler_p h, char format[], ...);
 void clu_handler_unregister(handler_p h, char format[], ...);
 
-void clu_mem_report(char tag[]);
-void clu_mem_report_full(char tag[]);
-
-uint64_t clu_get_count_x();
-uint64_t clu_get_count_y(uint64_t i);
-handler_p clu_get_handler(uint64_t i, uint64_t j);
+void clu_mem_report(char format[], ...);
+void clu_mem_report_full(char format[], ...);
 
 bool clu_mem_empty();
 bool clu_is_allocated(handler_p h);
 bool clu_is_safe(handler_p h);
 bool clu_is_freed(handler_p h);
+
+uint64_t clu_get_max_i();
+uint64_t clu_get_max_y(uint64_t i);
+handler_p clu_get_handler(uint64_t i, uint64_t j);
 
 void clu_set_log(bool _log_allocations);
 

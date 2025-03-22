@@ -21,11 +21,11 @@ void clu_handler_unregister(handler_p h, char format[], ...);
 
 void clu_mem_report(char tag[]);
 void clu_mem_report_full(char tag[]);
+bool clu_mem_is_empty();
 
-bool clu_mem_empty();
-bool clu_is_allocated(handler_p h);
 bool clu_handler_is_safe(handler_p h);
-bool clu_is_freed(handler_p h);
+bool clu_handler_is_allocated(handler_p h);
+bool clu_handler_is_freed(handler_p h);
 
 uint64_t clu_get_max_i();
 uint64_t clu_get_max_j(uint64_t i);

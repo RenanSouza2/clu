@@ -181,7 +181,7 @@ void clu_mem_report_full(char tag[])
 
 
 
-bool clu_mem_empty()
+bool clu_mem_is_empty()
 {
     if(lh_root_allocated)
     {
@@ -193,17 +193,17 @@ bool clu_mem_empty()
     return true;
 }
 
-bool clu_is_allocated(handler_p h)
+bool clu_handler_is_allocated(handler_p h)
 {
     return clu_list_head_contains(lh_root_allocated, h);
 }
 
 bool clu_handler_is_safe(handler_p h)
 {
-    return !h || clu_is_allocated(h);
+    return !h || clu_handler_is_allocated(h);
 }
 
-bool clu_is_freed(handler_p h)
+bool clu_handler_is_freed(handler_p h)
 {
     return clu_list_head_contains(lh_root_freed, h);
 }

@@ -14,16 +14,16 @@
         {                                               \
             int status;                                 \
             waitpid(pid, &status, 0);                   \
-            assert(status != 0);                        \
+            assert(status != EXIT_SUCCESS);             \
         }                                               \
         else                                            \
         {                                               \
             assert(freopen("/dev/null", "w", stdout));  \
             assert(freopen("/dev/null", "w", stderr));
 
-#define TEST_REVERT_CLOSE   \
-            exit(0);        \
-        }                   \
+#define TEST_REVERT_CLOSE       \
+            exit(EXIT_SUCCESS); \
+        }                       \
     }
 
 #define TEST_TIMEOUT_OPEN(TIMEOUT)  \

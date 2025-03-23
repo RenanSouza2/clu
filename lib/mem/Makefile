@@ -23,7 +23,6 @@ clean c:
 _clean:
 	echo "cleaning clu $(DIR)"
 	rm -f *.o
-	$(MAKE) clean --directory=test
 
 
 

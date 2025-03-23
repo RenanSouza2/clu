@@ -4,8 +4,9 @@
 #include "../../body/debug.h"
 #include "../../../mem/header.h"
 #include "../../../tag/debug.h"
+
+#include "../../../../utils/test.h"
 #include "../../../../utils/assert.h"
-#include "../../../../utils/test_revert.h"
 
 
 
@@ -418,7 +419,9 @@ void test_list_head()
 int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(5)
     test_list_head();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

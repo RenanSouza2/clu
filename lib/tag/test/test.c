@@ -2,6 +2,8 @@
 
 #include "../debug.h"
 #include "../../mem/header.h"
+
+#include "../../../utils/test.h"
 #include "../../../utils/assert.h"
 
 
@@ -80,7 +82,9 @@ void test_tag()
 int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(5)
     test_tag();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

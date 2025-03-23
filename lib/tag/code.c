@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "debug.h"
-
 #ifdef DEBUG
 
 bool clu_tag(tag_p tag_1, tag_p tag_2)

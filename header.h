@@ -13,7 +13,7 @@ typedef void * handler_p;
 
 handler_p clu_handler_malloc(size_t size, char format[], ...);
 handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...);
-handler_p clu_handler_realloc(handler_p h_old, size_t size, char format[], ...);
+handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...);
 void clu_handler_free(handler_p h, char format[], ...);
 
 void clu_handler_register(handler_p h, char format[], ...);

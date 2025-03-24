@@ -1,4 +1,4 @@
-FLAGS = -c -Wall -Wextra -Werror -Wfatal-errors -O3
+c -c -Wall -Wextra -Werror -Wfatal-errors -O3
 
 BIN = ../bin/bin.o
 

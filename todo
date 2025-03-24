@@ -1,2 +1,4 @@
 rewrite readme
 improve tutorial
+thread safe
+thread performant

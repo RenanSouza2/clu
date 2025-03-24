@@ -119,36 +119,36 @@ void test_list_head_insert(bool show)
         assert(clu_list_head_str(lh[0], lh[1]));                    \
     }
 
-    TEST_LIST_HEAD_INSERT( 1, tag_1, HD(1), true,
+    TEST_LIST_HEAD_INSERT(1, tag_1, HD(1), true,
         0,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_INSERT( 2, tag_1, HD(1), false,
+    TEST_LIST_HEAD_INSERT(2, tag_1, HD(1), false,
         1,  tag_1, 1, HD(1), 0,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_INSERT( 3, tag_1, HD(2), true,
+    TEST_LIST_HEAD_INSERT(3, tag_1, HD(2), true,
         1,  tag_1, 1, HD(1), 0,
         1,  tag_1, 2, HD(1), HD(2), 0
     );
-    TEST_LIST_HEAD_INSERT( 4, tag_2, HD(3), true,
+    TEST_LIST_HEAD_INSERT(4, tag_2, HD(3), true,
         1,  tag_1, 2, HD(1), HD(2), 0,
         2,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 1, HD(3), 0
     );
-    TEST_LIST_HEAD_INSERT( 5, tag_1, HD(4), true,
+    TEST_LIST_HEAD_INSERT(5, tag_1, HD(4), true,
         2,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 1, HD(3), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0
     );
-    TEST_LIST_HEAD_INSERT( 6, tag_2, HD(5), true,
+    TEST_LIST_HEAD_INSERT(6, tag_2, HD(5), true,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 2, HD(3), HD(5), 0
     );
-    TEST_LIST_HEAD_INSERT( 7, tag_2, HD(5), false,
+    TEST_LIST_HEAD_INSERT(7, tag_2, HD(5), false,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 2, HD(3), HD(5), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,

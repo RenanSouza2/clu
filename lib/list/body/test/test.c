@@ -304,38 +304,38 @@ void test_list_body_get_handler(bool show)
         clu_list_body_free(lb);                                         \
     }
 
-    TEST_LIST_BODY_GET_HANDLER( 1, 0, HD(1),
+    TEST_LIST_BODY_GET_HANDLER(1, 0, HD(1),
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 2, 1, NULL,
+    TEST_LIST_BODY_GET_HANDLER(2, 1, NULL,
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 3, 2, NULL,
+    TEST_LIST_BODY_GET_HANDLER(3, 2, NULL,
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 4, 0, HD(1),
+    TEST_LIST_BODY_GET_HANDLER(4, 0, HD(1),
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 5, 1, NULL,
+    TEST_LIST_BODY_GET_HANDLER(5, 1, NULL,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 6, 2, NULL,
+    TEST_LIST_BODY_GET_HANDLER(6, 2, NULL,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 7, 0, HD(1),
+    TEST_LIST_BODY_GET_HANDLER(7, 0, HD(1),
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_GET_HANDLER( 8, 1, HD(2),
+    TEST_LIST_BODY_GET_HANDLER(8, 1, HD(2),
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_GET_HANDLER( 9, 2, NULL,
+    TEST_LIST_BODY_GET_HANDLER(9, 2, NULL,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)

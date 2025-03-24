@@ -116,22 +116,17 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
     return h;
 }
 
-handler_p clu_handler_realloc(handler_p volatile h, size_t size, char format[], ...)
+handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...)
 {
     assert(size);
-
-    handler_p h_new = realloc(h, size);
-    assert(h_new);
-
-    if(h_new == h)
-        return h_new;
 
     va_list args;
     va_start(args, format);
     if(h) clu_handler_deallocate(h, format, args);
-    clu_handler_allocate(h_new, format, args, size, "realloc");
-
-    return h_new;
+    h = realloc(h, size);
+    assert(h);
+    clu_handler_allocate(h, format, args, size, "realloc");
+    return h;
 }
 
 void clu_handler_free(handler_p h, char format[], ...)

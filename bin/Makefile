@@ -1,16 +1,16 @@
 FLAGS = -c -Wall -Wextra -Werror -Wfatal-errors -O3
 
-OBJ = ../lib/lib.o
+LIB = ../lib/lib.o
 SRC = ../src/code.o
 
 build: bin.o
 
-bin.o: $(SRC) $(OBJ)
+bin.o: $(LIB) $(SRC)
 	echo " linking clu"
 	ld -r -o $@ $^
 
-.PHONY: $(SRC) $(OBJ)
-$(SRC) $(OBJ):
+.PHONY: $(SRC) $(LIB)
+$(SRC) $(LIB):
 	$(MAKE) --directory=$(dir $@)
 
 clean:

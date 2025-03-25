@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "./utils/assert.h"
+#include "./lib/macros/assert.h"
 
 typedef void * handler_p;
 

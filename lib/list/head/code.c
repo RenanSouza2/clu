@@ -3,8 +3,8 @@
 #include "debug.h"
 #include "../body/header.h"
 #include "../../mem/header.h"
-#include "../../../utils/assert.h"
-#include "../../../utils/U64.h"
+#include "../../macros/assert.h"
+#include "../../macros/U64.h"
 
 
 #ifdef DEBUG

@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#include "../../utils/struct.h"
+#include "../macros/struct.h"
 
 PLACEHOLDER(tag);
 

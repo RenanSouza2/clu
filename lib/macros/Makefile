@@ -21,18 +21,13 @@ clean c:
 	$(MAKE) clean --directory=$(LIB_ROOT) -s
 
 _clean:
-	echo "cleaning clu $(DIR)"
+	echo "cleaning $(DIR)"
 	rm -f *.o
-	$(MAKE) clean --directory=test
 
 
 
 .PHONY: test
 test t:
-	$(MAKE) debug.o --directory=$(LIB_ROOT) -s
-	$(MAKE) _test -s
-
 _test:
-	$(MAKE) --directory=test
 
 export

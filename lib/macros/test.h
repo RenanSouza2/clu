@@ -52,6 +52,7 @@
         }                                           \
         int status;                                 \
         pid_t pid_return = waitpid(0, &status, 0);  \
+        assert(pid_return > 0);                     \
         if(pid_return == pid_timeout)               \
         {                                           \
             kill(pid_test, SIGKILL);                \

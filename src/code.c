@@ -35,12 +35,13 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         assert(false);
     }
 
-    if(!h)
+    if(h == NULL)
     {
         printf("\n");
         printf("\n");
         printf("\n\t---------------");
         printf("\n\tallocation failure");
+        printf("\n\tfunction returned NULL");
         printf("\n\tsize: %lu", size);
         printf("\n\tfn: %s", fn);
         printf("\n\ttag: %s", tag.str);
@@ -50,7 +51,21 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
     }
 
     clu_list_head_remove(&lh_root_freed, h);
-    assert(clu_list_head_insert(&lh_root_allocated, &tag, h));
+
+    if(!clu_list_head_insert(&lh_root_allocated, &tag, h))
+    {
+        printf("\n");
+        printf("\n");
+        printf("\n\t---------------");
+        printf("\n\tallocation failure");
+        printf("\n\thandler alredy registered");
+        printf("\n\tsize: %lu", size);
+        printf("\n\tfn: %s", fn);
+        printf("\n\ttag: %s", tag.str);
+        printf("\n");
+        printf("\n\t");
+        assert(false);
+    }
 
     if(log_allocations) printf("\n%s | %s: %p\t", fn, tag.str, h);
 }
@@ -67,6 +82,17 @@ void clu_handler_deallocate(handler_p h, char format[], va_list args)
         assert(false);
     }
 
+    if(!clu_list_head_remove(&lh_root_allocated, h))
+    {
+        tag_t tag = clu_tag_format_variadic(format, args);
+        printf("\n");
+        printf("\n");
+        printf("\n\tfree not allocated pointer: %s\t", tag.str);
+        printf("\n\th: %p", h);
+        printf("\n\t");
+        assert(false);
+    }
+
     tag_t tag_free = clu_tag_format("free");
     if(!clu_list_head_insert(&lh_root_freed, &tag_free, h))
     {
@@ -75,16 +101,7 @@ void clu_handler_deallocate(handler_p h, char format[], va_list args)
         printf("\n");
         printf("\n\t---------------");
         printf("\n\tdouble free: %s\t", tag.str);
-        printf("\n\t");
-        assert(false);
-    }
-
-    if(!clu_list_head_remove(&lh_root_allocated, h))
-    {
-        tag_t tag = clu_tag_format_variadic(format, args);
-        printf("\n");
-        printf("\n");
-        printf("\n\tfree not allocated pointer: %s\t", tag.str);
+        printf("\n\th: %p", h);
         printf("\n\t");
         assert(false);
     }

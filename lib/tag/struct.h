@@ -5,7 +5,7 @@
 
 #include <stdarg.h>
 
-#define CLU_TAG_SIZE 50
+#define CLU_TAG_SIZE 100
 
 STRUCT(tag)
 {

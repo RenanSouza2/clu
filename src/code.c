@@ -9,7 +9,7 @@
 
 list_head_p lh_root_allocated = NULL;
 list_body_p lb_root_freed = NULL;
-bool log_allocations = true; // TODO
+bool log_allocations = false;
 
 #undef malloc
 #undef calloc

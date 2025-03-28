@@ -9,7 +9,7 @@
 
 list_head_p lh_root_allocated = NULL;
 list_body_p lb_root_freed = NULL;
-bool log_allocations = true;
+bool log_allocations = true; // TODO
 
 #undef malloc
 #undef calloc
@@ -70,7 +70,7 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         printf("\n\t");
         assert(false);
     }
-    
+
     if(log_allocations) printf("\n%s | %p | %s\t", fn, h, tag.str);
 }
 
@@ -104,7 +104,7 @@ void clu_handler_deallocate(handler_p h, char format[], va_list args, char fn[])
         printf("\n\t");
         assert(false);
     }
-    
+
     if(!clu_list_head_remove(&lh_root_allocated, h))
     {
         printf("\n");
@@ -226,7 +226,10 @@ bool clu_handler_is_allocated(handler_p h)
 
 bool clu_handler_is_freed(handler_p h)
 {
-    return clu_list_body_contains(lb_root_freed, h);
+    if(lb_root_freed)
+        return clu_list_body_contains(lb_root_freed, h);
+
+    return false;
 }
 
 void clu_handler_is_safe(handler_p h, char format[], ...)

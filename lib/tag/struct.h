@@ -5,11 +5,11 @@
 
 #include <stdarg.h>
 
-#define TAG_SIZE 50
+#define CLU_TAG_SIZE 50
 
 STRUCT(tag)
 {
-    char str[TAG_SIZE];
+    char str[CLU_TAG_SIZE];
 };
 
 tag_t clu_tag_format(char const format[], ...);

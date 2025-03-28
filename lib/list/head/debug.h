@@ -5,7 +5,7 @@
 
 #ifdef DEBUG
 
-#define LH(POINTER) ((list_head_p)(POINTER))
+#define LH(HANDLER) ((list_head_p)(HANDLER))
 
 list_head_p clu_list_head_create_immed(uint64_t n, ...);
 void clu_list_head_create_vec_immed(list_head_p lh[], uint64_t n, ...);
@@ -15,7 +15,7 @@ bool clu_list_head_immed(list_head_p lh, uint64_t n, ...);
 
 #endif
 
-list_head_p clu_list_head_create(tag_p tag);
+list_head_p clu_list_head_create(tag_p tag, list_head_p next);
 list_head_p clu_list_head_pop(list_head_p lh);
 
 #endif

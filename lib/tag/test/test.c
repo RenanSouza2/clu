@@ -14,23 +14,23 @@ void test_tag_format(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     tag_t tag = clu_tag_format("test");
-    assert(strncmp(tag.str, "test", TAG_SIZE) == 0);
+    assert(strncmp(tag.str, "test", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     tag = clu_tag_format("0123456789012345678901234567890123456789012345678");
-    assert(strncmp(tag.str, "0123456789012345678901234567890123456789012345678", TAG_SIZE) == 0);
+    assert(strncmp(tag.str, "0123456789012345678901234567890123456789012345678", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     tag = clu_tag_format("01234567890123456789012345678901234567890123456789");
-    assert(strncmp(tag.str, "0123456789012345678901234567890123456789012345678", TAG_SIZE) == 0);
+    assert(strncmp(tag.str, "0123456789012345678901234567890123456789012345678", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 4\t\t", __func__);
     tag = clu_tag_format("%d", 1);
-    assert(strncmp(tag.str, "1", TAG_SIZE) == 0);
+    assert(strncmp(tag.str, "1", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 5\t\t", __func__);
     tag = clu_tag_format("%s", "aaa");
-    assert(strncmp(tag.str, "aaa", TAG_SIZE) == 0);
+    assert(strncmp(tag.str, "aaa", CLU_TAG_SIZE) == 0);
 
     assert(clu_mem_internal_empty());
 }

@@ -15,7 +15,7 @@
 list_head_p clu_list_head_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
-    list_head_p lh = clu_list_head_create(&tag);
+    list_head_p lh = clu_list_head_create(&tag, NULL);
     lh->lb = clu_list_body_create_variadic_list(args);
     assert(lh->lb);
     return lh;
@@ -130,12 +130,13 @@ void clu_list_head_report(list_head_p lh, char tag[], bool full)
 
 
 
-list_head_p clu_list_head_create(tag_p tag)
+list_head_p clu_list_head_create(tag_p tag, list_head_p next)
 {
     list_head_p lh;
     CALLOC(lh, list_head);
 
     lh->tag = *tag;
+    lh->lh = next;
     return lh;
 }
 
@@ -150,12 +151,10 @@ list_head_p clu_list_head_pop(list_head_p lh)
 
 
 
-list_head_p clu_list_head_free(list_head_p lh_root)
+void clu_list_head_free(list_head_p lh_root)
 {
     for(list_head_p lh = lh_root; lh; lh = clu_list_head_pop(lh))
         clu_list_body_free(lh->lb);
-
-    return NULL;
 }
 
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
@@ -164,14 +163,22 @@ bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
     assert(tag);
     assert(h);
 
-    list_head_p lh = *lh_root;
-    if(lh == NULL)
-        lh = *lh_root = clu_list_head_create(tag);
+    if(clu_list_head_contains(*lh_root, h))
+        return false;
 
-    if(clu_tag_eq(&lh->tag, tag))
-        return clu_list_body_insert(&lh->lb, h);
+    for(list_head_p lh = *lh_root; lh; lh = lh->lh)
+    {
+        if(!clu_tag_eq(&lh->tag, tag))
+            continue;
 
-    return clu_list_head_insert(&lh->lh, tag, h);
+        assert(clu_list_body_insert(&lh->lb, h));
+        return true;
+    }
+
+    list_head_p lh = clu_list_head_create(tag, *lh_root);
+    assert(clu_list_body_insert(&lh->lb, h));
+    *lh_root = lh;
+    return true;
 }
 
 bool clu_list_head_remove(list_head_p *lh_root, handler_p h)

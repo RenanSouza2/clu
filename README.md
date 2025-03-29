@@ -17,5 +17,5 @@ The project in this current state is not advised to be used in production due to
 There are 4 functions that can be used to probe the memory status:
 - `clu_mem_report`: displays a report of current allocated pointers
 - `clu_mem_report_full`: same but with more details
-- `clu_mem_empty`: Returns true if there are no allocated pointers
-- `clu_mem_get_pointer`: gets an allocated pointer, the coordinates `x` and `y` are related to the full report
+- `clu_mem_is_empty`: Returns true if there are no allocated pointers
+- `clu_mem_get_handler`: gets an allocated pointer, the coordinates `i` and `j` are related to the full report

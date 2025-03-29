@@ -2,9 +2,10 @@
 
 #include "../debug.h"
 #include "../../../mem/header.h"
-#include "../../../../utils/U64.h"
-#include "../../../../utils/assert.h"
-#include "../../../../utils/test_revert.h"
+
+#include "../../../macros/U64.h"
+#include "../../../macros/test.h"
+#include "../../../macros/assert.h"
 
 
 
@@ -71,7 +72,7 @@ void test_list_body_create(bool show)
         assert(lb->h == HANDLER);                           \
         for(uint64_t i=0; i<16; i++)                        \
             assert(lb->arr[i] == NULL);                     \
-        free(lb, list_body);                                \
+        FREE(lb, list_body);                                \
     }
 
     TEST_LIST_BODY_CREATE(1, NULL);
@@ -303,38 +304,38 @@ void test_list_body_get_handler(bool show)
         clu_list_body_free(lb);                                         \
     }
 
-    TEST_LIST_BODY_GET_HANDLER( 1, 0, HD(1),
+    TEST_LIST_BODY_GET_HANDLER(1, 0, HD(1),
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 2, 1, NULL,
+    TEST_LIST_BODY_GET_HANDLER(2, 1, NULL,
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 3, 2, NULL,
+    TEST_LIST_BODY_GET_HANDLER(3, 2, NULL,
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 4, 0, HD(1),
+    TEST_LIST_BODY_GET_HANDLER(4, 0, HD(1),
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 5, 1, NULL,
+    TEST_LIST_BODY_GET_HANDLER(5, 1, NULL,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 6, 2, NULL,
+    TEST_LIST_BODY_GET_HANDLER(6, 2, NULL,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER( 7, 0, HD(1),
+    TEST_LIST_BODY_GET_HANDLER(7, 0, HD(1),
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_GET_HANDLER( 8, 1, HD(2),
+    TEST_LIST_BODY_GET_HANDLER(8, 1, HD(2),
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_GET_HANDLER( 9, 2, NULL,
+    TEST_LIST_BODY_GET_HANDLER(9, 2, NULL,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
@@ -445,7 +446,9 @@ void test_list_body()
 int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_list_body();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

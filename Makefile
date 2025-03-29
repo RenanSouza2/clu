@@ -5,7 +5,6 @@ SRC = src
 DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
 
 build b:
-	echo " linking clu object $(DIR)"
 	$(MAKE) --directory=$(BIN) -s
 
 clean c:

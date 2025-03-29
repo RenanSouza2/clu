@@ -4,8 +4,9 @@
 #include "../../body/debug.h"
 #include "../../../mem/header.h"
 #include "../../../tag/debug.h"
-#include "../../../../utils/assert.h"
-#include "../../../../utils/test_revert.h"
+
+#include "../../../macros/test.h"
+#include "../../../macros/assert.h"
 
 
 
@@ -16,11 +17,18 @@ void test_list_head_create(bool show)
     tag_t tag = clu_tag_format("test");
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create(&tag);
+    list_head_p lh = clu_list_head_create(&tag, NULL);
     assert(clu_tag(&lh->tag, &tag));
     assert(lh->lb == NULL);
     assert(lh->lh == NULL);
-    free(lh, list_head);
+    FREE(lh, list_head);
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    lh = clu_list_head_create(&tag, LH(1));
+    assert(clu_tag(&lh->tag, &tag));
+    assert(lh->lb == NULL);
+    assert(lh->lh == LH(1));
+    FREE(lh, list_head);
 
     assert(clu_mem_internal_empty());
 }
@@ -29,22 +37,21 @@ void test_list_head_pop(bool show)
 {
     printf("\n\t%s", __func__);
 
-    tag_t tag = clu_tag_format("test");
+    tag_t tag_1 = clu_tag_format("test_1");
+    tag_t tag_2 = clu_tag_format("test_2");
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create(&tag);
+    list_head_p lh = clu_list_head_create(&tag_1, NULL);
     lh = clu_list_head_pop(lh);
     assert(lh == NULL);
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lh = clu_list_head_create(&tag);
-    lh->lb = LB(1);
-    lh->lh = clu_list_head_create(&tag);
-    lh->lh->lb = LB(2);
+    lh = clu_list_head_create(&tag_2, NULL);
+    lh = clu_list_head_create(&tag_1, lh);
     lh = clu_list_head_pop(lh);
     assert(lh != NULL);
-    assert(lh->lb == LB(2));
-    free(lh, list_head);
+    assert(clu_tag(&lh->tag, &tag_2));
+    FREE(lh, list_head);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     TEST_REVERT_OPEN
@@ -118,56 +125,60 @@ void test_list_head_insert(bool show)
         assert(clu_list_head_str(lh[0], lh[1]));                    \
     }
 
-    TEST_LIST_HEAD_INSERT( 1, tag_1, HD(1), true,
+    TEST_LIST_HEAD_INSERT(1, tag_1, HD(1), true,
         0,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_INSERT( 2, tag_1, HD(1), false,
+    TEST_LIST_HEAD_INSERT(2, tag_1, HD(1), false,
         1,  tag_1, 1, HD(1), 0,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_INSERT( 3, tag_1, HD(2), true,
+    TEST_LIST_HEAD_INSERT(3, tag_2, HD(1), false,
+        1,  tag_1, 1, HD(1), 0,
+        1,  tag_1, 1, HD(1), 0
+    );
+    TEST_LIST_HEAD_INSERT(4, tag_1, HD(2), true,
         1,  tag_1, 1, HD(1), 0,
         1,  tag_1, 2, HD(1), HD(2), 0
     );
-    TEST_LIST_HEAD_INSERT( 4, tag_2, HD(3), true,
+    TEST_LIST_HEAD_INSERT(5, tag_2, HD(3), true,
         1,  tag_1, 2, HD(1), HD(2), 0,
-        2,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 1, HD(3), 0
+        2,  tag_2, 1, HD(3), 0,
+            tag_1, 2, HD(1), HD(2), 0
     );
-    TEST_LIST_HEAD_INSERT( 5, tag_1, HD(4), true,
+    TEST_LIST_HEAD_INSERT(6, tag_1, HD(4), true,
         2,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 1, HD(3), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0
     );
-    TEST_LIST_HEAD_INSERT( 6, tag_2, HD(5), true,
+    TEST_LIST_HEAD_INSERT(7, tag_2, HD(TEST_TIMEOUT_DEFAULT), true,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(5), 0
+            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0
     );
-    TEST_LIST_HEAD_INSERT( 7, tag_2, HD(5), false,
+    TEST_LIST_HEAD_INSERT(8, tag_2, HD(TEST_TIMEOUT_DEFAULT), false,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(5), 0,
+            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(5), 0
+            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0
     );
 
     #undef TEST_LIST_HEAD_INSERT
 
-    if(show) printf("\n\t\t%s  8\t\t", __func__);
+    if(show) printf("\n\t\t%s  9\t\t", __func__);
     TEST_REVERT_OPEN
     clu_list_head_insert(NULL, &tag_1, HD(1));
     TEST_REVERT_CLOSE
 
-    if(show) printf("\n\t\t%s  9\t\t", __func__);
+    if(show) printf("\n\t\t%s 10\t\t", __func__);
     list_head_p lh = clu_list_head_create_immed(0);
     TEST_REVERT_OPEN
     clu_list_head_insert(&lh, NULL, HD(1));
     TEST_REVERT_CLOSE
 
-    if(show) printf("\n\t\t%s 10\t\t", __func__);
+    if(show) printf("\n\t\t%s 11\t\t", __func__);
     lh = clu_list_head_create_immed(0);
     TEST_REVERT_OPEN
     clu_list_head_insert(&lh, &tag_1, NULL);
@@ -199,17 +210,17 @@ void test_list_head_remove(bool show)
     TEST_LIST_HEAD_REMOVE(1, HD(7), false,
         4,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(5), 0,
+            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
             tag_4, 1, HD(6), 0,
         4,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(5), 0,
+            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
             tag_4, 1, HD(6), 0
     );
-    TEST_LIST_HEAD_REMOVE(2, HD(5), true,
+    TEST_LIST_HEAD_REMOVE(2, HD(TEST_TIMEOUT_DEFAULT), true,
         4,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(5), 0,
+            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
             tag_4, 1, HD(6), 0,
         3,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
@@ -397,7 +408,7 @@ void test_list_head()
 {
     printf("\n%s", __func__);
 
-    bool show = false;
+    bool show = true;
 
     test_list_head_create(show);
     test_list_head_pop(show);
@@ -418,7 +429,9 @@ void test_list_head()
 int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_list_head();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

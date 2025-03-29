@@ -7,7 +7,8 @@
 
 #include <stdarg.h>
 
-#define LB(POINTER) ((list_body_p)(POINTER))
+#define HD(HANDLER) ((handler_p)(HANDLER))
+#define LB(HANDLER) ((list_body_p)(HANDLER))
 
 void clu_list_body_display_str(list_body_p lb);
 

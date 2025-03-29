@@ -2,7 +2,9 @@
 
 #include "../debug.h"
 #include "../../mem/header.h"
-#include "../../../utils/assert.h"
+
+#include "../../macros/test.h"
+#include "../../macros/assert.h"
 
 
 
@@ -12,23 +14,23 @@ void test_tag_format(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     tag_t tag = clu_tag_format("test");
-    assert(clu_tag(&tag, TAG("test")));
+    assert(strncmp(tag.str, "test", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
-    tag = clu_tag_format("0123456789012345678901234567890123456789012345678");
-    assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678") == 0);
+    tag = clu_tag_format("012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678");
+    assert(strncmp(tag.str, "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
-    tag = clu_tag_format("01234567890123456789012345678901234567890123456789");
-    assert(strcmp(tag.str, "0123456789012345678901234567890123456789012345678") == 0);
+    tag = clu_tag_format("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
+    assert(strncmp(tag.str, "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 4\t\t", __func__);
     tag = clu_tag_format("%d", 1);
-    assert(strcmp(tag.str, "1") == 0);
+    assert(strncmp(tag.str, "1", CLU_TAG_SIZE) == 0);
 
     if(show) printf("\n\t\t%s 5\t\t", __func__);
     tag = clu_tag_format("%s", "aaa");
-    assert(strcmp(tag.str, "aaa") == 0);
+    assert(strncmp(tag.str, "aaa", CLU_TAG_SIZE) == 0);
 
     assert(clu_mem_internal_empty());
 }
@@ -80,7 +82,9 @@ void test_tag()
 int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_tag();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

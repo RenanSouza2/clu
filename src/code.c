@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "../utils/assert.h"
+#include "../lib/macros/assert.h"
 
 #include "../header.h"
 #include "../lib/list/body/header.h"
@@ -8,7 +8,7 @@
 #include "../lib/tag/struct.h"
 
 list_head_p lh_root_allocated = NULL;
-list_head_p lh_root_freed = NULL;
+list_body_p lb_root_freed = NULL;
 bool log_allocations = false;
 
 #undef malloc
@@ -29,18 +29,21 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         printf("\n\t---------------");
         printf("\n\tallocation failure");
         printf("\n\tsize is ZERO");
+        printf("\n");
         printf("\n\ttag: %s", tag.str);
         printf("\n");
         printf("\n\t");
         assert(false);
     }
 
-    if(!h)
+    if(h == NULL)
     {
         printf("\n");
         printf("\n");
         printf("\n\t---------------");
         printf("\n\tallocation failure");
+        printf("\n\tfunction returned NULL");
+        printf("\n");
         printf("\n\tsize: %lu", size);
         printf("\n\tfn: %s", fn);
         printf("\n\ttag: %s", tag.str);
@@ -49,47 +52,74 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         assert(false);
     }
 
-    clu_list_head_remove(&lh_root_freed, h);
-    assert(clu_list_head_insert(&lh_root_allocated, &tag, h));
+    clu_list_body_remove(&lb_root_freed, h);
 
-    if(log_allocations) printf("\n%s | %s: %p\t", fn, tag.str, h);
+    if(!clu_list_head_insert(&lh_root_allocated, &tag, h))
+    {
+        printf("\n");
+        printf("\n");
+        printf("\n\t---------------");
+        printf("\n\tallocation failure");
+        printf("\n\thandler alredy allocated");
+        printf("\n");
+        printf("\n\th: %p", h);
+        printf("\n\tsize: %lu", size);
+        printf("\n\tfn: %s", fn);
+        printf("\n\ttag: %s", tag.str);
+        printf("\n");
+        printf("\n\t");
+        assert(false);
+    }
+
+    if(log_allocations) printf("\n%s | %p | %s\t", fn, h, tag.str);
 }
 
-void clu_handler_deallocate(handler_p h, char format[], va_list args)
+void clu_handler_deallocate(handler_p h, char format[], va_list args, char fn[])
 {
+    tag_t tag = clu_tag_format_variadic(format, args);
+
     if(h == NULL)
     {
         printf("\n");
         printf("\n");
         printf("\n\t---------------");
+        printf("\n\tfree faillure");
+        printf("\n");
         printf("\n\tfree NULL pointer\t");
+        printf("\n\ttag: %s", tag.str);
         printf("\n\t");
         assert(false);
     }
 
-    tag_t tag_free = clu_tag_format("free");
-    if(!clu_list_head_insert(&lh_root_freed, &tag_free, h))
+    if(!clu_list_body_insert(&lb_root_freed, h))
     {
-        tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
         printf("\n");
         printf("\n\t---------------");
-        printf("\n\tdouble free: %s\t", tag.str);
+        printf("\n\tfree faillure");
+        printf("\n\tdouble free");
+        printf("\n");
+        printf("\n\th: %p", h);
+        printf("\n\ttag: %s", tag.str);
         printf("\n\t");
         assert(false);
     }
 
     if(!clu_list_head_remove(&lh_root_allocated, h))
     {
-        tag_t tag = clu_tag_format_variadic(format, args);
         printf("\n");
         printf("\n");
+        printf("\n\t---------------");
+        printf("\n\tfree faillure");
         printf("\n\tfree not allocated pointer: %s\t", tag.str);
+        printf("\n");
+        printf("\n\th: %p", h);
+        printf("\n\ttag: %s", tag.str);
         printf("\n\t");
         assert(false);
     }
 
-    if(log_allocations) printf("\n\tfree: %p\t", h);
+    if(log_allocations) printf("\n%s | %p | %s\t", fn, h, tag.str);
 }
 
 
@@ -116,21 +146,16 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
     return h;
 }
 
-handler_p clu_handler_realloc(handler_p volatile h_old, size_t size, char format[], ...)
+handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...)
 {
     assert(size);
 
-    handler_p h = realloc(h_old, size);
-    assert(h);
-
-    if(h == h_old)
-        return h;
-
     va_list args;
     va_start(args, format);
-    if(h_old) clu_handler_deallocate(h_old, format, args);
+    if(h) clu_handler_deallocate(h, format, args, "realloc");
+    h = realloc(h, size);
+    assert(h);
     clu_handler_allocate(h, format, args, size, "realloc");
-
     return h;
 }
 
@@ -138,7 +163,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    clu_handler_deallocate(h, format, args);
+    clu_handler_deallocate(h, format, args, "free");
     free(h);
 }
 
@@ -155,7 +180,7 @@ void clu_handler_unregister(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    clu_handler_deallocate(h, format, args);
+    clu_handler_deallocate(h, format, args, "custom");
 }
 
 
@@ -181,12 +206,80 @@ void clu_mem_report_full(char tag[])
 
 
 
-uint64_t clu_get_count_x()
+bool clu_mem_is_empty()
+{
+    if(lh_root_allocated)
+    {
+        clu_mem_report("ASSERT FAIL | MEMORY NOT EMPTY");
+        return false;
+    }
+
+    clu_list_body_free(lb_root_freed);
+    lb_root_freed = NULL;
+    return true;
+}
+
+bool clu_handler_is_allocated(handler_p h)
+{
+    return clu_list_head_contains(lh_root_allocated, h);
+}
+
+bool clu_handler_is_freed(handler_p h)
+{
+    if(lb_root_freed)
+        return clu_list_body_contains(lb_root_freed, h);
+
+    return false;
+}
+
+void clu_handler_is_safe(handler_p h, char format[], ...)
+{
+    if(h == NULL)
+        return;
+
+    if(clu_handler_is_freed(h))
+    {
+        va_list args;
+        va_start(args, format);
+        tag_t tag = clu_tag_format_variadic(format, args);
+        printf("\n");
+        printf("\n");
+        printf("\n\t---------------");
+        printf("\n\thandler not safe");
+        printf("\n\thandler already freed");
+        printf("\n");
+        printf("\n\th: %p", h);
+        printf("\n\ttag: %s", tag.str);
+        printf("\n\t");
+        assert(false);
+    }
+
+    if(!clu_handler_is_allocated(h))
+    {
+        va_list args;
+        va_start(args, format);
+        tag_t tag = clu_tag_format_variadic(format, args);
+        printf("\n");
+        printf("\n");
+        printf("\n\t---------------");
+        printf("\n\thandler not safe");
+        printf("\n\thandler not allocated");
+        printf("\n");
+        printf("\n\th: %p", h);
+        printf("\n\ttag: %s", tag.str);
+        printf("\n\t");
+        assert(false);
+    }
+}
+
+
+
+uint64_t clu_get_max_i()
 {
     return clu_list_head_count(lh_root_allocated);
 }
 
-uint64_t clu_get_count_y(uint64_t i)
+uint64_t clu_get_max_j(uint64_t i)
 {
     list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
     return lb ? clu_list_body_count(lb) : 0;
@@ -196,35 +289,6 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
     list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
     return lb ? clu_list_body_get_handler(lb, j) : NULL;
-}
-
-
-
-bool clu_mem_empty()
-{
-    if(lh_root_allocated)
-    {
-        clu_mem_report("ASSERT FAIL | MEMORY NOT EMPTY");
-        return false;
-    }
-
-    lh_root_freed = clu_list_head_free(lh_root_freed);
-    return true;
-}
-
-bool clu_is_allocated(handler_p h)
-{
-    return clu_list_head_contains(lh_root_allocated, h);
-}
-
-bool clu_is_safe(handler_p h)
-{
-    return !h || clu_is_allocated(h);
-}
-
-bool clu_is_freed(handler_p h)
-{
-    return clu_list_head_contains(lh_root_freed, h);
 }
 
 

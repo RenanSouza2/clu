@@ -5,7 +5,7 @@
 
 #include <stdbool.h>
 
-#include "../../utils/U64.h"
+#include "../macros/U64.h"
 
 extern uint64_t list_head_alive;
 extern uint64_t list_body_alive;
@@ -20,7 +20,14 @@ bool clu_mem_internal_empty();
         NAME##_alive--;         \
     }
 
-#define free(HANDLER, NAME) \
+#define CALLOC(VAR, NAME)                   \
+    {                                       \
+        VAR = calloc(1, sizeof(NAME##_t));  \
+        assert(VAR);                        \
+        INC(NAME);                          \
+    }
+
+#define FREE(HANDLER, NAME) \
     {                       \
         DEC(NAME);          \
         free(HANDLER);      \
@@ -28,8 +35,12 @@ bool clu_mem_internal_empty();
 
 #else
 
-#define INC(NAME)
-#define free(HANDLER, NAME) free(HANDLER)
+#define FREE(HANDLER, NAME) free(HANDLER)
+#define CALLOC(VAR, NAME)                   \
+    {                                       \
+        VAR = calloc(1, sizeof(NAME##_t));  \
+        assert(VAR);                        \
+    }
 
 #endif
 

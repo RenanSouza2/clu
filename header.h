@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "./lib/macros/assert.h"
-
 typedef void * handler_p;
 
 handler_p clu_handler_malloc(size_t size, char format[], ...);

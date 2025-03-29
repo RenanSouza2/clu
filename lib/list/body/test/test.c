@@ -446,7 +446,7 @@ void test_list_body()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(5)
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_list_body();
     TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");

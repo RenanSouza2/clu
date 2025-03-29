@@ -33,6 +33,8 @@
         }                       \
     }
 
+#define TEST_TIMEOUT_DEFAULT 5
+
 #define TEST_TIMEOUT_OPEN(TIMEOUT)  \
     {                               \
         pid_t pid_timeout = fork(); \

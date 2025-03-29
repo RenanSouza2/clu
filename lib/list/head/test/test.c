@@ -152,17 +152,17 @@ void test_list_head_insert(bool show)
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0
     );
-    TEST_LIST_HEAD_INSERT(7, tag_2, HD(5), true,
+    TEST_LIST_HEAD_INSERT(7, tag_2, HD(TEST_TIMEOUT_DEFAULT), true,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
             tag_2, 1, HD(3), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(5), 0
+            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0
     );
-    TEST_LIST_HEAD_INSERT(8, tag_2, HD(5), false,
+    TEST_LIST_HEAD_INSERT(8, tag_2, HD(TEST_TIMEOUT_DEFAULT), false,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(5), 0,
+            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0,
         2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(5), 0
+            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0
     );
 
     #undef TEST_LIST_HEAD_INSERT
@@ -210,17 +210,17 @@ void test_list_head_remove(bool show)
     TEST_LIST_HEAD_REMOVE(1, HD(7), false,
         4,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(5), 0,
+            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
             tag_4, 1, HD(6), 0,
         4,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(5), 0,
+            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
             tag_4, 1, HD(6), 0
     );
-    TEST_LIST_HEAD_REMOVE(2, HD(5), true,
+    TEST_LIST_HEAD_REMOVE(2, HD(TEST_TIMEOUT_DEFAULT), true,
         4,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(5), 0,
+            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
             tag_4, 1, HD(6), 0,
         3,  tag_1, 2, HD(1), HD(2), 0,
             tag_2, 2, HD(3), HD(4), 0,
@@ -429,7 +429,7 @@ void test_list_head()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(5)
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_list_head();
     TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");

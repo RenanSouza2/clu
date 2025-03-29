@@ -141,7 +141,7 @@ bool uint64(uint64_t i1, uint64_t i2)
 {
     if(i1 != i2)
     {
-        printf("\n\n\tUINT64 ASSERTION ERROR\t| " U64P() " " U64P() "", i1, i2);
+        printf("\n\n\tUINT64 ASSERT ERROR\t| " U64P() " " U64P() "", i1, i2);
         return false;
     }
 
@@ -154,7 +154,7 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
     {
         if(lb_2 != NULL)
         {
-            printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
+            printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
             return false;
         }
 
@@ -163,7 +163,7 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
 
     if(lb_2 == NULL)
     {
-        printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
+        printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
         return false;
     }
 
@@ -178,14 +178,14 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
         for(uint64_t i=0; i<index; i++)
             if(!uint64(GET(lb_1->h, i), GET(h, i)))
             {
-                printf("\n\tLIST BODY ASSERTION ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
+                printf("\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
                 return false;
             }
 
         for(uint64_t i=0; i<16; i++)
             if(lb_1->arr[i])
             {
-                printf("\n\n\tLIST BODY ASSERTION ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
+                printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
                 return false;
             }
 

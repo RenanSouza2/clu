@@ -123,7 +123,7 @@ void clu_handler_deallocate(handler_p h, char format[], va_list args, char fn[])
         assert(false);
     }
 
-    if(log_allocations) printf("\n%s | %p | %s\t", fn, h, tag.str);
+    if(log_allocations) printf("\n\t%s | %p | %s\t", fn, h, tag.str);
 }
 
 

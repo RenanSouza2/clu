@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "../lib/macros/assert.h"
+#include "../mods/macros/assert.h"
 
 #include "../header.h"
 #include "../lib/list/body/header.h"

@@ -3,8 +3,8 @@
 #include "../debug.h"
 #include "../../mem/header.h"
 
-#include "../../macros/test.h"
-#include "../../macros/assert.h"
+#include "../../../mods/macros/assert.h"
+#include "../../../mods/macros/test.h"
 
 
 

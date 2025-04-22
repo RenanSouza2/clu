@@ -220,7 +220,7 @@ bool clu_list_body_immed_list(list_body_p lb, uint64_t n, ...)
 
 
 
-void clu_list_body_display_a(list_body_p lb) // TODO
+void clu_list_body_display(list_body_p lb)
 {
     if(lb == NULL)
         return;
@@ -323,6 +323,7 @@ bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
 bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
+    assert(*lb_root);
     assert(h);
 
     return clu_list_body_remove_rec(lb_root, h, 0);

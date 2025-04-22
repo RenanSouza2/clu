@@ -6,7 +6,6 @@
 #include "../../../tag/debug.h"
 
 #include "../../../../mods/macros/test.h"
-#include "../../../../mods/macros/assert.h"
 
 
 #define TEST_ASSERT_EMPTY assert(clu_mem_internal_empty());
@@ -37,7 +36,7 @@ void test_list_head_create(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_head_pop(bool show)
@@ -76,7 +75,7 @@ void test_list_head_pop(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_head_create_variadic(bool show)
@@ -134,7 +133,7 @@ void test_list_head_create_variadic(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 
@@ -262,7 +261,7 @@ void test_list_head_insert(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_head_remove(bool show)
@@ -393,7 +392,7 @@ void test_list_head_remove(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 
@@ -430,7 +429,7 @@ void test_list_head_count(bool show)
 
     #undef TEST_LIST_HEAD_COUNT
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_head_get_body(bool show)
@@ -487,7 +486,7 @@ void test_list_head_get_body(bool show)
 
     #undef TEST_LIST_HEAD_GET_BODY
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_head_contains(bool show)
@@ -533,14 +532,14 @@ void test_list_head_contains(bool show)
 
     #undef TEST_LIST_HEAD_CONTAINS
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 
 
 void test_list_head()
 {
-    printf("\n%s", __func__);
+    TEST_LIB
 
     bool show = false;
 
@@ -555,7 +554,7 @@ void test_list_head()
     test_list_head_get_body(show);
     test_list_head_contains(show);
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 

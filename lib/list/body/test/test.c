@@ -3,7 +3,6 @@
 #include "../debug.h"
 #include "../../../mem/header.h"
 
-#include "../../../../mods/macros/assert.h"
 #include "../../../../mods/macros/test.h"
 #include "../../../../mods/macros/U64.h"
 
@@ -48,7 +47,7 @@ void test_get(bool show)
         TEST_CASE_CLOSE;
     }
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_set(bool show)
@@ -71,7 +70,7 @@ void test_set(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_body_create(bool show)
@@ -96,7 +95,7 @@ void test_list_body_create(bool show)
 
     #undef TEST_LIST_BODY_CREATE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_body_create_immed_tree(bool show)
@@ -153,7 +152,7 @@ void test_list_body_create_immed_tree(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 
@@ -233,7 +232,7 @@ void test_list_body_insert(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_body_remove(bool show)
@@ -350,7 +349,7 @@ void test_list_body_remove(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 
@@ -389,7 +388,7 @@ void test_list_body_count(bool show)
 
     #undef TEST_LIST_BODY_COUNT
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_body_get_handler(bool show)
@@ -462,7 +461,7 @@ void test_list_body_get_handler(bool show)
     }
     TEST_CASE_CLOSE
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 void test_list_body_contains(bool show)
@@ -529,14 +528,14 @@ void test_list_body_contains(bool show)
 
     #undef TEST_LIST_BODY_CONTANS
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 
 
 void test_list_body()
 {
-    printf("\n%s", __func__);
+    TEST_LIB
 
     bool show = false;
 
@@ -554,7 +553,7 @@ void test_list_body()
     test_list_body_get_handler(show);
     test_list_body_contains(show);
 
-    assert(clu_mem_internal_empty());
+    TEST_ASSERT_EMPTY
 }
 
 

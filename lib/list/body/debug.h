@@ -19,7 +19,7 @@ list_body_p clu_list_body_create_immed_list(uint64_t n, ...);
 
 bool uint64(uint64_t i1, uint64_t i2);
 bool clu_list_body_inner(list_body_p lb_1, list_body_p lb_2);
-bool clu_list_body_immed_tree(list_body_p lb, bool content, ...);
+bool clu_list_body_immed_tree(list_body_p lb, int content, ...);
 bool clu_list_body_immed_list(list_body_p lb, uint64_t n, ...);
 
 #endif

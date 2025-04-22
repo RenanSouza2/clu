@@ -35,6 +35,7 @@ void test_list_head_create(bool show)
         assert(lh->lh == LH(1));
         FREE(lh, list_head);
     }
+    TEST_CASE_CLOSE
 
     assert(clu_mem_internal_empty());
 }

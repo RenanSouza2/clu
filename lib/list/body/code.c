@@ -200,7 +200,7 @@ bool clu_list_body(list_body_p lb_1, list_body_p lb_2)
     return true;
 }
 
-bool clu_list_body_immed_tree(list_body_p lb, bool content, ...)
+bool clu_list_body_immed_tree(list_body_p lb, int content, ...)
 {
     va_list args;
     va_start(args, content);

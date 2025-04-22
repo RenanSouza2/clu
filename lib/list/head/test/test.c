@@ -96,14 +96,13 @@ void test_list_head_create_variadic(bool show)
 
     TEST_CASE_OPEN(2)
     {
-        if(show) printf("\n\t\t%s 2\t\t", __func__);
         list_head_p lh = clu_list_head_create_immed(1,
             tag_1, 1, HD(1), 0
         );
         assert(lh != NULL);
         assert(clu_list_body_immed_list(lh->lb, 1, HD(1), 0))
         assert(lh->lh == NULL);
-        clu_list_head_free(lh);
+        FREE(lh, list_head);
     }
     TEST_CASE_CLOSE
 
@@ -115,7 +114,7 @@ void test_list_head_create_variadic(bool show)
         assert(lh != NULL);
         assert(clu_list_body_immed_list(lh->lb, 2, HD(1), HD(2), 0))
         assert(lh->lh == NULL);
-        clu_list_head_free(lh);
+        FREE(lh, list_head);
     }
     TEST_CASE_CLOSE
 
@@ -130,7 +129,8 @@ void test_list_head_create_variadic(bool show)
         assert(lh->lh != NULL);
         assert(clu_list_body_immed_list(lh->lh->lb, 1, HD(2), 0));
         assert(lh->lh->lh == NULL);
-        clu_list_head_free(lh);
+        FREE(lh->lh, list_head);
+        FREE(lh, list_head);
     }
     TEST_CASE_CLOSE
 
@@ -523,7 +523,7 @@ void test_list_head()
 {
     printf("\n%s", __func__);
 
-    bool show = false;
+    bool show = true;
 
     test_list_head_create(show);
     test_list_head_pop(show);

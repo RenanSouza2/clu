@@ -251,8 +251,11 @@ void clu_list_body_free(list_body_p lb)
     if(lb == NULL)
         return;
 
-    for(uint64_t i=0; i<SIZE; i++)
-        clu_list_body_free(lb->arr[i]);
+    if(lb->h == NULL)
+    {   
+        for(uint64_t i=0; i<SIZE; i++)
+            clu_list_body_free(lb->arr[i]);
+    }
 
     FREE(lb, list_body);
 }

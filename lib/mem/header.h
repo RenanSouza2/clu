@@ -13,29 +13,46 @@ extern uint64_t list_body_alive;
 void clu_mem_internal_display();
 bool clu_mem_internal_empty();
 
-#define INC(NAME) NAME##_alive++;
-#define DEC(NAME)               \
-    {                           \
-        assert(NAME##_alive);   \
-        NAME##_alive--;         \
+#define CLU_MEM_INTERNAL_LOG_STATUS false
+
+#define CLU_MEM_INTERNAL_LOG(...)       \
+    {                                   \
+        if(CLU_MEM_INTERNAL_LOG_STATUS) \
+        {                               \
+            printf("\n" __VA_ARGS__);   \
+        }                               \
+    }
+
+#define INC(HANDLER, NAME)                                  \
+    {                                                       \
+        CLU_MEM_INTERNAL_LOG("allocating: %p", HANDLER);    \
+        NAME##_alive++;                                     \
+    }
+
+#define DEC(HANDLER, NAME)                              \
+    {                                                   \
+        assert(NAME##_alive);                           \
+        CLU_MEM_INTERNAL_LOG("\tfreeing: %p", HANDLER); \
+        NAME##_alive--;                                 \
     }
 
 #define CALLOC(VAR, NAME)                   \
     {                                       \
         VAR = calloc(1, sizeof(NAME##_t));  \
         assert(VAR);                        \
-        INC(NAME);                          \
+        INC(VAR, NAME);                     \
     }
 
 #define FREE(HANDLER, NAME) \
     {                       \
-        DEC(NAME);          \
+        DEC(HANDLER, NAME); \
         free(HANDLER);      \
     }
 
 #else
 
 #define FREE(HANDLER, NAME) free(HANDLER)
+
 #define CALLOC(VAR, NAME)                   \
     {                                       \
         VAR = calloc(1, sizeof(NAME##_t));  \

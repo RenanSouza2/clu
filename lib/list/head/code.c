@@ -16,7 +16,8 @@ list_head_p clu_list_head_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
     list_head_p lh = clu_list_head_create(&tag, NULL);
-    lh->lb = clu_list_body_create_variadic_list(args);
+    int n = va_arg(*args, int);
+    lh->lb = clu_list_body_create_variadic_list(n, args);
     assert(lh->lb);
     return lh;
 }
@@ -57,7 +58,7 @@ void clu_list_head_create_vec_immed(list_head_p lh[], uint64_t n, ...)
 
 
 
-bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
+bool clu_list_head_inner(list_head_p lh_1, list_head_p lh_2)
 {
     for(uint64_t i=0; lh_1 && lh_2; i++)
     {
@@ -67,14 +68,14 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
             return false;
         }
 
-        if(!clu_list_body_str(lh_1->lb, lh_2->lb))
+        if(!clu_list_body_inner(lh_1->lb, lh_2->lb))
         {
             printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | " U64P() "", i);
             return false;
         }
 
-        lh_1 = clu_list_head_pop(lh_1);
-        lh_2 = clu_list_head_pop(lh_2);
+        lh_1 = lh_1->lh;
+        lh_2 = lh_2->lh;
     }
 
     if(lh_2)
@@ -92,12 +93,26 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
     return true;
 }
 
+bool clu_list_head(list_head_p lh_1, list_head_p lh_2)
+{
+    if(!clu_list_head_inner(lh_1, lh_2))
+    {
+        clu_list_head_report(lh_1, "lh_1", true);
+        clu_list_head_report(lh_2, "lh_2", true);
+        return false;
+    }
+
+    clu_list_head_free(lh_1);
+    clu_list_head_free(lh_2);
+    return true;
+}
+
 bool clu_list_head_immed(list_head_p lh, uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
     list_head_p lh_2 = clu_list_head_create_variadic_n(n, &args);
-    return clu_list_head_str(lh, lh_2);
+    return clu_list_head(lh, lh_2);
 }
 
 #endif

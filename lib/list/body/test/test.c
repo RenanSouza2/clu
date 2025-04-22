@@ -15,14 +15,14 @@ void test_offset(bool show)
 {
     TEST_FN
 
-    #define TEST_OFFSET(TAG, IN, RES)               \
-    {                                               \
-        TEST_CASE_OPEN(TAG)                         \
-        {                                           \
-            uint64_t res = OFFSET(IN);              \
-            assert(uint64(res, RES));               \
-        }                                           \
-        TEST_CASE_CLOSE;    \
+    #define TEST_OFFSET(TAG, IN, RES)   \
+    {                                   \
+        TEST_CASE_OPEN(TAG)             \
+        {                               \
+            uint64_t res = OFFSET(IN);  \
+            assert(uint64(res, RES));   \
+        }                               \
+        TEST_CASE_CLOSE;                \
     }
 
     TEST_OFFSET(1, 15, 60);
@@ -162,22 +162,23 @@ void test_list_body_insert(bool show)
 {
     TEST_FN
 
-    #define TEST_LIST_BODY_INSERT(TAG, HANDLER, RES, ...)               \
-    {                                                                   \
-        TEST_CASE_OPEN(TAG)                                             \
-        {                                                               \
-            list_body_p lb[2];                                          \
-            clu_list_body_create_vec_immed_tree(lb, 2, __VA_ARGS__);    \
-            bool res = clu_list_body_insert(&lb[0], HANDLER);           \
-            assert(res == RES);                                         \
-            assert(clu_list_body_str(lb[0], lb[1]));                    \
-        }                                                               \
-        TEST_CASE_CLOSE                                                 \
+    #define TEST_LIST_BODY_INSERT(TAG, LIST_BEF, HANDLER, RES, LIST_AFT)    \
+    {                                                                       \
+        TEST_CASE_OPEN(TAG)                                                 \
+        {                                                                   \
+            list_body_p lb = clu_list_body_create_immed_tree(LIST_BEF);     \
+            bool res = clu_list_body_insert(&lb, HANDLER);                  \
+            assert(res == RES);                                             \
+            assert(clu_list_body_immed_tree(lb, ARG_OPEN LIST_AFT));        \
+        }                                                                   \
+        TEST_CASE_CLOSE                                                     \
     }
 
-    TEST_LIST_BODY_INSERT(1, HD(1), true,
-        false,
-        true, HD(1)
+    TEST_LIST_BODY_INSERT(1,
+        (false),
+        HD(1),
+        true,
+        (true, HD(1))
     );
     TEST_LIST_BODY_INSERT(2, HD(1), false,
         true, HD(1),

@@ -22,7 +22,7 @@ list_head_p clu_list_head_create_variadic_item(va_list *args)
     return lh;
 }
 
-list_head_p clu_list_head_create_variadic_n(uint64_t n, va_list *args)
+list_head_p clu_list_head_create_variadic(uint64_t n, va_list *args)
 {
     if(n == 0)
         return NULL;
@@ -35,25 +35,11 @@ list_head_p clu_list_head_create_variadic_n(uint64_t n, va_list *args)
     return lh_first;
 }
 
-list_head_p clu_list_head_create_variadic(va_list *args)
-{
-    uint64_t n = va_arg(*args, uint64_t);
-    return clu_list_head_create_variadic_n(n, args);
-}
-
 list_head_p clu_list_head_create_immed(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    return clu_list_head_create_variadic_n(n, &args);
-}
-
-void clu_list_head_create_vec_immed(list_head_p lh[], uint64_t n, ...)
-{
-    va_list args;
-    va_start(args, n);
-    for(uint64_t i=0; i<n; i++)
-        lh[i] = clu_list_head_create_variadic(&args);
+    return clu_list_head_create_variadic(n, &args);
 }
 
 
@@ -111,7 +97,7 @@ bool clu_list_head_immed(list_head_p lh, uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    list_head_p lh_2 = clu_list_head_create_variadic_n(n, &args);
+    list_head_p lh_2 = clu_list_head_create_variadic(n, &args);
     return clu_list_head(lh, lh_2);
 }
 

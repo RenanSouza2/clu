@@ -9,99 +9,129 @@
 #include "../../../../mods/macros/assert.h"
 
 
+#define TEST_ASSERT_EMPTY assert(clu_mem_internal_empty());
 
 void test_list_head_create(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
     tag_t tag = clu_tag_format("test");
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create(&tag, NULL);
-    assert(clu_tag(&lh->tag, &tag));
-    assert(lh->lb == NULL);
-    assert(lh->lh == NULL);
-    FREE(lh, list_head);
+    TEST_CASE_OPEN(1)
+    {
+        list_head_p lh = clu_list_head_create(&tag, NULL);
+        assert(clu_tag(&lh->tag, &tag));
+        assert(lh->lb == NULL);
+        assert(lh->lh == NULL);
+        FREE(lh, list_head);
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lh = clu_list_head_create(&tag, LH(1));
-    assert(clu_tag(&lh->tag, &tag));
-    assert(lh->lb == NULL);
-    assert(lh->lh == LH(1));
-    FREE(lh, list_head);
+    TEST_CASE_OPEN(2)
+    {
+        list_head_p lh = clu_list_head_create(&tag, LH(1));
+        assert(clu_tag(&lh->tag, &tag));
+        assert(lh->lb == NULL);
+        assert(lh->lh == LH(1));
+        FREE(lh, list_head);
+    }
 
     assert(clu_mem_internal_empty());
 }
 
 void test_list_head_pop(bool show)
 {
-    printf("\n\t%s", __func__);
+    TEST_FN
 
     tag_t tag_1 = clu_tag_format("test_1");
     tag_t tag_2 = clu_tag_format("test_2");
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create(&tag_1, NULL);
-    lh = clu_list_head_pop(lh);
-    assert(lh == NULL);
+    TEST_CASE_OPEN(1)
+    {
+        list_head_p lh = clu_list_head_create(&tag_1, NULL);
+        lh = clu_list_head_pop(lh);
+        assert(lh == NULL);
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lh = clu_list_head_create(&tag_2, NULL);
-    lh = clu_list_head_create(&tag_1, lh);
-    lh = clu_list_head_pop(lh);
-    assert(lh != NULL);
-    assert(clu_tag(&lh->tag, &tag_2));
-    FREE(lh, list_head);
+    TEST_CASE_OPEN(2)
+    {
+        list_head_p lh = clu_list_head_create(&tag_2, NULL);
+        lh = clu_list_head_create(&tag_1, lh);
+        lh = clu_list_head_pop(lh);
+        assert(lh != NULL);
+        assert(clu_tag(&lh->tag, &tag_2));
+        FREE(lh, list_head);
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    TEST_REVERT_OPEN
-    clu_list_head_pop(NULL);
-    TEST_REVERT_CLOSE
+    TEST_CASE_OPEN(3)
+    {
+        TEST_REVERT_OPEN
+        {
+            clu_list_head_pop(NULL);
+        }
+        TEST_REVERT_CLOSE
+    }
+    TEST_CASE_CLOSE
 
     assert(clu_mem_internal_empty());
 }
 
 void test_list_head_create_variadic(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_head_p lh = clu_list_head_create_immed(0);
-    assert(lh == NULL);
-    clu_list_head_free(lh);
+    TEST_CASE_OPEN(1)
+    {
+        list_head_p lh = clu_list_head_create_immed(0);
+        assert(lh == NULL);
+        clu_list_head_free(lh);
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lh = clu_list_head_create_immed(1,
-        tag_1, 1, HD(1), 0
-    );
-    assert(lh != NULL);
-    assert(clu_list_body_immed_list(lh->lb, 1, HD(1), 0))
-    assert(lh->lh == NULL);
-    clu_list_head_free(lh);
+    TEST_CASE_OPEN(2)
+    {
+        if(show) printf("\n\t\t%s 2\t\t", __func__);
+        list_head_p lh = clu_list_head_create_immed(1,
+            tag_1, 1, HD(1), 0
+        );
+        assert(lh != NULL);
+        assert(clu_list_body_immed_list(lh->lb, 1, HD(1), 0))
+        assert(lh->lh == NULL);
+        clu_list_head_free(lh);
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lh = clu_list_head_create_immed(1,
-        tag_1, 2, HD(1), HD(2), 0
-    );
-    assert(lh != NULL);
-    assert(clu_list_body_immed_list(lh->lb, 2, HD(1), HD(2), 0))
-    assert(lh->lh == NULL);
-    clu_list_head_free(lh);
+    TEST_CASE_OPEN(3)
+    {
+        list_head_p lh = clu_list_head_create_immed(1,
+            tag_1, 2, HD(1), HD(2), 0
+        );
+        assert(lh != NULL);
+        assert(clu_list_body_immed_list(lh->lb, 2, HD(1), HD(2), 0))
+        assert(lh->lh == NULL);
+        clu_list_head_free(lh);
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 4\t\t", __func__);
-    lh = clu_list_head_create_immed(2,
-        tag_1, 1, HD(1), 0,
-        tag_2, 1, HD(2), 0
-    );
-    assert(lh != NULL);
-    assert(clu_list_body_immed_list(lh->lb, 1, HD(1), 0));
-    assert(lh->lh != NULL);
-    assert(clu_list_body_immed_list(lh->lh->lb, 1, HD(2), 0));
-    assert(lh->lh->lh == NULL);
-    clu_list_head_free(lh);
+    TEST_CASE_OPEN(4)
+    {
+        list_head_p lh = clu_list_head_create_immed(2,
+            tag_1, 1, HD(1), 0,
+            tag_2, 1, HD(2), 0
+        );
+        assert(lh != NULL);
+        assert(clu_list_body_immed_list(lh->lb, 1, HD(1), 0));
+        assert(lh->lh != NULL);
+        assert(clu_list_body_immed_list(lh->lh->lb, 1, HD(2), 0));
+        assert(lh->lh->lh == NULL);
+        clu_list_head_free(lh);
+    }
+    TEST_CASE_CLOSE
 
     assert(clu_mem_internal_empty());
 }
@@ -110,149 +140,233 @@ void test_list_head_create_variadic(bool show)
 
 void test_list_head_insert(bool show)
 {
-    printf("\n\t%s", __func__);
+    TEST_FN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_HEAD_INSERT(TAG, LTAG, HANDLER, RES, ...)     \
-    {                                                               \
-        list_head_p lh[2];                                          \
-        if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG);         \
-        clu_list_head_create_vec_immed(lh, 2, __VA_ARGS__);         \
-        bool res = clu_list_head_insert(&lh[0], &LTAG, HANDLER);    \
-        assert(res == RES);                                         \
-        assert(clu_list_head_str(lh[0], lh[1]));                    \
+    #define TEST_LIST_HEAD_INSERT(TAG, LH_BEF, LTAG, HANDLER, RES, LH_AFT)  \
+    {                                                                       \
+        TEST_CASE_OPEN(4)                                                   \
+        {                                                                   \
+            list_head_p lh = clu_list_head_create_immed(ARG_OPEN LH_BEF);   \
+            bool res = clu_list_head_insert(&lh, &LTAG, HANDLER);           \
+            assert(res == RES);                                             \
+            assert(clu_list_head_immed(lh, ARG_OPEN LH_AFT));               \
+        }                                                                   \
+        TEST_CASE_CLOSE                                                     \
     }
 
-    TEST_LIST_HEAD_INSERT(1, tag_1, HD(1), true,
-        0,
-        1,  tag_1, 1, HD(1), 0
+    TEST_LIST_HEAD_INSERT(1,
+        (0),
+        tag_1, HD(1),
+        true,
+        (1,  tag_1, 1, HD(1), 0)
     );
-    TEST_LIST_HEAD_INSERT(2, tag_1, HD(1), false,
-        1,  tag_1, 1, HD(1), 0,
-        1,  tag_1, 1, HD(1), 0
+    TEST_LIST_HEAD_INSERT(2,
+        (1,  tag_1, 1, HD(1), 0),
+        tag_1, HD(1),
+        false,
+        (1,  tag_1, 1, HD(1), 0)
     );
-    TEST_LIST_HEAD_INSERT(3, tag_2, HD(1), false,
-        1,  tag_1, 1, HD(1), 0,
-        1,  tag_1, 1, HD(1), 0
+    TEST_LIST_HEAD_INSERT(3,
+        (1,  tag_1, 1, HD(1), 0),
+        tag_2, HD(1),
+        false,
+        (1,  tag_1, 1, HD(1), 0)
     );
-    TEST_LIST_HEAD_INSERT(4, tag_1, HD(2), true,
-        1,  tag_1, 1, HD(1), 0,
-        1,  tag_1, 2, HD(1), HD(2), 0
+    TEST_LIST_HEAD_INSERT(4,  
+        (1,  tag_1, 1, HD(1), 0),
+        tag_1, HD(2),
+        true,
+        (1,  tag_1, 2, HD(1), HD(2), 0)
     );
-    TEST_LIST_HEAD_INSERT(5, tag_2, HD(3), true,
-        1,  tag_1, 2, HD(1), HD(2), 0,
-        2,  tag_2, 1, HD(3), 0,
-            tag_1, 2, HD(1), HD(2), 0
+    TEST_LIST_HEAD_INSERT(5,
+        (1,  tag_1, 2, HD(1), HD(2), 0),
+        tag_2, HD(3),
+        true,
+        (
+            2,  tag_2, 1, HD(3), 0,
+                tag_1, 2, HD(1), HD(2), 0
+        )
     );
-    TEST_LIST_HEAD_INSERT(6, tag_1, HD(4), true,
-        2,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 1, HD(3), 0,
-        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 1, HD(3), 0
+    TEST_LIST_HEAD_INSERT(6,
+        (
+            2,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 1, HD(3), 0
+        ),
+        tag_1, HD(4),
+        true,
+        (
+            2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+                tag_2, 1, HD(3), 0
+        )
     );
-    TEST_LIST_HEAD_INSERT(7, tag_2, HD(TEST_TIMEOUT_DEFAULT), true,
-        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 1, HD(3), 0,
-        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0
+    TEST_LIST_HEAD_INSERT(7,
+        (
+            2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+                tag_2, 1, HD(3), 0
+        ),
+        tag_2, HD(5),
+        true,
+        (
+            2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+                tag_2, 2, HD(3), HD(5), 0
+        )
     );
-    TEST_LIST_HEAD_INSERT(8, tag_2, HD(TEST_TIMEOUT_DEFAULT), false,
-        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0,
-        2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
-            tag_2, 2, HD(3), HD(TEST_TIMEOUT_DEFAULT), 0
+    TEST_LIST_HEAD_INSERT(8,
+        (
+            2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+                tag_2, 2, HD(3), HD(5), 0
+        ),
+        tag_2, HD(5),
+        false,
+        (
+            2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
+                tag_2, 2, HD(3), HD(5), 0
+        )
     );
 
     #undef TEST_LIST_HEAD_INSERT
 
-    if(show) printf("\n\t\t%s  9\t\t", __func__);
-    TEST_REVERT_OPEN
-    clu_list_head_insert(NULL, &tag_1, HD(1));
-    TEST_REVERT_CLOSE
+    TEST_CASE_OPEN(9)
+    {
+        TEST_REVERT_OPEN
+        {
+            clu_list_head_insert(NULL, &tag_1, HD(1));
+        }
+        TEST_REVERT_CLOSE
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 10\t\t", __func__);
-    list_head_p lh = clu_list_head_create_immed(0);
-    TEST_REVERT_OPEN
-    clu_list_head_insert(&lh, NULL, HD(1));
-    TEST_REVERT_CLOSE
+    TEST_CASE_OPEN(10)
+    {
+        list_head_p lh = clu_list_head_create_immed(0);
+        TEST_REVERT_OPEN
+        {
+            clu_list_head_insert(&lh, NULL, HD(1));
+        }
+        TEST_REVERT_CLOSE
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 11\t\t", __func__);
-    lh = clu_list_head_create_immed(0);
-    TEST_REVERT_OPEN
-    clu_list_head_insert(&lh, &tag_1, NULL);
-    TEST_REVERT_CLOSE
+    TEST_CASE_OPEN(11)
+    {
+        list_head_p lh = clu_list_head_create_immed(0);
+        TEST_REVERT_OPEN
+        {
+            clu_list_head_insert(&lh, &tag_1, NULL);
+        }
+        TEST_REVERT_CLOSE
+    }
+    TEST_CASE_CLOSE
 
     assert(clu_mem_internal_empty());
 }
 
 void test_list_head_remove(bool show)
 {
-    printf("\n\t%s", __func__);
+    TEST_FN
 
-    tag_t tag_1, tag_2, tag_3, tag_4;
-    tag_1 = clu_tag_format("test 1");
-    tag_2 = clu_tag_format("test 2");
-    tag_3 = clu_tag_format("test 3");
-    tag_4 = clu_tag_format("test 4");
+    tag_t tag_1 = clu_tag_format("test 1");
+    tag_t tag_2 = clu_tag_format("test 2");
+    tag_t tag_3 = clu_tag_format("test 3");
+    tag_t tag_4 = clu_tag_format("test 4");
 
-    #define TEST_LIST_HEAD_REMOVE(TAG, HANDLER, RES, ...)   \
-    {                                                       \
-        list_head_p lh[2];                                  \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
-        clu_list_head_create_vec_immed(lh, 2, __VA_ARGS__); \
-        bool res = clu_list_head_remove(&lh[0], HANDLER);   \
-        assert(res == RES);                                 \
-        assert(clu_list_head_str(lh[0], lh[1]));            \
+    #define TEST_LIST_HEAD_REMOVE(TAG, LH_BEF, HANDLER, RES, LH_AFT)        \
+    {                                                                       \
+        TEST_CASE_OPEN(TAG)                                                 \
+        {                                                                   \
+            list_head_p lh = clu_list_head_create_immed(ARG_OPEN LH_BEF);   \
+            bool res = clu_list_head_remove(&lh, HANDLER);                  \
+            assert(res == RES);                                             \
+            assert(clu_list_head_immed(lh, ARG_OPEN LH_AFT));               \
+        }                                                                   \
+        TEST_CASE_CLOSE                                                     \
     }
 
-    TEST_LIST_HEAD_REMOVE(1, HD(7), false,
-        4,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
-            tag_4, 1, HD(6), 0,
-        4,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
-            tag_4, 1, HD(6), 0
+    TEST_LIST_HEAD_REMOVE(1, 
+        (
+            4,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 0,
+                tag_3, 1, HD(5), 0,
+                tag_4, 1, HD(6), 0
+        ),
+        HD(7),
+        false,
+        (
+            4,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 0,
+                tag_3, 1, HD(5), 0,
+                tag_4, 1, HD(6), 0
+        )
     );
-    TEST_LIST_HEAD_REMOVE(2, HD(TEST_TIMEOUT_DEFAULT), true,
-        4,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 0,
-            tag_3, 1, HD(TEST_TIMEOUT_DEFAULT), 0,
-            tag_4, 1, HD(6), 0,
-        3,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 0,
-            tag_4, 1, HD(6), 0
+    TEST_LIST_HEAD_REMOVE(2, 
+        (
+            4,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 0,
+                tag_3, 1, HD(5), 0,
+                tag_4, 1, HD(6), 0
+        ),
+        HD(5),
+        true,
+        (
+            3,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 0,
+                tag_4, 1, HD(6), 0
+        )
     );
-    TEST_LIST_HEAD_REMOVE(3, HD(6), true,
-        3,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 0,
-            tag_4, 1, HD(6), 0,
-        2,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 0
+    TEST_LIST_HEAD_REMOVE(3,
+        (
+            3,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 0,
+                tag_4, 1, HD(6), 0
+        ),
+        HD(6),
+        true,
+        (
+            2,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 0
+        )
     );
-    TEST_LIST_HEAD_REMOVE(4, HD(4), true,
-        2,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 0,
-        2,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 1, HD(4)
+    TEST_LIST_HEAD_REMOVE(4,
+        (
+            2,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 0
+        ),
+        HD(4),
+        true,
+        (
+            2,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 1, HD(4)
+        )
     );
-    TEST_LIST_HEAD_REMOVE(5, HD(2), true,
-        2,  tag_1, 2, HD(1), HD(2), 0,
-            tag_2, 2, HD(3), HD(4), 1, HD(4),
-        2,  tag_1, 2, HD(1), HD(2), 1, HD(2),
-            tag_2, 2, HD(3), HD(4), 1, HD(4)
+    TEST_LIST_HEAD_REMOVE(5,
+        (
+            2,  tag_1, 2, HD(1), HD(2), 0,
+                tag_2, 2, HD(3), HD(4), 1, HD(4)
+        ),
+        HD(2),
+        true,
+        (
+            2,  tag_1, 2, HD(1), HD(2), 1, HD(2),
+                tag_2, 2, HD(3), HD(4), 1, HD(4)
+        )
     );
-    TEST_LIST_HEAD_REMOVE(6, HD(1), true,
-        2,  tag_1, 2, HD(1), HD(2), 1, HD(2),
-            tag_2, 2, HD(3), HD(4), 1, HD(4),
-        1,  tag_2, 2, HD(3), HD(4), 1, HD(4)
+    TEST_LIST_HEAD_REMOVE(6,
+        (
+            2,  tag_1, 2, HD(1), HD(2), 1, HD(2),
+                tag_2, 2, HD(3), HD(4), 1, HD(4)
+        ),
+        HD(1),
+        true,
+        (1,  tag_2, 2, HD(3), HD(4), 1, HD(4))
     );
-    TEST_LIST_HEAD_REMOVE(7, HD(3), true,
-        1,  tag_2, 2, HD(3), HD(4), 1, HD(4),
-        0
+    TEST_LIST_HEAD_REMOVE(7,
+        (1,  tag_2, 2, HD(3), HD(4), 1, HD(4)),
+        HD(3),
+        true,
+        (0)
     );
 
     #undef TEST_LIST_HEAD_REMOVE
@@ -275,7 +389,7 @@ void test_list_head_remove(bool show)
 
 void test_list_head_count(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 1");
@@ -307,7 +421,7 @@ void test_list_head_count(bool show)
 
 void test_list_head_get_body(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
@@ -361,7 +475,7 @@ void test_list_head_get_body(bool show)
 
 void test_list_head_contains(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");

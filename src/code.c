@@ -53,7 +53,8 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         assert(false);
     }
 
-    clu_list_body_remove(&lb_root_freed, h);
+    if(lb_root_freed)
+        clu_list_body_remove(&lb_root_freed, h);
 
     if(!clu_list_head_insert(&lh_root_allocated, &tag, h))
     {
@@ -108,7 +109,7 @@ void clu_handler_deallocate(handler_p h, char format[], va_list args, char fn[])
         assert(false);
     }
 
-    if(!clu_list_head_remove(&lh_root_allocated, h))
+    if(lh_root_allocated == NULL || !clu_list_head_remove(&lh_root_allocated, h))
     {
         printf("\n");
         printf("\n");

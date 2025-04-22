@@ -188,7 +188,7 @@ void clu_handler_unregister(handler_p h, char format[], ...)
 
 
 
-void clu_handler_validate(handler_p h, char format[], ...)
+void clu_handler_is_safe(handler_p h, char format[], ...)
 {
     if(h == NULL)
         return;

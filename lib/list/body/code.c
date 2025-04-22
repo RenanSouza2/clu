@@ -213,7 +213,7 @@ bool clu_list_body_immed_list(list_body_p lb, uint64_t n, ...)
     va_list args;
     va_start(args, n);
     list_body_p lb_2 = clu_list_body_create_variadic_list(n, &args);
-    bool res = clu_list_body(lb, lb_2);
+    return clu_list_body(lb, lb_2);
 }
 
 #endif

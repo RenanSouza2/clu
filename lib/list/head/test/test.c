@@ -148,7 +148,7 @@ void test_list_head_insert(bool show)
 
     #define TEST_LIST_HEAD_INSERT(TAG, LH_BEF, LTAG, HANDLER, RES, LH_AFT)  \
     {                                                                       \
-        TEST_CASE_OPEN(4)                                                   \
+        TEST_CASE_OPEN(TAG)                                                 \
         {                                                                   \
             list_head_p lh = clu_list_head_create_immed(ARG_OPEN LH_BEF);   \
             bool res = clu_list_head_insert(&lh, &LTAG, HANDLER);           \
@@ -372,16 +372,26 @@ void test_list_head_remove(bool show)
 
     #undef TEST_LIST_HEAD_REMOVE
 
-    if(show) printf("\n\t\t%s 8", __func__);
-    TEST_REVERT_OPEN
-    clu_list_head_remove(NULL, HD(1));
-    TEST_REVERT_CLOSE
+    TEST_CASE_OPEN(8)
+    {
+        TEST_REVERT_OPEN
+        {
+            clu_list_head_remove(NULL, HD(1));
+        }
+        TEST_REVERT_CLOSE
+    }
+    TEST_CASE_CLOSE
 
-    if(show) printf("\n\t\t%s 9", __func__);
-    list_head_p lh = clu_list_head_create_immed(0);
-    TEST_REVERT_OPEN
-    clu_list_head_remove(&lh, NULL);
-    TEST_REVERT_CLOSE
+    TEST_CASE_OPEN(9)
+    {
+        list_head_p lh = clu_list_head_create_immed(0);
+        TEST_REVERT_OPEN
+        {
+            clu_list_head_remove(&lh, NULL);
+        }
+        TEST_REVERT_CLOSE
+    }
+    TEST_CASE_CLOSE
 
     assert(clu_mem_internal_empty());
 }
@@ -395,13 +405,16 @@ void test_list_head_count(bool show)
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 1");
 
-    #define TEST_LIST_HEAD_COUNT(TAG, COUNT, ...)                   \
-    {                                                               \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);          \
-        list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-        uint64_t count = clu_list_head_count(lh);                   \
-        assert(uint64(count, COUNT));                               \
-        clu_list_head_free(lh);                                     \
+    #define TEST_LIST_HEAD_COUNT(TAG, COUNT, ...)                       \
+    {                                                                   \
+        TEST_CASE_OPEN(TAG)                                             \
+        {                                                               \
+            list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
+            uint64_t count = clu_list_head_count(lh);                   \
+            assert(uint64(count, COUNT));                               \
+            clu_list_head_free(lh);                                     \
+        }                                                               \
+        TEST_CASE_CLOSE                                                 \
     }
 
     TEST_LIST_HEAD_COUNT(1, 0,
@@ -427,14 +440,17 @@ void test_list_head_get_body(bool show)
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_HEAD_GET_BODY(TAG, INDEX, HANDLER, ...)       \
-    {                                                               \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);          \
-        list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-        list_body_p lb = clu_list_head_get_body(lh, INDEX);         \
-        if(HANDLER) {assert(clu_list_body_contains(lb, HANDLER));}  \
-        else        {assert(lb == NULL);}                           \
-        clu_list_head_free(lh);                                     \
+    #define TEST_LIST_HEAD_GET_BODY(TAG, INDEX, HANDLER, ...)           \
+    {                                                                   \
+        TEST_CASE_OPEN(TAG)                                             \
+        {                                                               \
+            list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
+            list_body_p lb = clu_list_head_get_body(lh, INDEX);         \
+            if(HANDLER) {assert(clu_list_body_contains(lb, HANDLER));}  \
+            else        {assert(lb == NULL);}                           \
+            clu_list_head_free(lh);                                     \
+        }                                                               \
+        TEST_CASE_CLOSE                                                 \
     }
 
     TEST_LIST_HEAD_GET_BODY(1, 0, NULL,
@@ -460,11 +476,11 @@ void test_list_head_get_body(bool show)
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_HEAD_GET_BODY(7, 2, NULL,
+    TEST_LIST_HEAD_GET_BODY(8, 2, NULL,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_HEAD_GET_BODY(8, 3, NULL,
+    TEST_LIST_HEAD_GET_BODY(9, 3, NULL,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
@@ -481,13 +497,16 @@ void test_list_head_contains(bool show)
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_HEAD_CONTAINS(TAG, HANDLER, RES, ...)         \
-    {                                                               \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);          \
-        list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-        bool res = clu_list_head_contains(lh, HANDLER);             \
-        assert(res == RES);                                         \
-        clu_list_head_free(lh);                                     \
+    #define TEST_LIST_HEAD_CONTAINS(TAG, HANDLER, RES, ...)             \
+    {                                                                   \
+        TEST_CASE_OPEN(TAG)                                             \
+        {                                                               \
+            list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
+            bool res = clu_list_head_contains(lh, HANDLER);             \
+            assert(res == RES);                                         \
+            clu_list_head_free(lh);                                     \
+        }                                                               \
+        TEST_CASE_CLOSE                                                 \
     }
 
     TEST_LIST_HEAD_CONTAINS(1, HD(1), false,
@@ -523,7 +542,7 @@ void test_list_head()
 {
     printf("\n%s", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_list_head_create(show);
     test_list_head_pop(show);

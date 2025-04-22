@@ -175,7 +175,7 @@ void test_list_head_insert(bool show)
         false,
         (1,  tag_1, 1, HD(1), 0)
     );
-    TEST_LIST_HEAD_INSERT(4,  
+    TEST_LIST_HEAD_INSERT(4,
         (1,  tag_1, 1, HD(1), 0),
         tag_1, HD(2),
         true,
@@ -285,7 +285,7 @@ void test_list_head_remove(bool show)
         TEST_CASE_CLOSE                                                     \
     }
 
-    TEST_LIST_HEAD_REMOVE(1, 
+    TEST_LIST_HEAD_REMOVE(1,
         (
             4,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 2, HD(3), HD(4), 0,
@@ -301,7 +301,7 @@ void test_list_head_remove(bool show)
                 tag_4, 1, HD(6), 0
         )
     );
-    TEST_LIST_HEAD_REMOVE(2, 
+    TEST_LIST_HEAD_REMOVE(2,
         (
             4,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 2, HD(3), HD(4), 0,

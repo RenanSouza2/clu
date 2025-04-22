@@ -252,7 +252,7 @@ void clu_list_body_free(list_body_p lb)
         return;
 
     if(lb->h == NULL)
-    {   
+    {
         for(uint64_t i=0; i<SIZE; i++)
             clu_list_body_free(lb->arr[i]);
     }

@@ -257,7 +257,7 @@ void test_list_body_remove(bool show)
         true,
         (false)
     );
-    TEST_LIST_BODY_REMOVE(2,  
+    TEST_LIST_BODY_REMOVE(2,
         (true, HD(1)),
         HD(2),
         false,
@@ -285,7 +285,7 @@ void test_list_body_remove(bool show)
         true,
         (false)
     );
-    TEST_LIST_BODY_REMOVE(5,  
+    TEST_LIST_BODY_REMOVE(5,
         (
             true, NULL, 1,
                 1, NULL, 2,
@@ -300,7 +300,7 @@ void test_list_body_remove(bool show)
                     2, HD(0x21)
         )
     );
-    TEST_LIST_BODY_REMOVE(6,  
+    TEST_LIST_BODY_REMOVE(6,
         (
             true, NULL, 1,
                 1, NULL, 1,
@@ -316,7 +316,7 @@ void test_list_body_remove(bool show)
     );
 
     #undef TEST_LIST_BODY_REMOVE
-    
+
     TEST_CASE_OPEN(7)
     {
         TEST_REVERT_OPEN
@@ -326,7 +326,7 @@ void test_list_body_remove(bool show)
         TEST_REVERT_CLOSE
     }
     TEST_CASE_CLOSE
-    
+
     TEST_CASE_OPEN(8)
     {
         list_body_p lb = clu_list_body_create_immed_tree(false);

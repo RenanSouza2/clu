@@ -3,8 +3,8 @@
 #include "debug.h"
 #include "../body/header.h"
 #include "../../mem/header.h"
-#include "../../macros/assert.h"
-#include "../../macros/U64.h"
+#include "../../../mods/macros/assert.h"
+#include "../../../mods/macros/U64.h"
 
 
 #ifdef DEBUG
@@ -16,12 +16,13 @@ list_head_p clu_list_head_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
     list_head_p lh = clu_list_head_create(&tag, NULL);
-    lh->lb = clu_list_body_create_variadic_list(args);
+    int n = va_arg(*args, int);
+    lh->lb = clu_list_body_create_variadic_list(n, args);
     assert(lh->lb);
     return lh;
 }
 
-list_head_p clu_list_head_create_variadic_n(uint64_t n, va_list *args)
+list_head_p clu_list_head_create_variadic(uint64_t n, va_list *args)
 {
     if(n == 0)
         return NULL;
@@ -34,30 +35,16 @@ list_head_p clu_list_head_create_variadic_n(uint64_t n, va_list *args)
     return lh_first;
 }
 
-list_head_p clu_list_head_create_variadic(va_list *args)
-{
-    uint64_t n = va_arg(*args, uint64_t);
-    return clu_list_head_create_variadic_n(n, args);
-}
-
 list_head_p clu_list_head_create_immed(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    return clu_list_head_create_variadic_n(n, &args);
-}
-
-void clu_list_head_create_vec_immed(list_head_p lh[], uint64_t n, ...)
-{
-    va_list args;
-    va_start(args, n);
-    for(uint64_t i=0; i<n; i++)
-        lh[i] = clu_list_head_create_variadic(&args);
+    return clu_list_head_create_variadic(n, &args);
 }
 
 
 
-bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
+bool clu_list_head_inner(list_head_p lh_1, list_head_p lh_2)
 {
     for(uint64_t i=0; lh_1 && lh_2; i++)
     {
@@ -67,14 +54,14 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
             return false;
         }
 
-        if(!clu_list_body_str(lh_1->lb, lh_2->lb))
+        if(!clu_list_body_inner(lh_1->lb, lh_2->lb))
         {
             printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | " U64P() "", i);
             return false;
         }
 
-        lh_1 = clu_list_head_pop(lh_1);
-        lh_2 = clu_list_head_pop(lh_2);
+        lh_1 = lh_1->lh;
+        lh_2 = lh_2->lh;
     }
 
     if(lh_2)
@@ -92,12 +79,26 @@ bool clu_list_head_str(list_head_p lh_1, list_head_p lh_2)
     return true;
 }
 
+bool clu_list_head(list_head_p lh_1, list_head_p lh_2)
+{
+    if(!clu_list_head_inner(lh_1, lh_2))
+    {
+        clu_list_head_report(lh_1, "lh_1", true);
+        clu_list_head_report(lh_2, "lh_2", true);
+        return false;
+    }
+
+    clu_list_head_free(lh_1);
+    clu_list_head_free(lh_2);
+    return true;
+}
+
 bool clu_list_head_immed(list_head_p lh, uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    list_head_p lh_2 = clu_list_head_create_variadic_n(n, &args);
-    return clu_list_head_str(lh, lh_2);
+    list_head_p lh_2 = clu_list_head_create_variadic(n, &args);
+    return clu_list_head(lh, lh_2);
 }
 
 #endif

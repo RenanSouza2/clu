@@ -2,8 +2,8 @@
 
 #include "debug.h"
 #include "../../mem/header.h"
-#include "../../macros/assert.h"
-#include "../../macros/U64.h"
+#include "../../../mods/macros/assert.h"
+#include "../../../mods/macros/U64.h"
 
 
 
@@ -32,7 +32,7 @@ list_body_p clu_list_body_create_variadic_tree_rec(va_list *args)
     return lb;
 }
 
-list_body_p clu_list_body_create_variadic_tree_content(bool content, va_list *args)
+list_body_p clu_list_body_create_variadic_tree(bool content, va_list *args)
 {
     if(!content)
         return NULL;
@@ -40,30 +40,16 @@ list_body_p clu_list_body_create_variadic_tree_content(bool content, va_list *ar
     return clu_list_body_create_variadic_tree_rec(args);
 }
 
-list_body_p clu_list_body_create_variadic_tree(va_list *args)
-{
-    bool content = va_arg(*args, int);
-    return clu_list_body_create_variadic_tree_content(content, args);
-}
-
 list_body_p clu_list_body_create_immed_tree(int content, ...)
 {
     va_list args;
     va_start(args, content);
-    return  clu_list_body_create_variadic_tree_content(content, &args);
-}
-
-void clu_list_body_create_vec_immed_tree(list_body_p lb[], uint64_t n, ...)
-{
-    va_list args;
-    va_start(args, n);
-    for(uint64_t i=0; i<n; i++)
-        lb[i] =  clu_list_body_create_variadic_tree(&args);
+    return  clu_list_body_create_variadic_tree(content, &args);
 }
 
 
 
-list_body_p clu_list_body_create_variadic_list_n(uint64_t n, va_list *args)
+list_body_p clu_list_body_create_variadic_list(uint64_t n, va_list *args)
 {
     assert(n > 0);
 
@@ -84,23 +70,16 @@ list_body_p clu_list_body_create_variadic_list_n(uint64_t n, va_list *args)
     return lb;
 }
 
-list_body_p clu_list_body_create_variadic_list(va_list *args)
-{
-    uint64_t n = va_arg(*args, uint64_t);
-    return clu_list_body_create_variadic_list_n(n, args);
-}
-
 list_body_p clu_list_body_create_immed_list(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    return clu_list_body_create_variadic_list_n(n, &args);
+    return clu_list_body_create_variadic_list(n, &args);
 }
 
 
 
-
-void clu_list_body_display_str_rec(list_body_p lb, uint64_t index)
+void clu_list_body_display_dbg_rec(list_body_p lb, uint64_t index)
 {
     assert(lb);
 
@@ -118,11 +97,11 @@ void clu_list_body_display_str_rec(list_body_p lb, uint64_t index)
             for(uint64_t k=0; k<index; k++)
                 printf("\t");
             printf("i: " U64P() "", i);
-            clu_list_body_display_str_rec(lb->arr[i], index + 1);
+            clu_list_body_display_dbg_rec(lb->arr[i], index + 1);
         }
 }
 
-void clu_list_body_display_str(list_body_p lb)
+void clu_list_body_display_dbg(list_body_p lb)
 {
     if(lb == NULL)
     {
@@ -131,7 +110,7 @@ void clu_list_body_display_str(list_body_p lb)
     }
 
     printf("\n");
-    clu_list_body_display_str_rec(lb, 0);
+    clu_list_body_display_dbg_rec(lb, 0);
     printf("\n");
 }
 
@@ -148,7 +127,7 @@ bool uint64(uint64_t i1, uint64_t i2)
     return true;
 }
 
-bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint64_t index)
+bool clu_list_body_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint64_t index)
 {
     if(lb_1 == NULL)
     {
@@ -193,36 +172,48 @@ bool clu_list_body_str_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint
     }
 
     for(uint64_t i=0; i<16; i++)
-        if(!clu_list_body_str_rec(lb_1->arr[i], lb_2->arr[i], SET(h, index, i), index + 1))
+        if(!clu_list_body_rec(lb_1->arr[i], lb_2->arr[i], SET(h, index, i), index + 1))
             return false;
 
     return true;
 }
 
-bool clu_list_body_str(list_body_p lb_1, list_body_p lb_2)
+bool clu_list_body_inner(list_body_p lb_1, list_body_p lb_2)
 {
-    bool res = clu_list_body_str_rec(lb_1, lb_2, NULL, 0);
+    if(!clu_list_body_rec(lb_1, lb_2, NULL, 0))
+    {
+        clu_list_body_display_dbg(lb_1);
+        clu_list_body_display_dbg(lb_2);
+        return false;
+    }
+
+    return true;
+}
+
+bool clu_list_body(list_body_p lb_1, list_body_p lb_2)
+{
+    if(!clu_list_body_inner(lb_1, lb_2))
+        return false;
+
     clu_list_body_free(lb_1);
     clu_list_body_free(lb_2);
-    return res;
+    return true;
 }
 
-bool clu_list_body_immed_tree(list_body_p lb, ...)
+bool clu_list_body_immed_tree(list_body_p lb, int content, ...)
 {
     va_list args;
-    va_start(args, lb);
-    list_body_p lb_2 = clu_list_body_create_variadic_tree(&args);
-    return clu_list_body_str(lb, lb_2);
+    va_start(args, content);
+    list_body_p lb_2 = clu_list_body_create_variadic_tree(content, &args);
+    return clu_list_body(lb, lb_2);
 }
 
-bool clu_list_body_immed_list(list_body_p lb, ...)
+bool clu_list_body_immed_list(list_body_p lb, uint64_t n, ...)
 {
     va_list args;
-    va_start(args, lb);
-    list_body_p lb_2 = clu_list_body_create_variadic_list(&args);
-    bool res = clu_list_body_str_rec(lb, lb_2, NULL, 0);
-    clu_list_body_free(lb_2);
-    return res;
+    va_start(args, n);
+    list_body_p lb_2 = clu_list_body_create_variadic_list(n, &args);
+    return clu_list_body(lb, lb_2);
 }
 
 #endif
@@ -260,8 +251,11 @@ void clu_list_body_free(list_body_p lb)
     if(lb == NULL)
         return;
 
-    for(uint64_t i=0; i<SIZE; i++)
-        clu_list_body_free(lb->arr[i]);
+    if(lb->h == NULL)
+    {
+        for(uint64_t i=0; i<SIZE; i++)
+            clu_list_body_free(lb->arr[i]);
+    }
 
     FREE(lb, list_body);
 }
@@ -332,6 +326,7 @@ bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
 bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
 {
     assert(lb_root);
+    assert(*lb_root);
     assert(h);
 
     return clu_list_body_remove_rec(lb_root, h, 0);

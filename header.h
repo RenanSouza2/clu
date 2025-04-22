@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "./lib/macros/assert.h"
-
 typedef void * handler_p;
 
 handler_p clu_handler_malloc(size_t size, char format[], ...);
@@ -19,13 +17,14 @@ void clu_handler_free(handler_p h, char format[], ...);
 void clu_handler_register(handler_p h, char format[], ...);
 void clu_handler_unregister(handler_p h, char format[], ...);
 
+void clu_handler_is_safe(handler_p h, char format[], ...);
+
 void clu_mem_report(char tag[]);
 void clu_mem_report_full(char tag[]);
 bool clu_mem_is_empty();
 
 bool clu_handler_is_allocated(handler_p h);
 bool clu_handler_is_freed(handler_p h);
-void clu_handler_is_safe(handler_p h, char format[], ...);
 
 uint64_t clu_get_max_i();
 uint64_t clu_get_max_j(uint64_t i);

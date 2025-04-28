@@ -7,7 +7,7 @@
 
 
 
-void test_list_head_create(bool show)
+void test_list_create(bool show)
 {
     TEST_FN_OPEN
 
@@ -15,28 +15,28 @@ void test_list_head_create(bool show)
 
     TEST_CASE_OPEN(1)
     {
-        list_head_p lh = clu_list_head_create(&tag, NULL);
-        assert(clu_tag(&lh->tag, &tag));
-        assert(lh->t == NULL);
-        assert(lh->lh == NULL);
-        FREE(lh, list_head);
+        list_p l = clu_list_create(&tag, NULL);
+        assert(clu_tag(&l->tag, &tag));
+        assert(l->t == NULL);
+        assert(l->next == NULL);
+        FREE(l, list);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(2)
     {
-        list_head_p lh = clu_list_head_create(&tag, LH(1));
-        assert(clu_tag(&lh->tag, &tag));
-        assert(lh->t == NULL);
-        assert(lh->lh == LH(1));
-        FREE(lh, list_head);
+        list_p l = clu_list_create(&tag, L(1));
+        assert(clu_tag(&l->tag, &tag));
+        assert(l->t == NULL);
+        assert(l->next == L(1));
+        FREE(l, list);
     }
     TEST_CASE_CLOSE
 
     TEST_FN_CLOSE
 }
 
-void test_list_head_pop(bool show)
+void test_list_pop(bool show)
 {
     TEST_FN_OPEN
 
@@ -45,20 +45,20 @@ void test_list_head_pop(bool show)
 
     TEST_CASE_OPEN(1)
     {
-        list_head_p lh = clu_list_head_create(&tag_1, NULL);
-        lh = clu_list_head_pop(lh);
-        assert(lh == NULL);
+        list_p l = clu_list_create(&tag_1, NULL);
+        l = clu_list_pop(l);
+        assert(l == NULL);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(2)
     {
-        list_head_p lh = clu_list_head_create(&tag_2, NULL);
-        lh = clu_list_head_create(&tag_1, lh);
-        lh = clu_list_head_pop(lh);
-        assert(lh != NULL);
-        assert(clu_tag(&lh->tag, &tag_2));
-        FREE(lh, list_head);
+        list_p l = clu_list_create(&tag_2, NULL);
+        l = clu_list_create(&tag_1, l);
+        l = clu_list_pop(l);
+        assert(l != NULL);
+        assert(clu_tag(&l->tag, &tag_2));
+        FREE(l, list);
     }
     TEST_CASE_CLOSE
 
@@ -66,7 +66,7 @@ void test_list_head_pop(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_head_pop(NULL);
+            clu_list_pop(NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -75,7 +75,7 @@ void test_list_head_pop(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_head_create_variadic(bool show)
+void test_list_create_variadic(bool show)
 {
     TEST_FN_OPEN
 
@@ -84,49 +84,49 @@ void test_list_head_create_variadic(bool show)
 
     TEST_CASE_OPEN(1)
     {
-        list_head_p lh = clu_list_head_create_immed(0);
-        assert(lh == NULL);
-        clu_list_head_free(lh);
+        list_p l = clu_list_create_immed(0);
+        assert(l == NULL);
+        clu_list_free(l);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(2)
     {
-        list_head_p lh = clu_list_head_create_immed(1,
+        list_p l = clu_list_create_immed(1,
             tag_1, 1, HD(1), 0
         );
-        assert(lh != NULL);
-        assert(clu_trie_immed_list(lh->t, 1, HD(1), 0))
-        assert(lh->lh == NULL);
-        FREE(lh, list_head);
+        assert(l != NULL);
+        assert(clu_trie_immed_list(l->t, 1, HD(1), 0))
+        assert(l->next == NULL);
+        FREE(l, list);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(3)
     {
-        list_head_p lh = clu_list_head_create_immed(1,
+        list_p l = clu_list_create_immed(1,
             tag_1, 2, HD(1), HD(2), 0
         );
-        assert(lh != NULL);
-        assert(clu_trie_immed_list(lh->t, 2, HD(1), HD(2), 0))
-        assert(lh->lh == NULL);
-        FREE(lh, list_head);
+        assert(l != NULL);
+        assert(clu_trie_immed_list(l->t, 2, HD(1), HD(2), 0))
+        assert(l->next == NULL);
+        FREE(l, list);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(4)
     {
-        list_head_p lh = clu_list_head_create_immed(2,
+        list_p l = clu_list_create_immed(2,
             tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
         );
-        assert(lh != NULL);
-        assert(clu_trie_immed_list(lh->t, 1, HD(1), 0));
-        assert(lh->lh != NULL);
-        assert(clu_trie_immed_list(lh->lh->t, 1, HD(2), 0));
-        assert(lh->lh->lh == NULL);
-        FREE(lh->lh, list_head);
-        FREE(lh, list_head);
+        assert(l != NULL);
+        assert(clu_trie_immed_list(l->t, 1, HD(1), 0));
+        assert(l->next != NULL);
+        assert(clu_trie_immed_list(l->next->t, 1, HD(2), 0));
+        assert(l->next->next == NULL);
+        FREE(l->next, list);
+        FREE(l, list);
     }
     TEST_CASE_CLOSE
 
@@ -135,50 +135,50 @@ void test_list_head_create_variadic(bool show)
 
 
 
-void test_list_head_insert(bool show)
+void test_list_insert(bool show)
 {
     TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_HEAD_INSERT(TAG, LH_BEF, LTAG, HANDLER, RES, LH_AFT)  \
+    #define TEST_LIST_INSERT(TAG, L_BEF, LTAG, HANDLER, RES, L_AFT)  \
     {                                                                       \
         TEST_CASE_OPEN(TAG)                                                 \
         {                                                                   \
-            list_head_p lh = clu_list_head_create_immed(ARG_OPEN LH_BEF);   \
-            bool res = clu_list_head_insert(&lh, &LTAG, HANDLER);           \
+            list_p l = clu_list_create_immed(ARG_OPEN L_BEF);   \
+            bool res = clu_list_insert(&l, &LTAG, HANDLER);           \
             assert(res == RES);                                             \
-            assert(clu_list_head_immed(lh, ARG_OPEN LH_AFT));               \
+            assert(clu_list_immed(l, ARG_OPEN L_AFT));               \
         }                                                                   \
         TEST_CASE_CLOSE                                                     \
     }
 
-    TEST_LIST_HEAD_INSERT(1,
+    TEST_LIST_INSERT(1,
         (0),
         tag_1, HD(1),
         true,
         (1,  tag_1, 1, HD(1), 0)
     );
-    TEST_LIST_HEAD_INSERT(2,
+    TEST_LIST_INSERT(2,
         (1,  tag_1, 1, HD(1), 0),
         tag_1, HD(1),
         false,
         (1,  tag_1, 1, HD(1), 0)
     );
-    TEST_LIST_HEAD_INSERT(3,
+    TEST_LIST_INSERT(3,
         (1,  tag_1, 1, HD(1), 0),
         tag_2, HD(1),
         false,
         (1,  tag_1, 1, HD(1), 0)
     );
-    TEST_LIST_HEAD_INSERT(4,
+    TEST_LIST_INSERT(4,
         (1,  tag_1, 1, HD(1), 0),
         tag_1, HD(2),
         true,
         (1,  tag_1, 2, HD(1), HD(2), 0)
     );
-    TEST_LIST_HEAD_INSERT(5,
+    TEST_LIST_INSERT(5,
         (1,  tag_1, 2, HD(1), HD(2), 0),
         tag_2, HD(3),
         true,
@@ -187,7 +187,7 @@ void test_list_head_insert(bool show)
                 tag_1, 2, HD(1), HD(2), 0
         )
     );
-    TEST_LIST_HEAD_INSERT(6,
+    TEST_LIST_INSERT(6,
         (
             2,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 1, HD(3), 0
@@ -199,7 +199,7 @@ void test_list_head_insert(bool show)
                 tag_2, 1, HD(3), 0
         )
     );
-    TEST_LIST_HEAD_INSERT(7,
+    TEST_LIST_INSERT(7,
         (
             2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
                 tag_2, 1, HD(3), 0
@@ -211,7 +211,7 @@ void test_list_head_insert(bool show)
                 tag_2, 2, HD(3), HD(5), 0
         )
     );
-    TEST_LIST_HEAD_INSERT(8,
+    TEST_LIST_INSERT(8,
         (
             2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
                 tag_2, 2, HD(3), HD(5), 0
@@ -224,13 +224,13 @@ void test_list_head_insert(bool show)
         )
     );
 
-    #undef TEST_LIST_HEAD_INSERT
+    #undef TEST_LIST_INSERT
 
     TEST_CASE_OPEN(9)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_head_insert(NULL, &tag_1, HD(1));
+            clu_list_insert(NULL, &tag_1, HD(1));
         }
         TEST_REVERT_CLOSE
     }
@@ -238,10 +238,10 @@ void test_list_head_insert(bool show)
 
     TEST_CASE_OPEN(10)
     {
-        list_head_p lh = clu_list_head_create_immed(0);
+        list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_head_insert(&lh, NULL, HD(1));
+            clu_list_insert(&l, NULL, HD(1));
         }
         TEST_REVERT_CLOSE
     }
@@ -249,10 +249,10 @@ void test_list_head_insert(bool show)
 
     TEST_CASE_OPEN(11)
     {
-        list_head_p lh = clu_list_head_create_immed(0);
+        list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_head_insert(&lh, &tag_1, NULL);
+            clu_list_insert(&l, &tag_1, NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -261,7 +261,7 @@ void test_list_head_insert(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_head_remove(bool show)
+void test_list_remove(bool show)
 {
     TEST_FN_OPEN
 
@@ -270,19 +270,19 @@ void test_list_head_remove(bool show)
     tag_t tag_3 = clu_tag_format("test 3");
     tag_t tag_4 = clu_tag_format("test 4");
 
-    #define TEST_LIST_HEAD_REMOVE(TAG, LH_BEF, HANDLER, RES, LH_AFT)        \
+    #define TEST_LIST_REMOVE(TAG, L_BEF, HANDLER, RES, L_AFT)        \
     {                                                                       \
         TEST_CASE_OPEN(TAG)                                                 \
         {                                                                   \
-            list_head_p lh = clu_list_head_create_immed(ARG_OPEN LH_BEF);   \
-            bool res = clu_list_head_remove(&lh, HANDLER);                  \
+            list_p l = clu_list_create_immed(ARG_OPEN L_BEF);   \
+            bool res = clu_list_remove(&l, HANDLER);                  \
             assert(res == RES);                                             \
-            assert(clu_list_head_immed(lh, ARG_OPEN LH_AFT));               \
+            assert(clu_list_immed(l, ARG_OPEN L_AFT));               \
         }                                                                   \
         TEST_CASE_CLOSE                                                     \
     }
 
-    TEST_LIST_HEAD_REMOVE(1,
+    TEST_LIST_REMOVE(1,
         (
             4,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 2, HD(3), HD(4), 0,
@@ -298,7 +298,7 @@ void test_list_head_remove(bool show)
                 tag_4, 1, HD(6), 0
         )
     );
-    TEST_LIST_HEAD_REMOVE(2,
+    TEST_LIST_REMOVE(2,
         (
             4,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 2, HD(3), HD(4), 0,
@@ -313,7 +313,7 @@ void test_list_head_remove(bool show)
                 tag_4, 1, HD(6), 0
         )
     );
-    TEST_LIST_HEAD_REMOVE(3,
+    TEST_LIST_REMOVE(3,
         (
             3,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 2, HD(3), HD(4), 0,
@@ -326,7 +326,7 @@ void test_list_head_remove(bool show)
                 tag_2, 2, HD(3), HD(4), 0
         )
     );
-    TEST_LIST_HEAD_REMOVE(4,
+    TEST_LIST_REMOVE(4,
         (
             2,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 2, HD(3), HD(4), 0
@@ -338,7 +338,7 @@ void test_list_head_remove(bool show)
                 tag_2, 2, HD(3), HD(4), 1, HD(4)
         )
     );
-    TEST_LIST_HEAD_REMOVE(5,
+    TEST_LIST_REMOVE(5,
         (
             2,  tag_1, 2, HD(1), HD(2), 0,
                 tag_2, 2, HD(3), HD(4), 1, HD(4)
@@ -350,7 +350,7 @@ void test_list_head_remove(bool show)
                 tag_2, 2, HD(3), HD(4), 1, HD(4)
         )
     );
-    TEST_LIST_HEAD_REMOVE(6,
+    TEST_LIST_REMOVE(6,
         (
             2,  tag_1, 2, HD(1), HD(2), 1, HD(2),
                 tag_2, 2, HD(3), HD(4), 1, HD(4)
@@ -359,20 +359,20 @@ void test_list_head_remove(bool show)
         true,
         (1,  tag_2, 2, HD(3), HD(4), 1, HD(4))
     );
-    TEST_LIST_HEAD_REMOVE(7,
+    TEST_LIST_REMOVE(7,
         (1,  tag_2, 2, HD(3), HD(4), 1, HD(4)),
         HD(3),
         true,
         (0)
     );
 
-    #undef TEST_LIST_HEAD_REMOVE
+    #undef TEST_LIST_REMOVE
 
     TEST_CASE_OPEN(8)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_head_remove(NULL, HD(1));
+            clu_list_remove(NULL, HD(1));
         }
         TEST_REVERT_CLOSE
     }
@@ -380,10 +380,10 @@ void test_list_head_remove(bool show)
 
     TEST_CASE_OPEN(9)
     {
-        list_head_p lh = clu_list_head_create_immed(0);
+        list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_head_remove(&lh, NULL);
+            clu_list_remove(&l, NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -394,162 +394,162 @@ void test_list_head_remove(bool show)
 
 
 
-void test_list_head_count(bool show)
+void test_list_count(bool show)
 {
     TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 1");
 
-    #define TEST_LIST_HEAD_COUNT(TAG, COUNT, ...)                       \
+    #define TEST_LIST_COUNT(TAG, COUNT, ...)                       \
     {                                                                   \
         TEST_CASE_OPEN(TAG)                                             \
         {                                                               \
-            list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-            uint64_t count = clu_list_head_count(lh);                   \
+            list_p l = clu_list_create_immed(__VA_ARGS__);   \
+            uint64_t count = clu_list_count(l);                   \
             assert(uint64(count, COUNT));                               \
-            clu_list_head_free(lh);                                     \
+            clu_list_free(l);                                     \
         }                                                               \
         TEST_CASE_CLOSE                                                 \
     }
 
-    TEST_LIST_HEAD_COUNT(1, 0,
+    TEST_LIST_COUNT(1, 0,
         0
     );
-    TEST_LIST_HEAD_COUNT(2, 1,
+    TEST_LIST_COUNT(2, 1,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_COUNT(3, 2,
+    TEST_LIST_COUNT(3, 2,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
 
-    #undef TEST_LIST_HEAD_COUNT
+    #undef TEST_LIST_COUNT
 
     TEST_FN_CLOSE
 }
 
-void test_list_head_get_body(bool show)
+void test_list_get_body(bool show)
 {
     TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_HEAD_GET_BODY(TAG, INDEX, HANDLER, ...)           \
+    #define TEST_LIST_GET_BODY(TAG, INDEX, HANDLER, ...)           \
     {                                                                   \
         TEST_CASE_OPEN(TAG)                                             \
         {                                                               \
-            list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-            trie_p t = clu_list_head_get_trie(lh, INDEX);               \
+            list_p l = clu_list_create_immed(__VA_ARGS__);   \
+            trie_p t = clu_list_get_trie(l, INDEX);               \
             if(HANDLER) {assert(clu_trie_contains(t, HANDLER));}        \
             else        {assert(t == NULL);}                            \
-            clu_list_head_free(lh);                                     \
+            clu_list_free(l);                                     \
         }                                                               \
         TEST_CASE_CLOSE                                                 \
     }
 
-    TEST_LIST_HEAD_GET_BODY(1, 0, NULL,
+    TEST_LIST_GET_BODY(1, 0, NULL,
         0
     );
-    TEST_LIST_HEAD_GET_BODY(2, 1, NULL,
+    TEST_LIST_GET_BODY(2, 1, NULL,
         0
     );
-    TEST_LIST_HEAD_GET_BODY(3, 0, HD(1),
+    TEST_LIST_GET_BODY(3, 0, HD(1),
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_GET_BODY(4, 1, NULL,
+    TEST_LIST_GET_BODY(4, 1, NULL,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_GET_BODY(5, 2, NULL,
+    TEST_LIST_GET_BODY(5, 2, NULL,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_GET_BODY(6, 0, HD(1),
+    TEST_LIST_GET_BODY(6, 0, HD(1),
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_HEAD_GET_BODY(7, 1, HD(2),
+    TEST_LIST_GET_BODY(7, 1, HD(2),
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_HEAD_GET_BODY(8, 2, NULL,
+    TEST_LIST_GET_BODY(8, 2, NULL,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_HEAD_GET_BODY(9, 3, NULL,
+    TEST_LIST_GET_BODY(9, 3, NULL,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
 
-    #undef TEST_LIST_HEAD_GET_BODY
+    #undef TEST_LIST_GET_BODY
 
     TEST_FN_CLOSE
 }
 
-void test_list_head_contains(bool show)
+void test_list_contains(bool show)
 {
     TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_HEAD_CONTAINS(TAG, HANDLER, RES, ...)             \
+    #define TEST_LIST_CONTAINS(TAG, HANDLER, RES, ...)             \
     {                                                                   \
         TEST_CASE_OPEN(TAG)                                             \
         {                                                               \
-            list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-            bool res = clu_list_head_contains(lh, HANDLER);             \
+            list_p l = clu_list_create_immed(__VA_ARGS__);   \
+            bool res = clu_list_contains(l, HANDLER);             \
             assert(res == RES);                                         \
-            clu_list_head_free(lh);                                     \
+            clu_list_free(l);                                     \
         }                                                               \
         TEST_CASE_CLOSE                                                 \
     }
 
-    TEST_LIST_HEAD_CONTAINS(1, HD(1), false,
+    TEST_LIST_CONTAINS(1, HD(1), false,
         0
     );
-    TEST_LIST_HEAD_CONTAINS(2, HD(1), true,
+    TEST_LIST_CONTAINS(2, HD(1), true,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_CONTAINS(3, HD(2), false,
+    TEST_LIST_CONTAINS(3, HD(2), false,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_HEAD_CONTAINS(4, HD(1), true,
+    TEST_LIST_CONTAINS(4, HD(1), true,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_HEAD_CONTAINS(5, HD(2), true,
+    TEST_LIST_CONTAINS(5, HD(2), true,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_HEAD_CONTAINS(5, HD(3), false,
+    TEST_LIST_CONTAINS(5, HD(3), false,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
 
-    #undef TEST_LIST_HEAD_CONTAINS
+    #undef TEST_LIST_CONTAINS
 
     TEST_FN_CLOSE
 }
 
 
 
-void test_list_head()
+void test_list()
 {
     TEST_LIB
 
     bool show = false;
 
-    test_list_head_create(show);
-    test_list_head_pop(show);
-    test_list_head_create_variadic(show);
+    test_list_create(show);
+    test_list_pop(show);
+    test_list_create_variadic(show);
 
-    test_list_head_insert(show);
-    test_list_head_remove(show);
+    test_list_insert(show);
+    test_list_remove(show);
 
-    test_list_head_count(show);
-    test_list_head_get_body(show);
-    test_list_head_contains(show);
+    test_list_count(show);
+    test_list_get_body(show);
+    test_list_contains(show);
 
     TEST_ASSERT_MEM_EMPTY
 }
@@ -559,7 +559,7 @@ void test_list_head()
 int main()
 {
     setbuf(stdout, NULL);
-    test_list_head();
+    test_list();
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

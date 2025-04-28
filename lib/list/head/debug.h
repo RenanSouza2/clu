@@ -1,21 +1,21 @@
-#ifndef __LIST_HEAD_DEBUG_H__
-#define __LIST_HEAD_DEBUG_H__
+#ifndef __LIST_DEBUG_H__
+#define __LIST_DEBUG_H__
 
 #include "header.h"
 #include "struct.h"
 
 #ifdef DEBUG
 
-#define LH(HANDLER) ((list_head_p)(HANDLER))
+#define L(HANDLER) ((list_p)(HANDLER))
 
-list_head_p clu_list_head_create_immed(uint64_t n, ...);
+list_p clu_list_create_immed(uint64_t n, ...);
 
-bool clu_list_head(list_head_p lh_1, list_head_p lh_2);
-bool clu_list_head_immed(list_head_p lh, uint64_t n, ...);
+bool clu_list(list_p lh_1, list_p lh_2);
+bool clu_list_immed(list_p lh, uint64_t n, ...);
 
 #endif
 
-list_head_p clu_list_head_create(tag_p tag, list_head_p next);
-list_head_p clu_list_head_pop(list_head_p lh);
+list_p clu_list_create(tag_p tag, list_p next);
+list_p clu_list_pop(list_p lh);
 
 #endif

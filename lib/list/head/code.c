@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "../body/header.h"
 #include "../../mem/header.h"
+
 #include "../../../mods/macros/assert.h"
 #include "../../../mods/macros/U64.h"
 
@@ -12,65 +13,65 @@
 #include "../body/debug.h"
 #include "../../tag/debug.h"
 
-list_head_p clu_list_head_create_variadic_item(va_list *args)
+list_p clu_list_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
-    list_head_p lh = clu_list_head_create(&tag, NULL);
+    list_p l = clu_list_create(&tag, NULL);
     int n = va_arg(*args, int);
-    lh->t = clu_trie_create_variadic_list(n, args);
-    assert(lh->t);
-    return lh;
+    l->t = clu_trie_create_variadic_list(n, args);
+    assert(l->t);
+    return l;
 }
 
-list_head_p clu_list_head_create_variadic(uint64_t n, va_list *args)
+list_p clu_list_create_variadic(uint64_t n, va_list *args)
 {
     if(n == 0)
         return NULL;
 
-    list_head_p lh, lh_first;
-    lh = lh_first = clu_list_head_create_variadic_item(args);
+    list_p l, l_first;
+    l = l_first = clu_list_create_variadic_item(args);
     for(uint64_t i=1; i<n; i++)
-        lh = lh->lh = clu_list_head_create_variadic_item(args);
+        l = l->next = clu_list_create_variadic_item(args);
 
-    return lh_first;
+    return l_first;
 }
 
-list_head_p clu_list_head_create_immed(uint64_t n, ...)
+list_p clu_list_create_immed(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    return clu_list_head_create_variadic(n, &args);
+    return clu_list_create_variadic(n, &args);
 }
 
 
 
-bool clu_list_head_inner(list_head_p lh_1, list_head_p lh_2)
+bool clu_list_inner(list_p l_1, list_p l_2)
 {
-    for(uint64_t i=0; lh_1 && lh_2; i++)
+    for(uint64_t i=0; l_1 && l_2; i++)
     {
-        if(!clu_tag(&lh_1->tag, &lh_2->tag))
+        if(!clu_tag(&l_1->tag, &l_2->tag))
         {
             printf("\n\tLIST HEAD ASSERT ERROR\t| TAG MISMATCH | INDEX " U64P() "", i);
             return false;
         }
 
-        if(!clu_trie_inner(lh_1->t, lh_2->t))
+        if(!clu_trie_inner(l_1->t, l_2->t))
         {
             printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | " U64P() "", i);
             return false;
         }
 
-        lh_1 = lh_1->lh;
-        lh_2 = lh_2->lh;
+        l_1 = l_1->next;
+        l_2 = l_2->next;
     }
 
-    if(lh_2)
+    if(l_2)
     {
         printf("\n\tLIST HEAD ASSERT ERROR\t| LIST SHORTER");
         return false;
     }
 
-    if(lh_1)
+    if(l_1)
     {
         printf("\n\tLIST HEAD ASSERT ERROR\t| LIST LONGER");
         return false;
@@ -79,152 +80,152 @@ bool clu_list_head_inner(list_head_p lh_1, list_head_p lh_2)
     return true;
 }
 
-bool clu_list_head(list_head_p lh_1, list_head_p lh_2)
+bool clu_list(list_p l_1, list_p l_2)
 {
-    if(!clu_list_head_inner(lh_1, lh_2))
+    if(!clu_list_inner(l_1, l_2))
     {
-        clu_list_head_report(lh_1, "lh_1", true);
-        clu_list_head_report(lh_2, "lh_2", true);
+        clu_list_report(l_1, "l_1", true);
+        clu_list_report(l_2, "l_2", true);
         return false;
     }
 
-    clu_list_head_free(lh_1);
-    clu_list_head_free(lh_2);
+    clu_list_free(l_1);
+    clu_list_free(l_2);
     return true;
 }
 
-bool clu_list_head_immed(list_head_p lh, uint64_t n, ...)
+bool clu_list_immed(list_p l, uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    list_head_p lh_2 = clu_list_head_create_variadic(n, &args);
-    return clu_list_head(lh, lh_2);
+    list_p l_2 = clu_list_create_variadic(n, &args);
+    return clu_list(l, l_2);
 }
 
 #endif
 
 
 
-void clu_list_head_report(list_head_p lh, char tag[], bool full)
+void clu_list_report(list_p l, char tag[], bool full)
 {
     printf("\n\tCLU REPORT: %s", tag);
-    if(lh == NULL)
+    if(l == NULL)
     {
         printf("\n\nEMPTY LIST");
         return;
     }
 
-    for(; lh; lh = lh->lh)
+    for(; l; l = l->next)
     {
         if(full)
         {
-            printf("\n%s", lh->tag.str);
-            clu_trie_display(lh->t);
+            printf("\n%s", l->tag.str);
+            clu_trie_display(l->t);
         }
         else
         {
-            uint64_t count = clu_trie_count(lh->t);
-            printf("\n%s: " U64P() "", lh->tag.str, count);
+            uint64_t count = clu_trie_count(l->t);
+            printf("\n%s: " U64P() "", l->tag.str, count);
         }
     }
 }
 
 
 
-list_head_p clu_list_head_create(tag_p tag, list_head_p next)
+list_p clu_list_create(tag_p tag, list_p next)
 {
-    list_head_p lh;
-    CALLOC(lh, list_head);
+    list_p l;
+    CALLOC(l, list);
 
-    lh->tag = *tag;
-    lh->lh = next;
-    return lh;
+    l->tag = *tag;
+    l->next = next;
+    return l;
 }
 
-list_head_p clu_list_head_pop(list_head_p lh)
+list_p clu_list_pop(list_p l)
 {
-    assert(lh);
+    assert(l);
 
-    list_head_p lh_aux = lh->lh;
-    FREE(lh, list_head);
-    return lh_aux;
+    list_p l_aux = l->next;
+    FREE(l, list);
+    return l_aux;
 }
 
 
 
-void clu_list_head_free(list_head_p lh_root)
+void clu_list_free(list_p l_root)
 {
-    for(list_head_p lh = lh_root; lh; lh = clu_list_head_pop(lh))
-        clu_trie_free(lh->t);
+    for(list_p l = l_root; l; l = clu_list_pop(l))
+        clu_trie_free(l->t);
 }
 
-bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
+bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h)
 {
-    assert(lh_root);
+    assert(l_root);
     assert(tag);
     assert(h);
 
-    if(clu_list_head_contains(*lh_root, h))
+    if(clu_list_contains(*l_root, h))
         return false;
 
-    for(list_head_p lh = *lh_root; lh; lh = lh->lh)
+    for(list_p l = *l_root; l; l = l->next)
     {
-        if(!clu_tag_eq(&lh->tag, tag))
+        if(!clu_tag_eq(&l->tag, tag))
             continue;
 
-        assert(clu_trie_insert(&lh->t, h));
+        assert(clu_trie_insert(&l->t, h));
         return true;
     }
 
-    list_head_p lh = clu_list_head_create(tag, *lh_root);
-    assert(clu_trie_insert(&lh->t, h));
-    *lh_root = lh;
+    list_p l = clu_list_create(tag, *l_root);
+    assert(clu_trie_insert(&l->t, h));
+    *l_root = l;
     return true;
 }
 
-bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
+bool clu_list_remove(list_p *l_root, handler_p h)
 {
-    assert(lh_root);
+    assert(l_root);
     assert(h);
 
-    list_head_p lh = *lh_root;
-    if(lh == NULL) return false;
+    list_p l = *l_root;
+    if(l == NULL) return false;
 
-    if(!clu_trie_remove(&lh->t, h))
-        return clu_list_head_remove(&lh->lh, h);
+    if(!clu_trie_remove(&l->t, h))
+        return clu_list_remove(&l->next, h);
 
-    if(lh->t == NULL)
-        *lh_root = clu_list_head_pop(lh);
+    if(l->t == NULL)
+        *l_root = clu_list_pop(l);
 
     return true;
 }
 
 
 
-uint64_t clu_list_head_count(list_head_p lh)
+uint64_t clu_list_count(list_p l)
 {
     uint64_t i = 0;
-    for(; lh; i++)
-        lh = lh->lh;
+    for(; l; i++)
+        l = l->next;
 
     return i;
 }
 
-trie_p clu_list_head_get_trie(list_head_p lh, uint64_t i)
+trie_p clu_list_get_trie(list_p l, uint64_t i)
 {
-    if(lh == NULL)
+    if(l == NULL)
         return NULL;
 
     if(i == 0)
-        return lh->t;
+        return l->t;
 
-    return clu_list_head_get_trie(lh->lh, i-1);
+    return clu_list_get_trie(l->next, i-1);
 }
 
-bool clu_list_head_contains(list_head_p lh, handler_p h)
+bool clu_list_contains(list_p l, handler_p h)
 {
-    for(; lh; lh = lh->lh)
-        if(clu_trie_contains(lh->t, h))
+    for(; l; l = l->next)
+        if(clu_trie_contains(l->t, h))
             return true;
 
     return false;

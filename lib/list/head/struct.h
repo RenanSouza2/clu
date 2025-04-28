@@ -1,13 +1,13 @@
-#ifndef __LIST_HEAD_STRUCT_H__
-#define __LIST_HEAD_STRUCT_H__
+#ifndef __LIST_STRUCT_H__
+#define __LIST_STRUCT_H__
 
 #include "../../tag/struct.h"
 
-STRUCT(list_head)
+STRUCT(list)
 {
     tag_t tag;
     trie_p t;
-    list_head_p lh;
+    list_p next;
 };
 
 #endif

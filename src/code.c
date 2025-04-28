@@ -7,7 +7,7 @@
 #include "../lib/list/head/header.h"
 #include "../lib/tag/struct.h"
 
-list_head_p lh_root_allocated = NULL;
+list_p l_root_allocated = NULL;
 trie_p t_root_freed = NULL;
 bool log_allocations = false;
 
@@ -56,7 +56,7 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
     if(t_root_freed)
         clu_trie_remove(&t_root_freed, h);
 
-    if(!clu_list_head_insert(&lh_root_allocated, &tag, h))
+    if(!clu_list_insert(&l_root_allocated, &tag, h))
     {
         printf("\n");
         printf("\n");
@@ -109,7 +109,7 @@ void clu_handler_deallocate(handler_p h, char format[], va_list args, char fn[])
         assert(false);
     }
 
-    if(lh_root_allocated == NULL || !clu_list_head_remove(&lh_root_allocated, h))
+    if(l_root_allocated == NULL || !clu_list_remove(&l_root_allocated, h))
     {
         printf("\n");
         printf("\n");
@@ -235,7 +235,7 @@ void clu_mem_report_opts(char tag[], bool full)
 {
     printf("\n");
     printf("\n----------------------");
-    clu_list_head_report(lh_root_allocated, tag, full);
+    clu_list_report(l_root_allocated, tag, full);
     printf("\n----------------------");
     printf("\n");
 }
@@ -254,7 +254,7 @@ void clu_mem_report_full(char tag[])
 
 bool clu_mem_is_empty()
 {
-    if(lh_root_allocated)
+    if(l_root_allocated)
     {
         clu_mem_report("ASSERT FAIL | MEMORY NOT EMPTY");
         return false;
@@ -267,7 +267,7 @@ bool clu_mem_is_empty()
 
 bool clu_handler_is_allocated(handler_p h)
 {
-    return clu_list_head_contains(lh_root_allocated, h);
+    return clu_list_contains(l_root_allocated, h);
 }
 
 bool clu_handler_is_freed(handler_p h)
@@ -282,18 +282,18 @@ bool clu_handler_is_freed(handler_p h)
 
 uint64_t clu_get_max_i()
 {
-    return clu_list_head_count(lh_root_allocated);
+    return clu_list_count(l_root_allocated);
 }
 
 uint64_t clu_get_max_j(uint64_t i)
 {
-    trie_p t = clu_list_head_get_trie(lh_root_allocated, i);
+    trie_p t = clu_list_get_trie(l_root_allocated, i);
     return t ? clu_trie_count(t) : 0;
 }
 
 handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
-    trie_p t = clu_list_head_get_trie(lh_root_allocated, i);
+    trie_p t = clu_list_get_trie(l_root_allocated, i);
     return t ? clu_trie_get_handler(t, j) : NULL;
 }
 

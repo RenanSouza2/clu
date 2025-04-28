@@ -1,5 +1,5 @@
-#ifndef __LIST_HEAD_H__
-#define __LIST_HEAD_H__
+#ifndef __LIST_H__
+#define __LIST_H__
 
 #include <stdbool.h>
 
@@ -8,16 +8,16 @@
 
 #include "../../../mods/macros/struct.h"
 
-PLACEHOLDER(list_head);
+PLACEHOLDER(list);
 
-void clu_list_head_report(list_head_p lh, char tag[], bool full);
+void clu_list_report(list_p l, char tag[], bool full);
 
-void clu_list_head_free(list_head_p lh_root);
-bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h);
-bool clu_list_head_remove(list_head_p *lh_root, handler_p h);
+void clu_list_free(list_p l_root);
+bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h);
+bool clu_list_remove(list_p *l_root, handler_p h);
 
-uint64_t clu_list_head_count(list_head_p lh);
-trie_p clu_list_head_get_trie(list_head_p lh, uint64_t i);
-bool clu_list_head_contains(list_head_p lh, handler_p h);
+uint64_t clu_list_count(list_p l);
+trie_p clu_list_get_trie(list_p l, uint64_t i);
+bool clu_list_contains(list_p l, handler_p h);
 
 #endif

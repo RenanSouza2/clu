@@ -1,5 +1,5 @@
-#ifndef __LIST_BODY_STRUCT_H__
-#define __LIST_BODY_STRUCT_H__
+#ifndef __TRIE_STRUCT_H__
+#define __TRIE_STRUCT_H__
 
 #define CHUNK 4
 #define SIZE 16

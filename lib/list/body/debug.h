@@ -1,5 +1,5 @@
-#ifndef __LIST_BODY_DEBUG_H__
-#define __LIST_BODY_DEBUG_H__
+#ifndef __TRIE_DEBUG_H__
+#define __TRIE_DEBUG_H__
 
 #include "header.h"
 #include "struct.h"

@@ -1,5 +1,5 @@
-#ifndef __LIST_BODY_H__
-#define __LIST_BODY_H__
+#ifndef __TRIE_H__
+#define __TRIE_H__
 
 #include <stdbool.h>
 #include <stdint.h>

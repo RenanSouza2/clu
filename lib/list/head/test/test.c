@@ -142,16 +142,16 @@ void test_list_insert(bool show)
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_INSERT(TAG, L_BEF, LTAG, HANDLER, RES, L_AFT)  \
-    {                                                                       \
-        TEST_CASE_OPEN(TAG)                                                 \
-        {                                                                   \
-            list_p l = clu_list_create_immed(ARG_OPEN L_BEF);   \
-            bool res = clu_list_insert(&l, &LTAG, HANDLER);           \
-            assert(res == RES);                                             \
-            assert(clu_list_immed(l, ARG_OPEN L_AFT));               \
-        }                                                                   \
-        TEST_CASE_CLOSE                                                     \
+    #define TEST_LIST_INSERT(TAG, L_BEF, LTAG, HANDLER, RES, L_AFT) \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            list_p l = clu_list_create_immed(ARG_OPEN L_BEF);       \
+            bool res = clu_list_insert(&l, &LTAG, HANDLER);         \
+            assert(res == RES);                                     \
+            assert(clu_list_immed(l, ARG_OPEN L_AFT));              \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
     TEST_LIST_INSERT(1,
@@ -270,16 +270,16 @@ void test_list_remove(bool show)
     tag_t tag_3 = clu_tag_format("test 3");
     tag_t tag_4 = clu_tag_format("test 4");
 
-    #define TEST_LIST_REMOVE(TAG, L_BEF, HANDLER, RES, L_AFT)        \
-    {                                                                       \
-        TEST_CASE_OPEN(TAG)                                                 \
-        {                                                                   \
+    #define TEST_LIST_REMOVE(TAG, L_BEF, HANDLER, RES, L_AFT)   \
+    {                                                           \
+        TEST_CASE_OPEN(TAG)                                     \
+        {                                                       \
             list_p l = clu_list_create_immed(ARG_OPEN L_BEF);   \
-            bool res = clu_list_remove(&l, HANDLER);                  \
-            assert(res == RES);                                             \
-            assert(clu_list_immed(l, ARG_OPEN L_AFT));               \
-        }                                                                   \
-        TEST_CASE_CLOSE                                                     \
+            bool res = clu_list_remove(&l, HANDLER);            \
+            assert(res == RES);                                 \
+            assert(clu_list_immed(l, ARG_OPEN L_AFT));          \
+        }                                                       \
+        TEST_CASE_CLOSE                                         \
     }
 
     TEST_LIST_REMOVE(1,
@@ -401,16 +401,16 @@ void test_list_count(bool show)
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 1");
 
-    #define TEST_LIST_COUNT(TAG, COUNT, ...)                       \
-    {                                                                   \
-        TEST_CASE_OPEN(TAG)                                             \
-        {                                                               \
-            list_p l = clu_list_create_immed(__VA_ARGS__);   \
-            uint64_t count = clu_list_count(l);                   \
-            assert(uint64(count, COUNT));                               \
-            clu_list_free(l);                                     \
-        }                                                               \
-        TEST_CASE_CLOSE                                                 \
+    #define TEST_LIST_COUNT(TAG, COUNT, ...)                \
+    {                                                       \
+        TEST_CASE_OPEN(TAG)                                 \
+        {                                                   \
+            list_p l = clu_list_create_immed(__VA_ARGS__);  \
+            uint64_t count = clu_list_count(l);             \
+            assert(uint64(count, COUNT));                   \
+            clu_list_free(l);                               \
+        }                                                   \
+        TEST_CASE_CLOSE                                     \
     }
 
     TEST_LIST_COUNT(1, 0,
@@ -429,59 +429,59 @@ void test_list_count(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_get_body(bool show)
+void test_list_get_trie(bool show)
 {
     TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_GET_BODY(TAG, INDEX, HANDLER, ...)           \
-    {                                                                   \
-        TEST_CASE_OPEN(TAG)                                             \
-        {                                                               \
-            list_p l = clu_list_create_immed(__VA_ARGS__);   \
-            trie_p t = clu_list_get_trie(l, INDEX);               \
-            if(HANDLER) {assert(clu_trie_contains(t, HANDLER));}        \
-            else        {assert(t == NULL);}                            \
-            clu_list_free(l);                                     \
-        }                                                               \
-        TEST_CASE_CLOSE                                                 \
+    #define TEST_LIST_GET_TRIE(TAG, INDEX, HANDLER, ...)            \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            list_p l = clu_list_create_immed(__VA_ARGS__);          \
+            trie_p t = clu_list_get_trie(l, INDEX);                 \
+            if(HANDLER) {assert(clu_trie_contains(t, HANDLER));}    \
+            else        {assert(t == NULL);}                        \
+            clu_list_free(l);                                       \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
-    TEST_LIST_GET_BODY(1, 0, NULL,
+    TEST_LIST_GET_TRIE(1, 0, NULL,
         0
     );
-    TEST_LIST_GET_BODY(2, 1, NULL,
+    TEST_LIST_GET_TRIE(2, 1, NULL,
         0
     );
-    TEST_LIST_GET_BODY(3, 0, HD(1),
+    TEST_LIST_GET_TRIE(3, 0, HD(1),
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_GET_BODY(4, 1, NULL,
+    TEST_LIST_GET_TRIE(4, 1, NULL,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_GET_BODY(5, 2, NULL,
+    TEST_LIST_GET_TRIE(5, 2, NULL,
         1,  tag_1, 1, HD(1), 0
     );
-    TEST_LIST_GET_BODY(6, 0, HD(1),
+    TEST_LIST_GET_TRIE(6, 0, HD(1),
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_GET_BODY(7, 1, HD(2),
+    TEST_LIST_GET_TRIE(7, 1, HD(2),
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_GET_BODY(8, 2, NULL,
+    TEST_LIST_GET_TRIE(8, 2, NULL,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_GET_BODY(9, 3, NULL,
+    TEST_LIST_GET_TRIE(9, 3, NULL,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
 
-    #undef TEST_LIST_GET_BODY
+    #undef TEST_LIST_GET_TRIE
 
     TEST_FN_CLOSE
 }
@@ -493,16 +493,16 @@ void test_list_contains(bool show)
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
 
-    #define TEST_LIST_CONTAINS(TAG, HANDLER, RES, ...)             \
-    {                                                                   \
-        TEST_CASE_OPEN(TAG)                                             \
-        {                                                               \
-            list_p l = clu_list_create_immed(__VA_ARGS__);   \
-            bool res = clu_list_contains(l, HANDLER);             \
-            assert(res == RES);                                         \
-            clu_list_free(l);                                     \
-        }                                                               \
-        TEST_CASE_CLOSE                                                 \
+    #define TEST_LIST_CONTAINS(TAG, HANDLER, RES, ...)      \
+    {                                                       \
+        TEST_CASE_OPEN(TAG)                                 \
+        {                                                   \
+            list_p l = clu_list_create_immed(__VA_ARGS__);  \
+            bool res = clu_list_contains(l, HANDLER);       \
+            assert(res == RES);                             \
+            clu_list_free(l);                               \
+        }                                                   \
+        TEST_CASE_CLOSE                                     \
     }
 
     TEST_LIST_CONTAINS(1, HD(1), false,
@@ -548,7 +548,7 @@ void test_list()
     test_list_remove(show);
 
     test_list_count(show);
-    test_list_get_body(show);
+    test_list_get_trie(show);
     test_list_contains(show);
 
     TEST_ASSERT_MEM_EMPTY

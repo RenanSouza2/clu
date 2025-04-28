@@ -51,13 +51,13 @@ bool clu_list_inner(list_p l_1, list_p l_2)
     {
         if(!clu_tag(&l_1->tag, &l_2->tag))
         {
-            printf("\n\tLIST HEAD ASSERT ERROR\t| TAG MISMATCH | INDEX " U64P() "", i);
+            printf("\n\tLIST ASSERT ERROR\t| TAG MISMATCH | INDEX " U64P() "", i);
             return false;
         }
 
         if(!clu_trie_inner(l_1->t, l_2->t))
         {
-            printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | " U64P() "", i);
+            printf("\n\tLIST ASSERT ERROR\t| TRIE MISMATCH | " U64P() "", i);
             return false;
         }
 
@@ -67,13 +67,13 @@ bool clu_list_inner(list_p l_1, list_p l_2)
 
     if(l_2)
     {
-        printf("\n\tLIST HEAD ASSERT ERROR\t| LIST SHORTER");
+        printf("\n\tLIST ASSERT ERROR\t| LIST SHORTER");
         return false;
     }
 
     if(l_1)
     {
-        printf("\n\tLIST HEAD ASSERT ERROR\t| LIST LONGER");
+        printf("\n\tLIST ASSERT ERROR\t| LIST LONGER");
         return false;
     }
 

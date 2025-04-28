@@ -133,7 +133,7 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
     {
         if(t_2 != NULL)
         {
-            printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
+            printf("\n\n\tTRIE ASSERT ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
             return false;
         }
 
@@ -142,13 +142,13 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 
     if(t_2 == NULL)
     {
-        printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
+        printf("\n\n\tTRIE ASSERT ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
         return false;
     }
 
     if(t_1->h != t_2->h)
     {
-        printf("\n\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 1 | %p %p | H %p | I " U64P() "", t_1->h, t_2->h, h, index);
+        printf("\n\n\tTRIE ASSERT ERROR\t| H MISMATCH 1 | %p %p | H %p | I " U64P() "", t_1->h, t_2->h, h, index);
         return false;
     }
 
@@ -157,14 +157,14 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
         for(uint64_t i=0; i<index; i++)
             if(!uint64(GET(t_1->h, i), GET(h, i)))
             {
-                printf("\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", t_1->h, h, index);
+                printf("\n\tTRIE ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", t_1->h, h, index);
                 return false;
             }
 
         for(uint64_t i=0; i<16; i++)
             if(t_1->arr[i])
             {
-                printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
+                printf("\n\n\tTRIE ASSERT ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
                 return false;
             }
 

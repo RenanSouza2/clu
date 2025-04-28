@@ -1,6 +1,7 @@
 #ifndef __LIST_BODY_DEBUG_H__
 #define __LIST_BODY_DEBUG_H__
 
+#include "header.h"
 #include "struct.h"
 
 #ifdef DEBUG
@@ -8,7 +9,6 @@
 #include <stdarg.h>
 
 #define HD(HANDLER) ((handler_p)(HANDLER))
-#define LB(HANDLER) ((trie_p)(HANDLER))
 
 void clu_trie_display_dbg(trie_p t);
 

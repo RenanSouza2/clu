@@ -71,82 +71,82 @@ void test_set(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_body_create(bool show)
+void test_trie_create(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_LIST_BODY_CREATE(TAG, HANDLER)             \
-    {                                                       \
-        TEST_CASE_OPEN(TAG)                                 \
-        {                                                   \
-            list_body_p lb = clu_list_body_create(HANDLER); \
-            assert(lb->h == HANDLER);                       \
-            for(uint64_t i=0; i<16; i++)                    \
-            assert(lb->arr[i] == NULL);                     \
-            FREE(lb, list_body);                            \
-        }                                                   \
-        TEST_CASE_CLOSE                                     \
+    #define TEST_TRIE_CREATE(TAG, HANDLER)          \
+    {                                               \
+        TEST_CASE_OPEN(TAG)                         \
+        {                                           \
+            trie_p t = clu_trie_create(HANDLER);    \
+            assert(t->h == HANDLER);                \
+            for(uint64_t i=0; i<16; i++)            \
+            assert(t->arr[i] == NULL);              \
+            FREE(t, trie);                          \
+        }                                           \
+        TEST_CASE_CLOSE                             \
     }
 
-    TEST_LIST_BODY_CREATE(1, NULL);
-    TEST_LIST_BODY_CREATE(2, HD(1));
+    TEST_TRIE_CREATE(1, NULL);
+    TEST_TRIE_CREATE(2, HD(1));
 
-    #undef TEST_LIST_BODY_CREATE
+    #undef TEST_TRIE_CREATE
 
     TEST_FN_CLOSE
 }
 
-void test_list_body_create_immed_tree(bool show)
+void test_trie_create_immed_tree(bool show)
 {
     TEST_FN_OPEN
 
     TEST_CASE_OPEN(1)
     {
-        list_body_p lb = clu_list_body_create_immed_tree(false);
-        assert(lb == NULL);
+        trie_p t = clu_trie_create_immed_tree(false);
+        assert(t == NULL);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(2)
     {
-        list_body_p lb = clu_list_body_create_immed_tree(true, HD(1));
-        assert(lb != NULL);
-        assert(lb->h == HD(1));
-        clu_list_body_free(lb);
+        trie_p t = clu_trie_create_immed_tree(true, HD(1));
+        assert(t != NULL);
+        assert(t->h == HD(1));
+        clu_trie_free(t);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(3)
     {
-        list_body_p lb = clu_list_body_create_immed_tree(true, NULL, 2,
+        trie_p t = clu_trie_create_immed_tree(true, NULL, 2,
             1, HD(1),
             2, HD(2)
         );
-        assert(lb != NULL);
-        assert(lb->h == NULL);
-        assert(lb->arr[1] != NULL);
-        assert(lb->arr[1]->h == HD(1));
-        assert(lb->arr[2] != NULL);
-        assert(lb->arr[2]->h == HD(2));
-        clu_list_body_free(lb);
+        assert(t != NULL);
+        assert(t->h == NULL);
+        assert(t->arr[1] != NULL);
+        assert(t->arr[1]->h == HD(1));
+        assert(t->arr[2] != NULL);
+        assert(t->arr[2]->h == HD(2));
+        clu_trie_free(t);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(3)
     {
-        list_body_p lb = clu_list_body_create_immed_tree(true, NULL, 1,
+        trie_p t = clu_trie_create_immed_tree(true, NULL, 1,
             0, NULL, 2,
                 1, HD(0x10),
                 2, HD(0x20)
         );
-        assert(lb != NULL);
-        assert(lb->h == NULL);
-        assert(lb->arr[0] != NULL);
-        assert(lb->arr[0]->arr[1] != NULL);
-        assert(lb->arr[0]->arr[1]->h == HD(0x10));
-        assert(lb->arr[0]->arr[2] != NULL);
-        assert(lb->arr[0]->arr[2]->h == HD(0x20));
-        clu_list_body_free(lb);
+        assert(t != NULL);
+        assert(t->h == NULL);
+        assert(t->arr[0] != NULL);
+        assert(t->arr[0]->arr[1] != NULL);
+        assert(t->arr[0]->arr[1]->h == HD(0x10));
+        assert(t->arr[0]->arr[2] != NULL);
+        assert(t->arr[0]->arr[2]->h == HD(0x20));
+        clu_trie_free(t);
     }
     TEST_CASE_CLOSE
 
@@ -155,35 +155,35 @@ void test_list_body_create_immed_tree(bool show)
 
 
 
-void test_list_body_insert(bool show)
+void test_trie_insert(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_LIST_BODY_INSERT(TAG, lLB_BEF, HANDLER, RES, LB_AFT)           \
-    {                                                                           \
-        TEST_CASE_OPEN(TAG)                                                     \
-        {                                                                       \
-            list_body_p lb = clu_list_body_create_immed_tree(ARG_OPEN lLB_BEF); \
-            bool res = clu_list_body_insert(&lb, HANDLER);                      \
-            assert(res == RES);                                                 \
-            assert(clu_list_body_immed_tree(lb, ARG_OPEN LB_AFT));              \
-        }                                                                       \
-        TEST_CASE_CLOSE                                                         \
+    #define TEST_TRIE_INSERT(TAG, T_BEF, HANDLER, RES, T_AFT)       \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            trie_p t = clu_trie_create_immed_tree(ARG_OPEN T_BEF);  \
+            bool res = clu_trie_insert(&t, HANDLER);                \
+            assert(res == RES);                                     \
+            assert(clu_trie_immed_tree(t, ARG_OPEN T_AFT));         \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
-    TEST_LIST_BODY_INSERT(1,
+    TEST_TRIE_INSERT(1,
         (false),
         HD(1),
         true,
         (true, HD(1))
     );
-    TEST_LIST_BODY_INSERT(2,
+    TEST_TRIE_INSERT(2,
         (true, HD(1)),
         HD(1),
         false,
         (true, HD(1))
     );
-    TEST_LIST_BODY_INSERT(3,
+    TEST_TRIE_INSERT(3,
         (true, HD(1)),
         HD(2),
         true,
@@ -193,7 +193,7 @@ void test_list_body_insert(bool show)
                 2, HD(2)
         )
     );
-    TEST_LIST_BODY_INSERT(4,
+    TEST_TRIE_INSERT(4,
         (true, HD(0x111)),
         HD(0x211),
         true,
@@ -206,13 +206,13 @@ void test_list_body_insert(bool show)
         )
     );
 
-    #undef TEST_LIST_BODY_INSERT
+    #undef TEST_TRIE_INSERT
 
     TEST_CASE_OPEN(4)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_body_insert(NULL, HD(1));
+            clu_trie_insert(NULL, HD(1));
         }
         TEST_REVERT_CLOSE
     }
@@ -221,10 +221,10 @@ void test_list_body_insert(bool show)
     TEST_CASE_OPEN(5)
     {
         if(show) printf("\n\t\t%s 5\t\t", __func__);
-        list_body_p lb = clu_list_body_create_immed_tree(false);
+        trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_list_body_insert(&lb, NULL);
+            clu_trie_insert(&t, NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -233,35 +233,35 @@ void test_list_body_insert(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_body_remove(bool show)
+void test_trie_remove(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_LIST_BODY_REMOVE(TAG, LB_BEF, HANDLER, RES, LB_AFT)            \
-    {                                                                           \
-        TEST_CASE_OPEN(TAG)                                                     \
-        {                                                                       \
-            list_body_p lb = clu_list_body_create_immed_tree(ARG_OPEN LB_BEF);  \
-            bool res = clu_list_body_remove(&lb, HANDLER);                      \
-            assert(res == RES);                                                 \
-            assert(clu_list_body_immed_tree(lb, ARG_OPEN LB_AFT));              \
-        }                                                                       \
-        TEST_CASE_CLOSE                                                         \
+    #define TEST_TRIE_REMOVE(TAG, T_BEF, HANDLER, RES, T_AFT)       \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            trie_p t = clu_trie_create_immed_tree(ARG_OPEN T_BEF);  \
+            bool res = clu_trie_remove(&t, HANDLER);                \
+            assert(res == RES);                                     \
+            assert(clu_trie_immed_tree(t, ARG_OPEN T_AFT));         \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
-    TEST_LIST_BODY_REMOVE(1,
+    TEST_TRIE_REMOVE(1,
         (true, HD(1)),
         HD(1),
         true,
         (false)
     );
-    TEST_LIST_BODY_REMOVE(2,
+    TEST_TRIE_REMOVE(2,
         (true, HD(1)),
         HD(2),
         false,
         (true, HD(1))
     );
-    TEST_LIST_BODY_REMOVE(3,
+    TEST_TRIE_REMOVE(3,
         (
             true, NULL, 2,
                 1, HD(1),
@@ -274,7 +274,7 @@ void test_list_body_remove(bool show)
                 1, HD(1)
         )
     );
-    TEST_LIST_BODY_REMOVE(4,
+    TEST_TRIE_REMOVE(4,
         (
             true, NULL, 1,
                 1, HD(1)
@@ -283,7 +283,7 @@ void test_list_body_remove(bool show)
         true,
         (false)
     );
-    TEST_LIST_BODY_REMOVE(5,
+    TEST_TRIE_REMOVE(5,
         (
             true, NULL, 1,
                 1, NULL, 2,
@@ -298,7 +298,7 @@ void test_list_body_remove(bool show)
                     2, HD(0x21)
         )
     );
-    TEST_LIST_BODY_REMOVE(6,
+    TEST_TRIE_REMOVE(6,
         (
             true, NULL, 1,
                 1, NULL, 1,
@@ -313,13 +313,13 @@ void test_list_body_remove(bool show)
         )
     );
 
-    #undef TEST_LIST_BODY_REMOVE
+    #undef TEST_TRIE_REMOVE
 
     TEST_CASE_OPEN(7)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_body_remove(NULL, HD(1));
+            clu_trie_remove(NULL, HD(1));
         }
         TEST_REVERT_CLOSE
     }
@@ -327,10 +327,10 @@ void test_list_body_remove(bool show)
 
     TEST_CASE_OPEN(8)
     {
-        list_body_p lb = clu_list_body_create_immed_tree(false);
+        trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_list_body_remove(&lb, HD(1));
+            clu_trie_remove(&t, HD(1));
         }
         TEST_REVERT_CLOSE
     }
@@ -338,10 +338,10 @@ void test_list_body_remove(bool show)
 
     TEST_CASE_OPEN(9)
     {
-        list_body_p lb = clu_list_body_create_immed_tree(false);
+        trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_list_body_remove(&lb, NULL);
+            clu_trie_remove(&t, NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -352,108 +352,108 @@ void test_list_body_remove(bool show)
 
 
 
-void test_list_body_count(bool show)
+void test_trie_count(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_LIST_BODY_COUNT(TAG, RES, ...)                             \
-    {                                                                       \
-        TEST_CASE_OPEN(TAG)                                                 \
-        {                                                                   \
-            list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
-            uint64_t res = clu_list_body_count(lb);                         \
-            assert(uint64(res, RES));                                       \
-            clu_list_body_free(lb);                                         \
-        }                                                                   \
-        TEST_CASE_CLOSE                                                     \
+    #define TEST_TRIE_COUNT(TAG, RES, ...)                          \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            trie_p t = clu_trie_create_immed_tree(__VA_ARGS__);     \
+            uint64_t res = clu_trie_count(t);                       \
+            assert(uint64(res, RES));                               \
+            clu_trie_free(t);                                       \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
-    TEST_LIST_BODY_COUNT(1, 0,
+    TEST_TRIE_COUNT(1, 0,
         false
     );
-    TEST_LIST_BODY_COUNT(2, 1,
+    TEST_TRIE_COUNT(2, 1,
         true, HD(1)
     );
-    TEST_LIST_BODY_COUNT(3, 1,
+    TEST_TRIE_COUNT(3, 1,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_COUNT(4, 2,
+    TEST_TRIE_COUNT(4, 2,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
 
-    #undef TEST_LIST_BODY_COUNT
+    #undef TEST_TRIE_COUNT
 
     TEST_FN_CLOSE
 }
 
-void test_list_body_get_handler(bool show)
+void test_trie_get_handler(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_LIST_BODY_GET_HANDLER(TAG, INDEX, RES, ...)                \
-    {                                                                       \
-        TEST_CASE_OPEN(TAG)                                                 \
-        {                                                                   \
-            list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
-            handler_p h = clu_list_body_get_handler(lb, INDEX);             \
-            assert(h == RES);                                               \
-            clu_list_body_free(lb);                                         \
-        }                                                                   \
-        TEST_CASE_CLOSE                                                     \
+    #define TEST_TRIE_GET_HANDLER(TAG, INDEX, RES, ...)             \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            trie_p t = clu_trie_create_immed_tree(__VA_ARGS__);     \
+            handler_p h = clu_trie_get_handler(t, INDEX);           \
+            assert(h == RES);                                       \
+            clu_trie_free(t);                                       \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
-    TEST_LIST_BODY_GET_HANDLER(1, 0, HD(1),
+    TEST_TRIE_GET_HANDLER(1, 0, HD(1),
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER(2, 1, NULL,
+    TEST_TRIE_GET_HANDLER(2, 1, NULL,
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER(3, 2, NULL,
+    TEST_TRIE_GET_HANDLER(3, 2, NULL,
         true, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER(4, 0, HD(1),
+    TEST_TRIE_GET_HANDLER(4, 0, HD(1),
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER(5, 1, NULL,
+    TEST_TRIE_GET_HANDLER(5, 1, NULL,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER(6, 2, NULL,
+    TEST_TRIE_GET_HANDLER(6, 2, NULL,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_LIST_BODY_GET_HANDLER(7, 0, HD(1),
+    TEST_TRIE_GET_HANDLER(7, 0, HD(1),
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_GET_HANDLER(8, 1, HD(2),
+    TEST_TRIE_GET_HANDLER(8, 1, HD(2),
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_GET_HANDLER(9, 2, NULL,
+    TEST_TRIE_GET_HANDLER(9, 2, NULL,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_GET_HANDLER(10, 3, NULL,
+    TEST_TRIE_GET_HANDLER(10, 3, NULL,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
 
-    #undef TEST_LIST_BODY_GET_HANDLER
+    #undef TEST_TRIE_GET_HANDLER
 
     TEST_CASE_OPEN(11)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_body_get_handler(NULL, 0);
+            clu_trie_get_handler(NULL, 0);
         }
         TEST_REVERT_CLOSE
     }
@@ -462,76 +462,75 @@ void test_list_body_get_handler(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_body_contains(bool show)
+void test_trie_contains(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_LIST_BODY_CONTANS(TAG, HANDLER, RES, ...)                  \
-    {                                                                       \
-        TEST_CASE_OPEN(TAG)                                                 \
-        {                                                                   \
-            list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
-            bool res = clu_list_body_contains(lb, HANDLER);                 \
-            assert(res == RES);                                             \
-            clu_list_body_free(lb);                                         \
-        }                                                                   \
-        TEST_CASE_CLOSE                                                     \
+    #define TEST_TRIE_CONTANS(TAG, HANDLER, RES, ...)               \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            trie_p t = clu_trie_create_immed_tree(__VA_ARGS__);     \
+            bool res = clu_trie_contains(t, HANDLER);               \
+            assert(res == RES);                                     \
+            clu_trie_free(t);                                       \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
-    TEST_LIST_BODY_CONTANS(1, HD(1), true,
+    TEST_TRIE_CONTANS(1, HD(1), true,
         true, HD(1)
     );
-    TEST_LIST_BODY_CONTANS(2, HD(2), false,
+    TEST_TRIE_CONTANS(2, HD(2), false,
         true, HD(1)
     );
-    TEST_LIST_BODY_CONTANS(3, HD(1), true,
+    TEST_TRIE_CONTANS(3, HD(1), true,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_CONTANS(4, HD(2), true,
+    TEST_TRIE_CONTANS(4, HD(2), true,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_LIST_BODY_CONTANS(5, HD(3), false,
+    TEST_TRIE_CONTANS(5, HD(3), false,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
 
-    #undef TEST_LIST_BODY_CONTANS
+    #undef TEST_TRIE_CONTANS
 
-    #define TEST_LIST_BODY_CONTANS(TAG, HANDLER, ...)                       \
-    {                                                                       \
-        TEST_CASE_OPEN(TAG)                                                 \
-        {                                                                   \
-            list_body_p lb = clu_list_body_create_immed_tree(__VA_ARGS__);  \
-            TEST_REVERT_OPEN                                                \
-            {                                                               \
-                clu_list_body_contains(lb, HANDLER);                        \
-            }                                                               \
-            TEST_REVERT_CLOSE                                               \
-            clu_list_body_free(lb);                                         \
-        }                                                                   \
-        TEST_CASE_CLOSE                                                     \
+    #define TEST_TRIE_CONTANS(TAG, HANDLER, ...)                    \
+    {                                                               \
+        TEST_CASE_OPEN(TAG)                                         \
+        {                                                           \
+            trie_p t = clu_trie_create_immed_tree(__VA_ARGS__);     \
+            TEST_REVERT_OPEN                                        \
+            {                                                       \
+                clu_trie_contains(t, HANDLER);                      \
+            }                                                       \
+            TEST_REVERT_CLOSE                                       \
+        }                                                           \
+        TEST_CASE_CLOSE                                             \
     }
 
-    TEST_LIST_BODY_CONTANS(6, HD(1),
+    TEST_TRIE_CONTANS(6, HD(1),
         false
     );
-    TEST_LIST_BODY_CONTANS(7, NULL,
+    TEST_TRIE_CONTANS(7, NULL,
         true, HD(1)
     );
 
-    #undef TEST_LIST_BODY_CONTANS
+    #undef TEST_TRIE_CONTANS
 
     TEST_FN_CLOSE
 }
 
 
 
-void test_list_body()
+void test_trie()
 {
     TEST_LIB
 
@@ -541,15 +540,15 @@ void test_list_body()
     test_get(show);
     test_set(show);
 
-    test_list_body_create(show);
-    test_list_body_create_immed_tree(show);
+    test_trie_create(show);
+    test_trie_create_immed_tree(show);
 
-    test_list_body_insert(show);
-    test_list_body_remove(show);
+    test_trie_insert(show);
+    test_trie_remove(show);
 
-    test_list_body_count(show);
-    test_list_body_get_handler(show);
-    test_list_body_contains(show);
+    test_trie_count(show);
+    test_trie_get_handler(show);
+    test_trie_contains(show);
 
     TEST_ASSERT_MEM_EMPTY
 }
@@ -559,7 +558,7 @@ void test_list_body()
 int main()
 {
     setbuf(stdout, NULL);
-    test_list_body();
+    test_trie();
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

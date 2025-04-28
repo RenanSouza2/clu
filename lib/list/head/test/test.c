@@ -17,7 +17,7 @@ void test_list_head_create(bool show)
     {
         list_head_p lh = clu_list_head_create(&tag, NULL);
         assert(clu_tag(&lh->tag, &tag));
-        assert(lh->lb == NULL);
+        assert(lh->t == NULL);
         assert(lh->lh == NULL);
         FREE(lh, list_head);
     }
@@ -27,7 +27,7 @@ void test_list_head_create(bool show)
     {
         list_head_p lh = clu_list_head_create(&tag, LH(1));
         assert(clu_tag(&lh->tag, &tag));
-        assert(lh->lb == NULL);
+        assert(lh->t == NULL);
         assert(lh->lh == LH(1));
         FREE(lh, list_head);
     }
@@ -96,7 +96,7 @@ void test_list_head_create_variadic(bool show)
             tag_1, 1, HD(1), 0
         );
         assert(lh != NULL);
-        assert(clu_list_body_immed_list(lh->lb, 1, HD(1), 0))
+        assert(clu_trie_immed_list(lh->t, 1, HD(1), 0))
         assert(lh->lh == NULL);
         FREE(lh, list_head);
     }
@@ -108,7 +108,7 @@ void test_list_head_create_variadic(bool show)
             tag_1, 2, HD(1), HD(2), 0
         );
         assert(lh != NULL);
-        assert(clu_list_body_immed_list(lh->lb, 2, HD(1), HD(2), 0))
+        assert(clu_trie_immed_list(lh->t, 2, HD(1), HD(2), 0))
         assert(lh->lh == NULL);
         FREE(lh, list_head);
     }
@@ -121,9 +121,9 @@ void test_list_head_create_variadic(bool show)
             tag_2, 1, HD(2), 0
         );
         assert(lh != NULL);
-        assert(clu_list_body_immed_list(lh->lb, 1, HD(1), 0));
+        assert(clu_trie_immed_list(lh->t, 1, HD(1), 0));
         assert(lh->lh != NULL);
-        assert(clu_list_body_immed_list(lh->lh->lb, 1, HD(2), 0));
+        assert(clu_trie_immed_list(lh->lh->t, 1, HD(2), 0));
         assert(lh->lh->lh == NULL);
         FREE(lh->lh, list_head);
         FREE(lh, list_head);
@@ -441,9 +441,9 @@ void test_list_head_get_body(bool show)
         TEST_CASE_OPEN(TAG)                                             \
         {                                                               \
             list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-            list_body_p lb = clu_list_head_get_trie(lh, INDEX);         \
-            if(HANDLER) {assert(clu_list_body_contains(lb, HANDLER));}  \
-            else        {assert(lb == NULL);}                           \
+            trie_p t = clu_list_head_get_trie(lh, INDEX);               \
+            if(HANDLER) {assert(clu_trie_contains(t, HANDLER));}        \
+            else        {assert(t == NULL);}                            \
             clu_list_head_free(lh);                                     \
         }                                                               \
         TEST_CASE_CLOSE                                                 \

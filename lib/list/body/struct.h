@@ -9,7 +9,6 @@
 #define MASK U64(0xf)
 #define SH 2
 
-#define U64(NUM) ((uint64_t)(NUM))
 #define OFFSET(INDEX) (U64(INDEX) << SH)
 #define GET(HANDLER, INDEX) ((U64(HANDLER) >> OFFSET(INDEX)) & MASK)
 #define SET(HANDLER, INDEX, KEY) ((handler_p)((U64(HANDLER) & ~(MASK << OFFSET(INDEX))) | U64(KEY) << OFFSET(INDEX)))

@@ -1,18 +1,15 @@
-#include <stdlib.h>
-
 #include "../debug.h"
-#include "../../body/debug.h"
-#include "../../../mem/header.h"
-#include "../../../tag/debug.h"
-
+#include "../../../../testrc.h"
 #include "../../../../mods/macros/test.h"
 
+#include "../../body/debug.h"
+#include "../../../tag/debug.h"
 
-#define TEST_ASSERT_EMPTY assert(clu_mem_internal_empty());
+
 
 void test_list_head_create(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag = clu_tag_format("test");
 
@@ -36,12 +33,12 @@ void test_list_head_create(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_head_pop(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test_1");
     tag_t tag_2 = clu_tag_format("test_2");
@@ -75,12 +72,12 @@ void test_list_head_pop(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_head_create_variadic(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
@@ -133,14 +130,14 @@ void test_list_head_create_variadic(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 
 
 void test_list_head_insert(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
@@ -261,12 +258,12 @@ void test_list_head_insert(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_head_remove(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
@@ -392,14 +389,14 @@ void test_list_head_remove(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 
 
 void test_list_head_count(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 1");
@@ -429,12 +426,12 @@ void test_list_head_count(bool show)
 
     #undef TEST_LIST_HEAD_COUNT
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_head_get_body(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
@@ -486,12 +483,12 @@ void test_list_head_get_body(bool show)
 
     #undef TEST_LIST_HEAD_GET_BODY
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_head_contains(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     tag_t tag_1 = clu_tag_format("test 1");
     tag_t tag_2 = clu_tag_format("test 2");
@@ -532,7 +529,7 @@ void test_list_head_contains(bool show)
 
     #undef TEST_LIST_HEAD_CONTAINS
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 
@@ -554,7 +551,7 @@ void test_list_head()
     test_list_head_get_body(show);
     test_list_head_contains(show);
 
-    TEST_ASSERT_EMPTY
+    TEST_ASSERT_MEM_EMPTY
 }
 
 
@@ -562,9 +559,7 @@ void test_list_head()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_list_head();
-    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

@@ -1,18 +1,14 @@
-#include <stdlib.h>
-
 #include "../debug.h"
-#include "../../../mem/header.h"
-
+#include "../../../../testrc.h"
 #include "../../../../mods/macros/test.h"
+
 #include "../../../../mods/macros/U64.h"
 
 
 
-#define TEST_ASSERT_EMPTY assert(clu_mem_internal_empty());
-
 void test_offset(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     #define TEST_OFFSET(TAG, IN, RES)   \
     {                                   \
@@ -29,11 +25,13 @@ void test_offset(bool show)
     TEST_OFFSET(3, 5, 20);
 
     #undef TEST_OFFSET
+
+    TEST_FN_CLOSE
 }
 
 void test_get(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     handler_p h = HD(0xfedcba9876543210);
 
@@ -47,12 +45,12 @@ void test_get(bool show)
         TEST_CASE_CLOSE;
     }
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_set(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     TEST_CASE_OPEN(1)
     {
@@ -70,12 +68,12 @@ void test_set(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_body_create(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     #define TEST_LIST_BODY_CREATE(TAG, HANDLER)             \
     {                                                       \
@@ -95,12 +93,12 @@ void test_list_body_create(bool show)
 
     #undef TEST_LIST_BODY_CREATE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_body_create_immed_tree(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     TEST_CASE_OPEN(1)
     {
@@ -152,14 +150,14 @@ void test_list_body_create_immed_tree(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 
 
 void test_list_body_insert(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     #define TEST_LIST_BODY_INSERT(TAG, lLB_BEF, HANDLER, RES, LB_AFT)           \
     {                                                                           \
@@ -232,12 +230,12 @@ void test_list_body_insert(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_body_remove(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     #define TEST_LIST_BODY_REMOVE(TAG, LB_BEF, HANDLER, RES, LB_AFT)            \
     {                                                                           \
@@ -349,14 +347,14 @@ void test_list_body_remove(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 
 
 void test_list_body_count(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     #define TEST_LIST_BODY_COUNT(TAG, RES, ...)                             \
     {                                                                       \
@@ -388,12 +386,12 @@ void test_list_body_count(bool show)
 
     #undef TEST_LIST_BODY_COUNT
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_body_get_handler(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     #define TEST_LIST_BODY_GET_HANDLER(TAG, INDEX, RES, ...)                \
     {                                                                       \
@@ -461,12 +459,12 @@ void test_list_body_get_handler(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_list_body_contains(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     #define TEST_LIST_BODY_CONTANS(TAG, HANDLER, RES, ...)                  \
     {                                                                       \
@@ -528,7 +526,7 @@ void test_list_body_contains(bool show)
 
     #undef TEST_LIST_BODY_CONTANS
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 
@@ -553,7 +551,7 @@ void test_list_body()
     test_list_body_get_handler(show);
     test_list_body_contains(show);
 
-    TEST_ASSERT_EMPTY
+    TEST_ASSERT_MEM_EMPTY
 }
 
 
@@ -561,9 +559,7 @@ void test_list_body()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_list_body();
-    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

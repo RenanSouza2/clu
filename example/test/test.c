@@ -22,9 +22,9 @@ void test_example()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
+    TEST_CASE_TIMEOUT_OPEN(TEST_CASE_TIMEOUT_DEFAULT)
     test_example();
-    TEST_TIMEOUT_CLOSE
+    TEST_CASE_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

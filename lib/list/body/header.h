@@ -6,17 +6,17 @@
 
 #include "../../../mods/macros/struct.h"
 
-PLACEHOLDER(list_body);
+PLACEHOLDER(trie);
 
-void clu_list_body_display(list_body_p lb);
+void clu_trie_display(trie_p t);
 
-void clu_list_body_free(list_body_p lb);
+void clu_trie_free(trie_p t);
 
-bool clu_list_body_insert(list_body_p *lb_root, handler_p h);
-bool clu_list_body_remove(list_body_p *lb_root, handler_p h);
+bool clu_trie_insert(trie_p *t_root, handler_p h);
+bool clu_trie_remove(trie_p *t_root, handler_p h);
 
-uint64_t clu_list_body_count(list_body_p lb);
-handler_p clu_list_body_get_handler(list_body_p lb, uint64_t j);
-bool clu_list_body_contains(list_body_p lb, handler_p h);
+uint64_t clu_trie_count(trie_p t);
+handler_p clu_trie_get_handler(trie_p t, uint64_t j);
+bool clu_trie_contains(trie_p t, handler_p h);
 
 #endif

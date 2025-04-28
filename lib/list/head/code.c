@@ -17,8 +17,8 @@ list_head_p clu_list_head_create_variadic_item(va_list *args)
     tag_t tag = va_arg(*args, tag_t);
     list_head_p lh = clu_list_head_create(&tag, NULL);
     int n = va_arg(*args, int);
-    lh->lb = clu_list_body_create_variadic_list(n, args);
-    assert(lh->lb);
+    lh->t = clu_trie_create_variadic_list(n, args);
+    assert(lh->t);
     return lh;
 }
 
@@ -54,7 +54,7 @@ bool clu_list_head_inner(list_head_p lh_1, list_head_p lh_2)
             return false;
         }
 
-        if(!clu_list_body_inner(lh_1->lb, lh_2->lb))
+        if(!clu_trie_inner(lh_1->t, lh_2->t))
         {
             printf("\n\tLIST HEAD ASSERT ERROR\t| LIST BODY MISMATCH | " U64P() "", i);
             return false;
@@ -119,11 +119,11 @@ void clu_list_head_report(list_head_p lh, char tag[], bool full)
         if(full)
         {
             printf("\n%s", lh->tag.str);
-            clu_list_body_display(lh->lb);
+            clu_trie_display(lh->t);
         }
         else
         {
-            uint64_t count = clu_list_body_count(lh->lb);
+            uint64_t count = clu_trie_count(lh->t);
             printf("\n%s: " U64P() "", lh->tag.str, count);
         }
     }
@@ -155,7 +155,7 @@ list_head_p clu_list_head_pop(list_head_p lh)
 void clu_list_head_free(list_head_p lh_root)
 {
     for(list_head_p lh = lh_root; lh; lh = clu_list_head_pop(lh))
-        clu_list_body_free(lh->lb);
+        clu_trie_free(lh->t);
 }
 
 bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
@@ -172,12 +172,12 @@ bool clu_list_head_insert(list_head_p *lh_root, tag_p tag, handler_p h)
         if(!clu_tag_eq(&lh->tag, tag))
             continue;
 
-        assert(clu_list_body_insert(&lh->lb, h));
+        assert(clu_trie_insert(&lh->t, h));
         return true;
     }
 
     list_head_p lh = clu_list_head_create(tag, *lh_root);
-    assert(clu_list_body_insert(&lh->lb, h));
+    assert(clu_trie_insert(&lh->t, h));
     *lh_root = lh;
     return true;
 }
@@ -190,10 +190,10 @@ bool clu_list_head_remove(list_head_p *lh_root, handler_p h)
     list_head_p lh = *lh_root;
     if(lh == NULL) return false;
 
-    if(!clu_list_body_remove(&lh->lb, h))
+    if(!clu_trie_remove(&lh->t, h))
         return clu_list_head_remove(&lh->lh, h);
 
-    if(lh->lb == NULL)
+    if(lh->t == NULL)
         *lh_root = clu_list_head_pop(lh);
 
     return true;
@@ -210,21 +210,21 @@ uint64_t clu_list_head_count(list_head_p lh)
     return i;
 }
 
-list_body_p clu_list_head_get_body(list_head_p lh, uint64_t i)
+trie_p clu_list_head_get_trie(list_head_p lh, uint64_t i)
 {
     if(lh == NULL)
         return NULL;
 
     if(i == 0)
-        return lh->lb;
+        return lh->t;
 
-    return clu_list_head_get_body(lh->lh, i-1);
+    return clu_list_head_get_trie(lh->lh, i-1);
 }
 
 bool clu_list_head_contains(list_head_p lh, handler_p h)
 {
     for(; lh; lh = lh->lh)
-        if(clu_list_body_contains(lh->lb, h))
+        if(clu_trie_contains(lh->t, h))
             return true;
 
     return false;

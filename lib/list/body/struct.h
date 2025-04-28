@@ -13,10 +13,10 @@
 #define GET(HANDLER, INDEX) ((U64(HANDLER) >> OFFSET(INDEX)) & MASK)
 #define SET(HANDLER, INDEX, KEY) ((handler_p)((U64(HANDLER) & ~(MASK << OFFSET(INDEX))) | U64(KEY) << OFFSET(INDEX)))
 
-STRUCT(list_body)
+STRUCT(trie)
 {
     handler_p h;
-    list_body_p arr[SIZE];
+    trie_p arr[SIZE];
 };
 
 #endif

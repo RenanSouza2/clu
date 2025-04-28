@@ -8,7 +8,7 @@
 #include "../lib/tag/struct.h"
 
 list_head_p lh_root_allocated = NULL;
-list_body_p lb_root_freed = NULL;
+trie_p t_root_freed = NULL;
 bool log_allocations = false;
 
 #undef malloc
@@ -53,8 +53,8 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         assert(false);
     }
 
-    if(lb_root_freed)
-        clu_list_body_remove(&lb_root_freed, h);
+    if(t_root_freed)
+        clu_trie_remove(&t_root_freed, h);
 
     if(!clu_list_head_insert(&lh_root_allocated, &tag, h))
     {
@@ -94,7 +94,7 @@ void clu_handler_deallocate(handler_p h, char format[], va_list args, char fn[])
         assert(false);
     }
 
-    if(!clu_list_body_insert(&lb_root_freed, h))
+    if(!clu_trie_insert(&t_root_freed, h))
     {
         printf("\n");
         printf("\n");
@@ -260,8 +260,8 @@ bool clu_mem_is_empty()
         return false;
     }
 
-    clu_list_body_free(lb_root_freed);
-    lb_root_freed = NULL;
+    clu_trie_free(t_root_freed);
+    t_root_freed = NULL;
     return true;
 }
 
@@ -272,8 +272,8 @@ bool clu_handler_is_allocated(handler_p h)
 
 bool clu_handler_is_freed(handler_p h)
 {
-    if(lb_root_freed)
-        return clu_list_body_contains(lb_root_freed, h);
+    if(t_root_freed)
+        return clu_trie_contains(t_root_freed, h);
 
     return false;
 }
@@ -287,14 +287,14 @@ uint64_t clu_get_max_i()
 
 uint64_t clu_get_max_j(uint64_t i)
 {
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
-    return lb ? clu_list_body_count(lb) : 0;
+    trie_p t = clu_list_head_get_trie(lh_root_allocated, i);
+    return t ? clu_trie_count(t) : 0;
 }
 
 handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
-    list_body_p lb = clu_list_head_get_body(lh_root_allocated, i);
-    return lb ? clu_list_body_get_handler(lb, j) : NULL;
+    trie_p t = clu_list_head_get_trie(lh_root_allocated, i);
+    return t ? clu_trie_get_handler(t, j) : NULL;
 }
 
 

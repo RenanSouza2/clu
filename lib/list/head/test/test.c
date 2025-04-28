@@ -441,7 +441,7 @@ void test_list_head_get_body(bool show)
         TEST_CASE_OPEN(TAG)                                             \
         {                                                               \
             list_head_p lh = clu_list_head_create_immed(__VA_ARGS__);   \
-            list_body_p lb = clu_list_head_get_body(lh, INDEX);         \
+            list_body_p lb = clu_list_head_get_trie(lh, INDEX);         \
             if(HANDLER) {assert(clu_list_body_contains(lb, HANDLER));}  \
             else        {assert(lb == NULL);}                           \
             clu_list_head_free(lh);                                     \

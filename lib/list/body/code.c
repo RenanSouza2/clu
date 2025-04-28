@@ -12,12 +12,12 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-list_body_p clu_list_body_create_variadic_tree_rec(va_list *args)
+trie_p clu_trie_create_variadic_tree_rec(va_list *args)
 {
     handler_p h = va_arg(*args, handler_p);
-    list_body_p lb = clu_list_body_create(h);
+    trie_p t = clu_trie_create(h);
     if(h)
-        return lb;
+        return t;
 
     uint64_t n = va_arg(*args, uint64_t);
     assert(n > 0);
@@ -26,38 +26,38 @@ list_body_p clu_list_body_create_variadic_tree_rec(va_list *args)
     {
         uint64_t k = va_arg(*args, uint64_t);
         assert(k < SIZE);
-        assert(lb->arr[k] == NULL);
-        lb->arr[k] = clu_list_body_create_variadic_tree_rec(args);
+        assert(t->arr[k] == NULL);
+        t->arr[k] = clu_trie_create_variadic_tree_rec(args);
     }
-    return lb;
+    return t;
 }
 
-list_body_p clu_list_body_create_variadic_tree(bool content, va_list *args)
+trie_p clu_trie_create_variadic_tree(bool content, va_list *args)
 {
     if(!content)
         return NULL;
 
-    return clu_list_body_create_variadic_tree_rec(args);
+    return clu_trie_create_variadic_tree_rec(args);
 }
 
-list_body_p clu_list_body_create_immed_tree(int content, ...)
+trie_p clu_trie_create_immed_tree(int content, ...)
 {
     va_list args;
     va_start(args, content);
-    return  clu_list_body_create_variadic_tree(content, &args);
+    return  clu_trie_create_variadic_tree(content, &args);
 }
 
 
 
-list_body_p clu_list_body_create_variadic_list(uint64_t n, va_list *args)
+trie_p clu_trie_create_variadic_list(uint64_t n, va_list *args)
 {
     assert(n > 0);
 
-    list_body_p lb = NULL;
+    trie_p t = NULL;
     for(uint64_t i=0; i<n; i++)
     {
         handler_p h = va_arg(*args, handler_p);
-        assert(clu_list_body_insert(&lb, h));
+        assert(clu_trie_insert(&t, h));
     }
 
     uint64_t n_remove = va_arg(*args, uint64_t);
@@ -65,52 +65,52 @@ list_body_p clu_list_body_create_variadic_list(uint64_t n, va_list *args)
     for(uint64_t i=0; i<n_remove; i++)
     {
         handler_p h = va_arg(*args, handler_p);
-        assert(clu_list_body_remove(&lb, h));
+        assert(clu_trie_remove(&t, h));
     }
-    return lb;
+    return t;
 }
 
-list_body_p clu_list_body_create_immed_list(uint64_t n, ...)
+trie_p clu_trie_create_immed_list(uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    return clu_list_body_create_variadic_list(n, &args);
+    return clu_trie_create_variadic_list(n, &args);
 }
 
 
 
-void clu_list_body_display_dbg_rec(list_body_p lb, uint64_t index)
+void clu_trie_display_dbg_rec(trie_p t, uint64_t index)
 {
-    assert(lb);
+    assert(t);
 
-    if(lb->h)
+    if(t->h)
     {
         if(index) printf("\t");
-        printf("h: %p", lb->h);
+        printf("h: %p", t->h);
         return;
     }
 
     for(uint64_t i=0; i<SIZE; i++)
-        if(lb->arr[i])
+        if(t->arr[i])
         {
             printf("\n");
             for(uint64_t k=0; k<index; k++)
                 printf("\t");
             printf("i: " U64P() "", i);
-            clu_list_body_display_dbg_rec(lb->arr[i], index + 1);
+            clu_trie_display_dbg_rec(t->arr[i], index + 1);
         }
 }
 
-void clu_list_body_display_dbg(list_body_p lb)
+void clu_trie_display_dbg(trie_p t)
 {
-    if(lb == NULL)
+    if(t == NULL)
     {
         printf("\nEMPTY LIST");
         return;
     }
 
     printf("\n");
-    clu_list_body_display_dbg_rec(lb, 0);
+    clu_trie_display_dbg_rec(t, 0);
     printf("\n");
 }
 
@@ -127,11 +127,11 @@ bool uint64(uint64_t i1, uint64_t i2)
     return true;
 }
 
-bool clu_list_body_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint64_t index)
+bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 {
-    if(lb_1 == NULL)
+    if(t_1 == NULL)
     {
-        if(lb_2 != NULL)
+        if(t_2 != NULL)
         {
             printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
             return false;
@@ -140,29 +140,29 @@ bool clu_list_body_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint64_t
         return true;
     }
 
-    if(lb_2 == NULL)
+    if(t_2 == NULL)
     {
         printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
         return false;
     }
 
-    if(lb_1->h != lb_2->h)
+    if(t_1->h != t_2->h)
     {
-        printf("\n\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 1 | %p %p | H %p | I " U64P() "", lb_1->h, lb_2->h, h, index);
+        printf("\n\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 1 | %p %p | H %p | I " U64P() "", t_1->h, t_2->h, h, index);
         return false;
     }
 
-    if(lb_1->h != NULL)
+    if(t_1->h != NULL)
     {
         for(uint64_t i=0; i<index; i++)
-            if(!uint64(GET(lb_1->h, i), GET(h, i)))
+            if(!uint64(GET(t_1->h, i), GET(h, i)))
             {
-                printf("\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", lb_1->h, h, index);
+                printf("\n\tLIST BODY ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", t_1->h, h, index);
                 return false;
             }
 
         for(uint64_t i=0; i<16; i++)
-            if(lb_1->arr[i])
+            if(t_1->arr[i])
             {
                 printf("\n\n\tLIST BODY ASSERT ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
                 return false;
@@ -172,176 +172,176 @@ bool clu_list_body_rec(list_body_p lb_1, list_body_p lb_2, handler_p h, uint64_t
     }
 
     for(uint64_t i=0; i<16; i++)
-        if(!clu_list_body_rec(lb_1->arr[i], lb_2->arr[i], SET(h, index, i), index + 1))
+        if(!clu_trie_rec(t_1->arr[i], t_2->arr[i], SET(h, index, i), index + 1))
             return false;
 
     return true;
 }
 
-bool clu_list_body_inner(list_body_p lb_1, list_body_p lb_2)
+bool clu_trie_inner(trie_p t_1, trie_p t_2)
 {
-    if(!clu_list_body_rec(lb_1, lb_2, NULL, 0))
+    if(!clu_trie_rec(t_1, t_2, NULL, 0))
     {
-        clu_list_body_display_dbg(lb_1);
-        clu_list_body_display_dbg(lb_2);
+        clu_trie_display_dbg(t_1);
+        clu_trie_display_dbg(t_2);
         return false;
     }
 
     return true;
 }
 
-bool clu_list_body(list_body_p lb_1, list_body_p lb_2)
+bool clu_trie(trie_p t_1, trie_p t_2)
 {
-    if(!clu_list_body_inner(lb_1, lb_2))
+    if(!clu_trie_inner(t_1, t_2))
         return false;
 
-    clu_list_body_free(lb_1);
-    clu_list_body_free(lb_2);
+    clu_trie_free(t_1);
+    clu_trie_free(t_2);
     return true;
 }
 
-bool clu_list_body_immed_tree(list_body_p lb, int content, ...)
+bool clu_trie_immed_tree(trie_p t, int content, ...)
 {
     va_list args;
     va_start(args, content);
-    list_body_p lb_2 = clu_list_body_create_variadic_tree(content, &args);
-    return clu_list_body(lb, lb_2);
+    trie_p t_2 = clu_trie_create_variadic_tree(content, &args);
+    return clu_trie(t, t_2);
 }
 
-bool clu_list_body_immed_list(list_body_p lb, uint64_t n, ...)
+bool clu_trie_immed_list(trie_p t, uint64_t n, ...)
 {
     va_list args;
     va_start(args, n);
-    list_body_p lb_2 = clu_list_body_create_variadic_list(n, &args);
-    return clu_list_body(lb, lb_2);
+    trie_p t_2 = clu_trie_create_variadic_list(n, &args);
+    return clu_trie(t, t_2);
 }
 
 #endif
 
 
 
-void clu_list_body_display(list_body_p lb)
+void clu_trie_display(trie_p t)
 {
-    if(lb == NULL)
+    if(t == NULL)
         return;
 
-    if(lb->h)
+    if(t->h)
     {
-        printf("\n\t%p\t", lb->h);
+        printf("\n\t%p\t", t->h);
         return;
     }
 
     for(uint64_t i=0; i<SIZE; i++)
-        clu_list_body_display(lb->arr[i]);
+        clu_trie_display(t->arr[i]);
 }
 
 
 
-list_body_p clu_list_body_create(handler_p h)
+trie_p clu_trie_create(handler_p h)
 {
-    list_body_p lb;
-    CALLOC(lb, list_body);
+    trie_p t;
+    CALLOC(t, trie);
 
-    lb->h = h;
-    return lb;
+    t->h = h;
+    return t;
 }
 
-void clu_list_body_free(list_body_p lb)
+void clu_trie_free(trie_p t)
 {
-    if(lb == NULL)
+    if(t == NULL)
         return;
 
-    if(lb->h == NULL)
+    if(t->h == NULL)
     {
         for(uint64_t i=0; i<SIZE; i++)
-            clu_list_body_free(lb->arr[i]);
+            clu_trie_free(t->arr[i]);
     }
 
-    FREE(lb, list_body);
+    FREE(t, trie);
 }
 
 
 
-bool clu_list_body_insert_rec(list_body_p *lb_root, handler_p h, uint64_t index)
+bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t index)
 {
-    list_body_p lb = *lb_root;
+    trie_p t = *t_root;
     uint64_t key = GET(h, index);
 
-    if(lb == NULL)
+    if(t == NULL)
     {
-        *lb_root = clu_list_body_create(h);
+        *t_root = clu_trie_create(h);
         return true;
     }
 
-    if(lb->h)
+    if(t->h)
     {
-        if(lb->h == h)
+        if(t->h == h)
             return false;
 
-        assert(clu_list_body_insert_rec(&lb->arr[GET(lb->h, index)], lb->h, index + 1));
-        lb->h = NULL;
+        assert(clu_trie_insert_rec(&t->arr[GET(t->h, index)], t->h, index + 1));
+        t->h = NULL;
     }
 
-    return clu_list_body_insert_rec(&lb->arr[key], h, index + 1);
+    return clu_trie_insert_rec(&t->arr[key], h, index + 1);
 }
 
-bool clu_list_body_remove_rec(list_body_p *lb_root, handler_p h, uint64_t index)
+bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index)
 {
-    list_body_p lb = *lb_root;
-    if(lb == NULL)
+    trie_p t = *t_root;
+    if(t == NULL)
         return false;
 
-    if(lb->h)
+    if(t->h)
     {
-        if(lb->h != h)
+        if(t->h != h)
             return false;
 
-        FREE(lb, list_body);
-        *lb_root = NULL;
+        FREE(t, trie);
+        *t_root = NULL;
         return true;
     }
 
-    if(!clu_list_body_remove_rec(&lb->arr[GET(h, index)], h, index + 1))
+    if(!clu_trie_remove_rec(&t->arr[GET(h, index)], h, index + 1))
         return false;
 
     for(uint64_t i=0; i<SIZE; i++)
-        if(lb->arr[i])
+        if(t->arr[i])
             return true;
 
-    FREE(lb, list_body);
-    *lb_root = NULL;
+    FREE(t, trie);
+    *t_root = NULL;
     return true;
 }
 
 
 
-bool clu_list_body_insert(list_body_p *lb_root, handler_p h)
+bool clu_trie_insert(trie_p *t_root, handler_p h)
 {
-    assert(lb_root);
+    assert(t_root);
     assert(h);
 
-    return clu_list_body_insert_rec(lb_root, h, 0);
+    return clu_trie_insert_rec(t_root, h, 0);
 }
 
-bool clu_list_body_remove(list_body_p *lb_root, handler_p h)
+bool clu_trie_remove(trie_p *t_root, handler_p h)
 {
-    assert(lb_root);
-    assert(*lb_root);
+    assert(t_root);
+    assert(*t_root);
     assert(h);
 
-    return clu_list_body_remove_rec(lb_root, h, 0);
+    return clu_trie_remove_rec(t_root, h, 0);
 }
 
 
 
-handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, bool revert)
+handler_p clu_trie_get_handler_rec(trie_p t, uint64_t j, bool revert)
 {
-    assert(lb);
+    assert(t);
 
-    if(lb->h)
+    if(t->h)
     {
         if(j == 0)
-            return lb->h;
+            return t->h;
 
         assert(!revert);
         return NULL;
@@ -349,9 +349,9 @@ handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, bool revert)
 
     for(uint64_t i=0; i<SIZE; i++)
     {
-        uint64_t count = clu_list_body_count(lb->arr[i]);
+        uint64_t count = clu_trie_count(t->arr[i]);
         if(j < count)
-            return clu_list_body_get_handler_rec(lb->arr[i], j, true);
+            return clu_trie_get_handler_rec(t->arr[i], j, true);
 
         j -= count;
     }
@@ -360,45 +360,45 @@ handler_p clu_list_body_get_handler_rec(list_body_p lb, uint64_t j, bool revert)
     return NULL;
 }
 
-bool clu_list_body_contains_rec(list_body_p lb, handler_p h, uint64_t index)
+bool clu_trie_contains_rec(trie_p t, handler_p h, uint64_t index)
 {
-    if(lb == NULL)
+    if(t == NULL)
         return false;
 
-    if(lb->h)
-        return lb->h == h;
+    if(t->h)
+        return t->h == h;
 
-    return clu_list_body_contains_rec(lb->arr[GET(h, index)], h, index + 1);
+    return clu_trie_contains_rec(t->arr[GET(h, index)], h, index + 1);
 }
 
 
 
-uint64_t clu_list_body_count(list_body_p lb)
+uint64_t clu_trie_count(trie_p t)
 {
-    if(lb == NULL)
+    if(t == NULL)
         return 0;
 
-    if(lb->h)
+    if(t->h)
         return 1;
 
     uint64_t count = 0;
     for(uint64_t i=0; i<SIZE; i++)
-        count += clu_list_body_count(lb->arr[i]);
+        count += clu_trie_count(t->arr[i]);
 
     return count;
 }
 
-handler_p clu_list_body_get_handler(list_body_p lb, uint64_t j)
+handler_p clu_trie_get_handler(trie_p t, uint64_t j)
 {
-    assert(lb);
+    assert(t);
 
-    return clu_list_body_get_handler_rec(lb, j, false);
+    return clu_trie_get_handler_rec(t, j, false);
 }
 
-bool clu_list_body_contains(list_body_p lb, handler_p h)
+bool clu_trie_contains(trie_p t, handler_p h)
 {
-    assert(lb);
+    assert(t);
     assert(h);
 
-    return clu_list_body_contains_rec(lb, h, 0);
+    return clu_trie_contains_rec(t, h, 0);
 }

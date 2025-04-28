@@ -16,4 +16,5 @@ $(SRC) $(LIB):
 clean:
 	echo "cleaning clu"
 	rm -rf *.o
-	$(MAKE) clean --directory=..
+	$(MAKE) clean --directory=$(dir $(LIB))
+	$(MAKE) clean --directory=$(dir $(SRC))

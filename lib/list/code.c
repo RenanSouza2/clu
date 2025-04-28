@@ -1,17 +1,17 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "../body/header.h"
-#include "../../mem/header.h"
+#include "../trie/header.h"
+#include "../mem/header.h"
 
-#include "../../../mods/macros/assert.h"
-#include "../../../mods/macros/U64.h"
+#include "../../mods/macros/assert.h"
+#include "../../mods/macros/U64.h"
 
 
 #ifdef DEBUG
 
-#include "../body/debug.h"
-#include "../../tag/debug.h"
+#include "../trie/debug.h"
+#include "../tag/debug.h"
 
 list_p clu_list_create_variadic_item(va_list *args)
 {

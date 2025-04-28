@@ -3,10 +3,10 @@
 
 #include <stdbool.h>
 
-#include "../body/header.h"
-#include "../../tag/header.h"
+#include "../trie/header.h"
+#include "../tag/header.h"
 
-#include "../../../mods/macros/struct.h"
+#include "../../mods/macros/struct.h"
 
 PLACEHOLDER(list);
 

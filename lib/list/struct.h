@@ -1,7 +1,7 @@
 #ifndef __LIST_STRUCT_H__
 #define __LIST_STRUCT_H__
 
-#include "../../tag/struct.h"
+#include "../tag/struct.h"
 
 STRUCT(list)
 {

@@ -1,9 +1,9 @@
 #include "../debug.h"
-#include "../../../../testrc.h"
-#include "../../../../mods/macros/test.h"
+#include "../../../testrc.h"
+#include "../../../mods/macros/test.h"
 
-#include "../../body/debug.h"
-#include "../../../tag/debug.h"
+#include "../../tag/debug.h"
+#include "../../trie/debug.h"
 
 
 

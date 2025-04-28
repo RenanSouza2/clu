@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "../../mem/header.h"
-#include "../../../mods/macros/assert.h"
-#include "../../../mods/macros/U64.h"
+#include "../mem/header.h"
+#include "../../mods/macros/assert.h"
+#include "../../mods/macros/U64.h"
 
 
 

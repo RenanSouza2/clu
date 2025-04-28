@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "../../../mods/macros/struct.h"
+#include "../../mods/macros/struct.h"
 
 PLACEHOLDER(trie);
 

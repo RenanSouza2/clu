@@ -3,9 +3,9 @@
 #include "../mods/macros/assert.h"
 
 #include "../header.h"
-#include "../lib/list/body/header.h"
-#include "../lib/list/head/header.h"
+#include "../lib/list/header.h"
 #include "../lib/tag/struct.h"
+#include "../lib/trie/header.h"
 
 list_p l_root_allocated = NULL;
 trie_p t_root_freed = NULL;

@@ -18,10 +18,8 @@ bool log_allocations = false;
 
 
 
-void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size, char fn[])
+void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
 {
-    tag_t tag = clu_tag_format_variadic(format, args);
-
     if(size == 0)
     {
         printf("\n");
@@ -73,13 +71,12 @@ void clu_handler_allocate(handler_p h, char format[], va_list args, size_t size,
         assert(false);
     }
 
-    if(log_allocations) printf("\n%s | %p | %s | %lu\t", fn, h, tag.str, size);
+    if(log_allocations)
+        printf("\n%s | %p | %s | %lu\t", fn, h, tag.str, size);
 }
 
-void clu_handler_deallocate(handler_p h, char format[], va_list args, char fn[])
+void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
 {
-    tag_t tag = clu_tag_format_variadic(format, args);
-
     if(h == NULL)
     {
         printf("\n");
@@ -135,7 +132,8 @@ handler_p clu_handler_malloc(size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_allocate(h, format, args, size, "malloc");
+    tag_t tag = clu_tag_format_variadic(format, args);
+    clu_handler_allocate(h, tag, size, "malloc");
 
     return h;
 }
@@ -146,7 +144,8 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
 
     va_list args;
     va_start(args, format);
-    clu_handler_allocate(h, format, args, size, "calloc");
+    tag_t tag = clu_tag_format_variadic(format, args);
+    clu_handler_allocate(h, tag, size, "calloc");
 
     return h;
 }
@@ -155,10 +154,12 @@ handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    if(h) clu_handler_deallocate(h, format, args, "realloc");
-
+    tag_t tag = clu_tag_format_variadic(format, args);
+    if(h)
+        clu_handler_deallocate(h, tag, "realloc");
+    
     h = realloc(h, size);
-    clu_handler_allocate(h, format, args, size, "realloc");
+    clu_handler_allocate(h, tag, size, "realloc");
 
     return h;
 }
@@ -167,7 +168,8 @@ void clu_handler_free(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    clu_handler_deallocate(h, format, args, "free");
+    tag_t tag = clu_tag_format_variadic(format, args);
+    clu_handler_deallocate(h, tag, "free");
     free(h);
 }
 
@@ -177,14 +179,16 @@ void clu_handler_register(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    clu_handler_allocate(h, format, args, 1, "custom");
+    tag_t tag = clu_tag_format_variadic(format, args);
+    clu_handler_allocate(h, tag, 1, "custom");
 }
 
 void clu_handler_unregister(handler_p h, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    clu_handler_deallocate(h, format, args, "custom");
+    tag_t tag = clu_tag_format_variadic(format, args);
+    clu_handler_deallocate(h, tag, "custom");
 }
 
 

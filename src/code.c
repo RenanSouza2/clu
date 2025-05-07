@@ -157,7 +157,7 @@ handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...)
     tag_t tag = clu_tag_format_variadic(format, args);
     if(h)
         clu_handler_deallocate(h, tag, "realloc");
-    
+
     h = realloc(h, size);
     clu_handler_allocate(h, tag, size, "realloc");
 

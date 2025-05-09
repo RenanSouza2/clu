@@ -145,7 +145,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
     va_list args;
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
-    clu_handler_allocate(h, tag, size, "calloc");
+    clu_handler_allocate(h, tag, amt * size, "calloc");
 
     return h;
 }

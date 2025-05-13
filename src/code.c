@@ -32,7 +32,7 @@ void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
         printf("\n\tfn  : %s", fn);
         printf("\n");
         printf("\n\t");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 
     if(h == NULL)
@@ -48,7 +48,7 @@ void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
         printf("\n\tfn   : %s", fn);
         printf("\n");
         printf("\n\t");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 
     if(t_root_freed)
@@ -68,7 +68,7 @@ void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
         printf("\n\tfn   : %s", fn);
         printf("\n");
         printf("\n\t");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 
     if(log_allocations)
@@ -88,7 +88,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         printf("\n\ttag : %s", tag.str);
         printf("\n\tfn  : %s", fn);
         printf("\n");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 
     if(!clu_trie_insert(&t_root_freed, h))
@@ -103,7 +103,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         printf("\n\ttag : %s", tag.str);
         printf("\n\tfn  : %s", fn);
         printf("\n");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 
     if(l_root_allocated == NULL || !clu_list_remove(&l_root_allocated, h))
@@ -118,7 +118,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         printf("\n\ttag : %s", tag.str);
         printf("\n\tfn  : %s", fn);
         printf("\n");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 
     if(log_allocations) printf("\n\t%s | %p | %s\t", fn, h, tag.str);
@@ -212,7 +212,7 @@ void clu_handler_is_safe(handler_p h, char format[], ...)
         printf("\n\th   : %p", h);
         printf("\n\ttag : %s", tag.str);
         printf("\n\t");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 
     if(!clu_handler_is_allocated(h))
@@ -229,7 +229,7 @@ void clu_handler_is_safe(handler_p h, char format[], ...)
         printf("\n\th   : %p", h);
         printf("\n\ttag : %s", tag.str);
         printf("\n\t");
-        assert(false);
+        exit(EXIT_FAILURE);
     }
 }
 

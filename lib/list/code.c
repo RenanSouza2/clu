@@ -188,9 +188,11 @@ bool clu_list_remove(list_p *l_root, handler_p h)
     assert(l_root);
     assert(h);
 
-    list_p l = *l_root;
-    if(l == NULL) return false;
 
+    list_p l = *l_root;
+    if(l == NULL)
+        return false;
+        
     if(!clu_trie_remove(&l->t, h))
         return clu_list_remove(&l->next, h);
 

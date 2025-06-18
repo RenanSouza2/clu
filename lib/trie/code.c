@@ -116,7 +116,7 @@ void clu_trie_display_dbg(trie_p t)
 
 
 
-bool uint64(uint64_t i1, uint64_t i2)
+bool clu_uint64(uint64_t i1, uint64_t i2)
 {
     if(i1 != i2)
     {
@@ -155,7 +155,7 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
     if(t_1->h != NULL)
     {
         for(uint64_t i=0; i<index; i++)
-            if(!uint64(GET(t_1->h, i), GET(h, i)))
+            if(!clu_uint64(GET(t_1->h, i), GET(h, i)))
             {
                 printf("\n\tTRIE ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", t_1->h, h, index);
                 return false;
@@ -252,10 +252,8 @@ void clu_trie_free(trie_p t)
         return;
 
     if(t->h == NULL)
-    {
         for(uint64_t i=0; i<SIZE; i++)
             clu_trie_free(t->arr[i]);
-    }
 
     FREE(t, trie);
 }

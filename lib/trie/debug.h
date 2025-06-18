@@ -17,7 +17,7 @@ trie_p clu_trie_create_immed_tree(int empty, ...);
 trie_p clu_trie_create_variadic_list(uint64_t n, va_list *args);
 trie_p clu_trie_create_immed_list(uint64_t n, ...);
 
-bool uint64(uint64_t i1, uint64_t i2);
+bool clu_uint64(uint64_t i1, uint64_t i2);
 bool clu_trie_inner(trie_p t_1, trie_p t_2);
 bool clu_trie_immed_tree(trie_p t, int content, ...);
 bool clu_trie_immed_list(trie_p t, uint64_t n, ...);

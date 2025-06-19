@@ -13,7 +13,7 @@ extern uint64_t trie_alive;
 void clu_mem_internal_display();
 bool clu_mem_internal_empty();
 
-#define CLU_MEM_INTERNAL_LOG_STATUS true
+#define CLU_MEM_INTERNAL_LOG_STATUS false
 
 #define CLU_MEM_INTERNAL_LOG(...)               \
     {                                           \

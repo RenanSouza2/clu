@@ -9,8 +9,12 @@ bin.o: $(LIB) $(SRC)
 	echo " linking clu"
 	ld -r -o $@ $^
 
-.PHONY: $(SRC) $(LIB)
-$(SRC) $(LIB):
+.PHONY: $(SRC)
+$(SRC):
+	$(MAKE) --directory=$(dir $@)
+
+.PHONY: $(LIB)
+$(LIB):
 	$(MAKE) --directory=$(dir $@)
 
 clean:

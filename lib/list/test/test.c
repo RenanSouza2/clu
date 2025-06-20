@@ -407,7 +407,7 @@ void test_list_count(bool show)
         {                                                   \
             list_p l = clu_list_create_immed(__VA_ARGS__);  \
             uint64_t count = clu_list_count(l);             \
-            assert(uint64(count, COUNT));                   \
+            assert(clu_uint64(count, COUNT));               \
             clu_list_free(l);                               \
         }                                                   \
         TEST_CASE_CLOSE                                     \
@@ -425,63 +425,6 @@ void test_list_count(bool show)
     );
 
     #undef TEST_LIST_COUNT
-
-    TEST_FN_CLOSE
-}
-
-void test_list_get_trie(bool show)
-{
-    TEST_FN_OPEN
-
-    tag_t tag_1 = clu_tag_format("test 1");
-    tag_t tag_2 = clu_tag_format("test 2");
-
-    #define TEST_LIST_GET_TRIE(TAG, INDEX, HANDLER, ...)            \
-    {                                                               \
-        TEST_CASE_OPEN(TAG)                                         \
-        {                                                           \
-            list_p l = clu_list_create_immed(__VA_ARGS__);          \
-            trie_p t = clu_list_get_trie(l, INDEX);                 \
-            if(HANDLER) {assert(clu_trie_contains(t, HANDLER));}    \
-            else        {assert(t == NULL);}                        \
-            clu_list_free(l);                                       \
-        }                                                           \
-        TEST_CASE_CLOSE                                             \
-    }
-
-    TEST_LIST_GET_TRIE(1, 0, NULL,
-        0
-    );
-    TEST_LIST_GET_TRIE(2, 1, NULL,
-        0
-    );
-    TEST_LIST_GET_TRIE(3, 0, HD(1),
-        1,  tag_1, 1, HD(1), 0
-    );
-    TEST_LIST_GET_TRIE(4, 1, NULL,
-        1,  tag_1, 1, HD(1), 0
-    );
-    TEST_LIST_GET_TRIE(5, 2, NULL,
-        1,  tag_1, 1, HD(1), 0
-    );
-    TEST_LIST_GET_TRIE(6, 0, HD(1),
-        2,  tag_1, 1, HD(1), 0,
-            tag_2, 1, HD(2), 0
-    );
-    TEST_LIST_GET_TRIE(7, 1, HD(2),
-        2,  tag_1, 1, HD(1), 0,
-            tag_2, 1, HD(2), 0
-    );
-    TEST_LIST_GET_TRIE(8, 2, NULL,
-        2,  tag_1, 1, HD(1), 0,
-            tag_2, 1, HD(2), 0
-    );
-    TEST_LIST_GET_TRIE(9, 3, NULL,
-        2,  tag_1, 1, HD(1), 0,
-            tag_2, 1, HD(2), 0
-    );
-
-    #undef TEST_LIST_GET_TRIE
 
     TEST_FN_CLOSE
 }
@@ -532,6 +475,80 @@ void test_list_contains(bool show)
     TEST_FN_CLOSE
 }
 
+void test_list_get_trie(bool show)
+{
+    TEST_FN_OPEN
+
+    tag_t tag_1 = clu_tag_format("test 1");
+    tag_t tag_2 = clu_tag_format("test 2");
+
+    #define TEST_LIST_GET_TRIE(TAG, INDEX, HANDLER, ...)    \
+    {                                                       \
+        TEST_CASE_OPEN(TAG)                                 \
+        {                                                   \
+            list_p l = clu_list_create_immed(__VA_ARGS__);  \
+            trie_p t = clu_list_get_trie(l, INDEX);         \
+            assert(clu_trie_contains(t, HANDLER));          \
+            clu_list_free(l);                               \
+        }                                                   \
+        TEST_CASE_CLOSE                                     \
+    }
+
+    TEST_LIST_GET_TRIE(1, 0, HD(1),
+        1,  tag_1, 1, HD(1), 0
+    );
+    TEST_LIST_GET_TRIE(2, 0, HD(1),
+        2,  tag_1, 1, HD(1), 0,
+            tag_2, 1, HD(2), 0
+    );
+    TEST_LIST_GET_TRIE(3, 1, HD(2),
+        2,  tag_1, 1, HD(1), 0,
+            tag_2, 1, HD(2), 0
+    );
+
+    #undef TEST_LIST_GET_TRIE
+
+    #define TEST_LIST_GET_TRIE(TAG, INDEX, ...)             \
+    {                                                       \
+        TEST_CASE_OPEN(TAG)                                 \
+        {                                                   \
+            list_p l = clu_list_create_immed(__VA_ARGS__);  \
+            TEST_REVERT_OPEN                                \
+            {                                               \
+                clu_list_get_trie(l, INDEX);                \
+            }                                               \
+            TEST_REVERT_CLOSE                               \
+        }                                                   \
+        TEST_CASE_CLOSE                                     \
+    }
+
+    
+    TEST_LIST_GET_TRIE(4, 0,
+        0
+    );
+    TEST_LIST_GET_TRIE(5, 1,
+        0
+    );
+    TEST_LIST_GET_TRIE(6, 1,
+        1,  tag_1, 1, HD(1), 0
+    );
+    TEST_LIST_GET_TRIE(7, 2,
+        1,  tag_1, 1, HD(1), 0
+    );
+    TEST_LIST_GET_TRIE(8, 2,
+        2,  tag_1, 1, HD(1), 0,
+            tag_2, 1, HD(2), 0
+    );
+    TEST_LIST_GET_TRIE(9, 3,
+        2,  tag_1, 1, HD(1), 0,
+            tag_2, 1, HD(2), 0
+    );
+
+    #undef TEST_LIST_GET_TRIE
+
+    TEST_FN_CLOSE
+}
+
 
 
 void test_list()
@@ -548,8 +565,8 @@ void test_list()
     test_list_remove(show);
 
     test_list_count(show);
-    test_list_get_trie(show);
     test_list_contains(show);
+    test_list_get_trie(show);
 
     TEST_ASSERT_MEM_EMPTY
 }

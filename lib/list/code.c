@@ -214,8 +214,7 @@ uint64_t clu_list_count(list_p l)
 
 trie_p clu_list_get_trie(list_p l, uint64_t i)
 {
-    if(l == NULL)
-        return NULL;
+    assert(l);
 
     if(i == 0)
         return l->t;

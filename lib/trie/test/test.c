@@ -15,7 +15,7 @@ void test_offset(bool show)
         TEST_CASE_OPEN(TAG)             \
         {                               \
             uint64_t res = OFFSET(IN);  \
-            assert(uint64(res, RES));   \
+            assert(clu_uint64(res, RES));   \
         }                               \
         TEST_CASE_CLOSE;                \
     }
@@ -40,7 +40,7 @@ void test_get(bool show)
         TEST_CASE_OPEN(index + 1)
         {
             uint64_t key = GET(h, index);
-            assert(uint64(key, index));
+            assert(clu_uint64(key, index));
         }
         TEST_CASE_CLOSE;
     }
@@ -362,7 +362,7 @@ void test_trie_count(bool show)
         {                                                           \
             trie_p t = clu_trie_create_immed_tree(__VA_ARGS__);     \
             uint64_t res = clu_trie_count(t);                       \
-            assert(uint64(res, RES));                               \
+            assert(clu_uint64(res, RES));                               \
             clu_trie_free(t);                                       \
         }                                                           \
         TEST_CASE_CLOSE                                             \
@@ -393,55 +393,72 @@ void test_trie_get_handler(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_TRIE_GET_HANDLER(TAG, INDEX, RES, ...)             \
-    {                                                               \
-        TEST_CASE_OPEN(TAG)                                         \
-        {                                                           \
-            trie_p t = clu_trie_create_immed_tree(__VA_ARGS__);     \
-            handler_p h = clu_trie_get_handler(t, INDEX);           \
-            assert(h == RES);                                       \
-            clu_trie_free(t);                                       \
-        }                                                           \
-        TEST_CASE_CLOSE                                             \
+    #define TEST_TRIE_GET_HANDLER(TAG, INDEX, RES, ...)         \
+    {                                                           \
+        TEST_CASE_OPEN(TAG)                                     \
+        {                                                       \
+            trie_p t = clu_trie_create_immed_tree(__VA_ARGS__); \
+            handler_p h = clu_trie_get_handler(t, INDEX);       \
+            assert(h == RES);                                   \
+            clu_trie_free(t);                                   \
+        }                                                       \
+        TEST_CASE_CLOSE                                         \
     }
 
     TEST_TRIE_GET_HANDLER(1, 0, HD(1),
         true, HD(1)
     );
-    TEST_TRIE_GET_HANDLER(2, 1, NULL,
+    TEST_TRIE_GET_HANDLER(2, 0, HD(1),
+        true, NULL, 1,
+            1, HD(1)
+    );
+    TEST_TRIE_GET_HANDLER(3, 0, HD(1),
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+    TEST_TRIE_GET_HANDLER(4, 1, HD(2),
+        true, NULL, 2,
+            1, HD(1),
+            2, HD(2)
+    );
+
+    #undef TEST_TRIE_GET_HANDLER
+
+    #define TEST_TRIE_GET_HANDLER(TAG, INDEX, ...)              \
+    {                                                           \
+        TEST_CASE_OPEN(TAG)                                     \
+        {                                                       \
+            trie_p t = clu_trie_create_immed_tree(__VA_ARGS__); \
+            TEST_REVERT_OPEN                                    \
+            {                                                   \
+                clu_trie_get_handler(t, INDEX);                 \
+            }                                                   \
+            TEST_REVERT_CLOSE                                   \
+        }                                                       \
+        TEST_CASE_CLOSE                                         \
+    }
+
+    TEST_TRIE_GET_HANDLER(5, 1,
         true, HD(1)
     );
-    TEST_TRIE_GET_HANDLER(3, 2, NULL,
+    TEST_TRIE_GET_HANDLER(6, 2,
         true, HD(1)
     );
-    TEST_TRIE_GET_HANDLER(4, 0, HD(1),
+    TEST_TRIE_GET_HANDLER(7, 1,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_TRIE_GET_HANDLER(5, 1, NULL,
+    TEST_TRIE_GET_HANDLER(8, 2,
         true, NULL, 1,
             1, HD(1)
     );
-    TEST_TRIE_GET_HANDLER(6, 2, NULL,
-        true, NULL, 1,
-            1, HD(1)
-    );
-    TEST_TRIE_GET_HANDLER(7, 0, HD(1),
+    TEST_TRIE_GET_HANDLER(9, 2,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)
     );
-    TEST_TRIE_GET_HANDLER(8, 1, HD(2),
-        true, NULL, 2,
-            1, HD(1),
-            2, HD(2)
-    );
-    TEST_TRIE_GET_HANDLER(9, 2, NULL,
-        true, NULL, 2,
-            1, HD(1),
-            2, HD(2)
-    );
-    TEST_TRIE_GET_HANDLER(10, 3, NULL,
+    TEST_TRIE_GET_HANDLER(10, 3,
         true, NULL, 2,
             1, HD(1),
             2, HD(2)

@@ -2,5 +2,4 @@ rewrite readme
 improve tutorial
 thread safe
 thread performant
-refactor test aguments
 refactor get handler to revert in case of invalid input

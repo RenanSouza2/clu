@@ -332,45 +332,6 @@ bool clu_trie_remove(trie_p *t_root, handler_p h)
 
 
 
-handler_p clu_trie_get_handler_rec(trie_p t, uint64_t j, bool revert)
-{
-    assert(t);
-
-    if(t->h)
-    {
-        if(j == 0)
-            return t->h;
-
-        assert(!revert);
-        return NULL;
-    }
-
-    for(uint64_t i=0; i<SIZE; i++)
-    {
-        uint64_t count = clu_trie_count(t->arr[i]);
-        if(j < count)
-            return clu_trie_get_handler_rec(t->arr[i], j, true);
-
-        j -= count;
-    }
-
-    assert(!revert);
-    return NULL;
-}
-
-bool clu_trie_contains_rec(trie_p t, handler_p h, uint64_t index)
-{
-    if(t == NULL)
-        return false;
-
-    if(t->h)
-        return t->h == h;
-
-    return clu_trie_contains_rec(t->arr[GET(h, index)], h, index + 1);
-}
-
-
-
 uint64_t clu_trie_count(trie_p t)
 {
     if(t == NULL)
@@ -389,8 +350,32 @@ uint64_t clu_trie_count(trie_p t)
 handler_p clu_trie_get_handler(trie_p t, uint64_t j)
 {
     assert(t);
+    if(t->h)
+    {
+        assert(j == 0);
+        return t->h;
+    }
 
-    return clu_trie_get_handler_rec(t, j, false);
+    for(uint64_t i=0; i<SIZE; i++)
+    {
+        uint64_t count = clu_trie_count(t->arr[i]);
+        if(j < count)
+            return clu_trie_get_handler(t->arr[i], j);
+
+        j -= count;
+    }
+    exit(EXIT_FAILURE);
+}
+
+bool clu_trie_contains_rec(trie_p t, handler_p h, uint64_t index)
+{
+    if(t == NULL)
+        return false;
+
+    if(t->h)
+        return t->h == h;
+
+    return clu_trie_contains_rec(t->arr[GET(h, index)], h, index + 1);
 }
 
 bool clu_trie_contains(trie_p t, handler_p h)

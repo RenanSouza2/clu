@@ -298,7 +298,7 @@ uint64_t clu_get_max_j(uint64_t i)
 handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
     trie_p t = clu_list_get_trie(l_root_allocated, i);
-    return t ? clu_trie_get_handler(t, j) : NULL;
+    return clu_trie_get_handler(t, j);
 }
 
 

@@ -1,12 +1,14 @@
 #include <stdlib.h>
 
 #include "../mods/macros/assert.h"
+#include "../mods/macros/threads.h"
 
 #include "../header.h"
 #include "../lib/list/header.h"
 #include "../lib/tag/struct.h"
 #include "../lib/trie/header.h"
 
+pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 list_p l_root_allocated = NULL;
 trie_p t_root_freed = NULL;
 bool log_allocations = false;
@@ -20,6 +22,8 @@ bool log_allocations = false;
 
 void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
 {
+    TREAT(pthread_mutex_lock(&mut));
+
     if(size == 0)
     {
         printf("\n");
@@ -73,10 +77,14 @@ void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
 
     if(log_allocations)
         printf("\n%s | %p | %s | %lu\t", fn, h, tag.str, size);
+
+    TREAT(pthread_mutex_unlock(&mut));
 }
 
 void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
 {
+    TREAT(pthread_mutex_lock(&mut));
+
     if(h == NULL)
     {
         printf("\n");
@@ -121,7 +129,10 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         exit(EXIT_FAILURE);
     }
 
-    if(log_allocations) printf("\n\t%s | %p | %s\t", fn, h, tag.str);
+    if(log_allocations)
+        printf("\n\t%s | %p | %s\t", fn, h, tag.str);
+
+    TREAT(pthread_mutex_unlock(&mut));
 }
 
 
@@ -196,7 +207,10 @@ void clu_handler_unregister(handler_p h, char format[], ...)
 void clu_handler_is_safe(handler_p h, char format[], ...)
 {
     if(h == NULL)
+    {
+        TREAT(pthread_mutex_unlock(&mut));
         return;
+    }
 
     if(clu_handler_is_freed(h))
     {
@@ -237,11 +251,15 @@ void clu_handler_is_safe(handler_p h, char format[], ...)
 
 void clu_mem_report_opts(char tag[], bool full)
 {
+    TREAT(pthread_mutex_lock(&mut));
+
     printf("\n");
     printf("\n----------------------");
     clu_list_report(l_root_allocated, tag, full);
     printf("\n----------------------");
     printf("\n");
+
+    TREAT(pthread_mutex_unlock(&mut));
 }
 
 void clu_mem_report(char tag[])
@@ -258,47 +276,64 @@ void clu_mem_report_full(char tag[])
 
 bool clu_mem_is_empty()
 {
+    TREAT(pthread_mutex_lock(&mut));
+
     if(l_root_allocated)
     {
         clu_mem_report("ASSERT FAIL | MEMORY NOT EMPTY");
+        TREAT(pthread_mutex_unlock(&mut));
         return false;
     }
 
     clu_trie_free(t_root_freed);
     t_root_freed = NULL;
+    TREAT(pthread_mutex_unlock(&mut));
     return true;
 }
 
 bool clu_handler_is_allocated(handler_p h)
 {
-    return clu_list_contains(l_root_allocated, h);
+    TREAT(pthread_mutex_lock(&mut));
+    bool res = clu_list_contains(l_root_allocated, h);
+    TREAT(pthread_mutex_unlock(&mut));
+    return res;
 }
 
 bool clu_handler_is_freed(handler_p h)
 {
-    if(t_root_freed)
-        return clu_trie_contains(t_root_freed, h);
-
-    return false;
+    TREAT(pthread_mutex_lock(&mut));
+    bool res = t_root_freed ?
+        clu_trie_contains(t_root_freed, h) : false;
+    TREAT(pthread_mutex_unlock(&mut));
+    return res;
 }
 
 
 
 uint64_t clu_get_max_i()
 {
-    return clu_list_count(l_root_allocated);
+    TREAT(pthread_mutex_lock(&mut));
+    uint64_t res = clu_list_count(l_root_allocated);
+    TREAT(pthread_mutex_unlock(&mut));
+    return res;
 }
 
 uint64_t clu_get_max_j(uint64_t i)
 {
+    TREAT(pthread_mutex_lock(&mut));
     trie_p t = clu_list_get_trie(l_root_allocated, i);
-    return t ? clu_trie_count(t) : 0;
+    uint64_t res = clu_trie_count(t);
+    TREAT(pthread_mutex_unlock(&mut));
+    return res;
 }
 
 handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
+    TREAT(pthread_mutex_lock(&mut));
     trie_p t = clu_list_get_trie(l_root_allocated, i);
-    return clu_trie_get_handler(t, j);
+    handler_p res = clu_trie_get_handler(t, j);
+    TREAT(pthread_mutex_unlock(&mut));
+    return res;
 }
 
 

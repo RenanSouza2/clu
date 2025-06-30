@@ -522,7 +522,7 @@ void test_list_get_trie(bool show)
         TEST_CASE_CLOSE                                     \
     }
 
-    
+
     TEST_LIST_GET_TRIE(4, 0,
         0
     );

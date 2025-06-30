@@ -36,7 +36,7 @@ void clu_mut_nested_lock(clu_mutex_nested_p mut)
             mut->depth++;
             return;
         }
-        
+
         TREAT(pthread_mutex_lock(&mut->mut));
     }
 
@@ -265,7 +265,7 @@ void clu_handler_unregister(handler_p h, char format[], ...)
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
     clu_handler_deallocate(h, tag, "custom");
-    
+
     clu_mut_nested_unlock(&clu_mut);
 }
 

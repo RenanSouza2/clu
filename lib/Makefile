@@ -14,7 +14,7 @@ lib.o: $(LIB_FILES)
 	ld -r -o $@ $^
 
 debug.o: $(DGB_FILES)
-	echo " linking debug $(DIR)"
+	echo " linking clu debug $(DIR)"
 	ld -r -o $@ $^
 
 

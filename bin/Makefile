@@ -9,11 +9,16 @@ bin.o: $(LIB) $(SRC)
 	echo " linking clu"
 	ld -r -o $@ $^
 
-.PHONY: $(SRC) $(LIB)
-$(SRC) $(LIB):
+.PHONY: $(SRC)
+$(SRC):
+	$(MAKE) --directory=$(dir $@)
+
+.PHONY: $(LIB)
+$(LIB):
 	$(MAKE) --directory=$(dir $@)
 
 clean:
 	echo "cleaning clu"
 	rm -rf *.o
-	$(MAKE) clean --directory=..
+	$(MAKE) clean --directory=$(dir $(LIB))
+	$(MAKE) clean --directory=$(dir $(SRC))

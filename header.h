@@ -1,6 +1,8 @@
 #ifndef __CLU_H__
 #define __CLU_H__
 
+#include <stdlib.h>
+
 #ifdef DEBUG
 
 #include <stdio.h>
@@ -36,7 +38,7 @@ void clu_set_log(bool _log_allocations);
 
 #define malloc(SIZE) clu_handler_malloc(SIZE, CLU_DEFAULT_TAG)
 #define calloc(AMOUNT, SIZE) clu_handler_calloc(AMOUNT, SIZE, CLU_DEFAULT_TAG)
-#define realloc(HANDLER, SIZE) clu_handler_realloc(PTR, SIZE, CLU_DEFAULT_TAG)
+#define realloc(HANDLER, SIZE) clu_handler_realloc(HANDLER, SIZE, CLU_DEFAULT_TAG)
 #define free(HANDLER) clu_handler_free(HANDLER, CLU_DEFAULT_TAG)
 
 #define CLU_HANDLER_IS_SAFE(HANDLER) clu_handler_is_safe(HANDLER, CLU_DEFAULT_TAG);

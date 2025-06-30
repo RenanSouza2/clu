@@ -7,20 +7,22 @@
 
 #include "../../mods/macros/U64.h"
 
-extern uint64_t list_head_alive;
-extern uint64_t list_body_alive;
+extern uint64_t list_alive;
+extern uint64_t trie_alive;
 
 void clu_mem_internal_display();
 bool clu_mem_internal_empty();
 
 #define CLU_MEM_INTERNAL_LOG_STATUS false
 
-#define CLU_MEM_INTERNAL_LOG(...)       \
-    {                                   \
-        if(CLU_MEM_INTERNAL_LOG_STATUS) \
-        {                               \
-            printf("\n" __VA_ARGS__);   \
-        }                               \
+#define CLU_MEM_INTERNAL_LOG(...)               \
+    {                                           \
+        if(CLU_MEM_INTERNAL_LOG_STATUS)         \
+        {                                       \
+            printf("\nclu internal log\t| ");   \
+            printf(__VA_ARGS__);                \
+            printf("\t\t");                     \
+        }                                       \
     }
 
 #define INC(HANDLER, NAME)                                  \

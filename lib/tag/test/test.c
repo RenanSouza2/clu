@@ -1,16 +1,14 @@
 #include <string.h>
 
 #include "../debug.h"
-#include "../../mem/header.h"
-
+#include "../../../testrc.h"
 #include "../../../mods/macros/test.h"
 
 
-#define TEST_ASSERT_EMPTY assert(clu_mem_internal_empty());
 
 void test_tag_format(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     TEST_CASE_OPEN(1)
     {
@@ -47,12 +45,12 @@ void test_tag_format(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 void test_tag_eq(bool show)
 {
-    TEST_FN
+    TEST_FN_OPEN
 
     TEST_CASE_OPEN(1)
     {
@@ -86,7 +84,7 @@ void test_tag_eq(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_ASSERT_EMPTY
+    TEST_FN_CLOSE
 }
 
 
@@ -100,7 +98,7 @@ void test_tag()
     test_tag_format(show);
     test_tag_eq(show);
 
-    TEST_ASSERT_EMPTY
+    TEST_ASSERT_MEM_EMPTY
 }
 
 
@@ -108,9 +106,7 @@ void test_tag()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_tag();
-    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

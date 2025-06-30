@@ -1,44 +1,30 @@
-DIRS := $(wildcard */.)
+FLAGS = -Wall -Wextra -Werror -Wfatal-errors -O3 -c
+FLAGS_DBG = -D DEBUG -fsanitize=address
 
 LIB_ROOT = $(word 1,$(subst lib, ,$(CURDIR)))lib
-LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
-DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
-
 DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
 
 build: lib.o
 
 
 
-lib.o: $(LIB_FILES)
-	echo " linking clu object $(DIR)"
-	ld -r -o $@ $^
+lib.o: code.c
+	echo "building object $(DIR)"
+	gcc -o $@ $^ $(FLAGS)
 
-debug.o: $(DGB_FILES)
-	echo " linking debug $(DIR)"
-	ld -r -o $@ $^
-
-
-
-.PHONY: $(LIB_FILES)
-$(LIB_FILES):
-	$(MAKE) --directory=$(dir $@)
-
-.PHONY: $(DGB_FILES)
-$(DGB_FILES):
-	$(MAKE) debug.o --directory=$(dir $@)
+debug.o: code.c
+	echo "building debug $(DIR)"
+	gcc -o $@ $^ $(FLAGS) $(FLAGS_DBG)
 
 
 
 clean c:
-	$(MAKE) _clean --directory=$(LIB_ROOT) -s
+	$(MAKE) clean --directory=$(LIB_ROOT) -s
 
 _clean:
-	echo "cleaning clu $(DIR)"
-	rm -rf *.o
-	for DIR in $(DIRS) ; do \
-		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \
-	done
+	echo "cleaning $(DIR)"
+	rm -f *.o
+	$(MAKE) clean --directory=test
 
 
 
@@ -48,6 +34,6 @@ test t:
 	$(MAKE) _test -s
 
 _test:
-	for DIR in $(DIRS) ; do \
-		( $(MAKE) _test --directory=$$DIR ) || exit $$? ; \
-	done
+	$(MAKE) --directory=test
+
+export

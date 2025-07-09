@@ -32,7 +32,7 @@ uint64_t clu_get_max_i();
 uint64_t clu_get_max_j(uint64_t i);
 handler_p clu_get_handler(uint64_t i, uint64_t j);
 
-void clu_set_log(bool _log_allocations);
+void clu_log_enable(bool _log_allocations);
 
 #define CLU_DEFAULT_TAG "f|%s|l|%d", __func__, __LINE__
 

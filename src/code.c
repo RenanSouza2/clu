@@ -414,7 +414,7 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
 
 
 
-void clu_set_log(bool _log_allocations)
+void clu_log_enable(bool _log_allocations)
 {
     clu_mut_nested_lock(&clu_mut);
     log_allocations = _log_allocations;

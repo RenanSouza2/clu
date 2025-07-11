@@ -6,7 +6,7 @@
 
 #include "../../mods/macros/struct.h"
 
-PLACEHOLDER(trie);
+PLACEHOLDER(trie)
 
 void clu_trie_display(trie_p t);
 

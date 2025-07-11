@@ -8,7 +8,7 @@
 
 #include "../../mods/macros/struct.h"
 
-PLACEHOLDER(list);
+PLACEHOLDER(list)
 
 void clu_list_report(list_p l, char tag[], bool full);
 

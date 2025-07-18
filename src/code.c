@@ -437,7 +437,7 @@ bool clu_mem_is_empty()
 
     if(clu_l_root_allocated)
     {
-        clu_mem_report_opts("ASSERT FAIL | MEMORY NOT EMPTY", false);
+        clu_mem_report_opts("ASSERT FAIL | MEMORY NOT EMPTY", clu_log_enable);
         clu_mut_nested_unlock(&clu_mut);
         return false;
     }

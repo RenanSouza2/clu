@@ -342,6 +342,9 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
     clu_list_remove(&clu_l_root_static, h);
     clu_list_insert(&clu_l_root_static, &tag, h);
 
+    if(clu_log_allocations)
+        printf("\nstatic | %s | %p\t", tag.str, h);
+
     clu_mut_nested_unlock(&clu_mut);
 }
 
@@ -455,6 +458,14 @@ bool clu_handler_is_allocated(handler_p h)
 {
     clu_mut_nested_lock(&clu_mut);
     bool res = clu_list_contains(clu_l_root_allocated, h);
+    clu_mut_nested_unlock(&clu_mut);
+    return res;
+}
+
+bool clu_handler_is_static(handler_p h)
+{
+    clu_mut_nested_lock(&clu_mut);
+    bool res = clu_list_contains(clu_l_root_static, h);
     clu_mut_nested_unlock(&clu_mut);
     return res;
 }

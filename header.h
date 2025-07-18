@@ -21,6 +21,7 @@ void clu_handler_unregister(handler_p h, char const format[], ...);
 void clu_handler_register_static(handler_p h, char const format[], ...);
 
 void clu_handler_is_safe(handler_p h, char const format[], ...);
+bool clu_handler_is_static(handler_p h);
 
 void clu_mem_report(char const tag[]);
 void clu_mem_report_full(char const tag[]);

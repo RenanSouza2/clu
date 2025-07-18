@@ -150,7 +150,7 @@ void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
     }
 
     if(clu_log_allocations)
-        printf("\n%s | %p | %s | %lu\t", fn, h, tag.str, size);
+        printf("\n%s | %s | %p | %lu\t", fn, tag.str, h, size);
 
     clu_mut_nested_unlock(&clu_mut);
 }
@@ -224,14 +224,14 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
     }
 
     if(clu_log_allocations)
-        printf("\n\t%s | %p | %s\t", fn, h, tag.str);
+        printf("\n\t%s | %s | %p\t", fn, tag.str, h);
 
     clu_mut_nested_unlock(&clu_mut);
 }
 
 
 
-handler_p clu_handler_malloc(size_t size, char format[], ...)
+handler_p clu_handler_malloc(size_t size, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -246,7 +246,7 @@ handler_p clu_handler_malloc(size_t size, char format[], ...)
     return h;
 }
 
-handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
+handler_p clu_handler_calloc(size_t amt, size_t size, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -261,7 +261,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...)
     return h;
 }
 
-handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...)
+handler_p clu_handler_realloc(handler_p h, size_t size, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -278,7 +278,7 @@ handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...)
     return h;
 }
 
-void clu_handler_free(handler_p h, char format[], ...)
+void clu_handler_free(handler_p h, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -293,7 +293,7 @@ void clu_handler_free(handler_p h, char format[], ...)
 
 
 
-void clu_handler_register(handler_p h, char format[], ...)
+void clu_handler_register(handler_p h, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -305,7 +305,7 @@ void clu_handler_register(handler_p h, char format[], ...)
     clu_mut_nested_unlock(&clu_mut);
 }
 
-void clu_handler_unregister(handler_p h, char format[], ...)
+void clu_handler_unregister(handler_p h, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -317,7 +317,7 @@ void clu_handler_unregister(handler_p h, char format[], ...)
     clu_mut_nested_unlock(&clu_mut);
 }
 
-void clu_handler_register_static(handler_p h, char format[], ...)
+void clu_handler_register_static(handler_p h, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -347,7 +347,7 @@ void clu_handler_register_static(handler_p h, char format[], ...)
 
 
 
-void clu_handler_is_safe(handler_p h, char format[], ...)
+void clu_handler_is_safe(handler_p h, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -402,7 +402,7 @@ void clu_handler_is_safe(handler_p h, char format[], ...)
 
 
 
-void clu_mem_report_opts(char tag[], bool full)
+void clu_mem_report_opts(char const tag[], bool full)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -415,14 +415,14 @@ void clu_mem_report_opts(char tag[], bool full)
     clu_mut_nested_unlock(&clu_mut);
 }
 
-void clu_mem_report(char tag[])
+void clu_mem_report(char const tag[])
 {
     clu_mut_nested_lock(&clu_mut);
     clu_mem_report_opts(tag, false);
     clu_mut_nested_unlock(&clu_mut);
 }
 
-void clu_mem_report_full(char tag[])
+void clu_mem_report_full(char const tag[])
 {
     clu_mut_nested_lock(&clu_mut);
     clu_mem_report_opts(tag, true);

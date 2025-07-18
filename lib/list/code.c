@@ -106,7 +106,7 @@ bool clu_list_immed(list_p l, uint64_t n, ...)
 
 
 
-void clu_list_report(list_p l, char tag[], bool full)
+void clu_list_report(list_p l, char const tag[], bool full)
 {
     printf("\n\tCLU REPORT: %s", tag);
     if(l == NULL)

@@ -11,19 +11,19 @@
 
 typedef void * handler_p;
 
-handler_p clu_handler_malloc(size_t size, char format[], ...);
-handler_p clu_handler_calloc(size_t amt, size_t size, char format[], ...);
-handler_p clu_handler_realloc(handler_p h, size_t size, char format[], ...);
-void clu_handler_free(handler_p h, char format[], ...);
+handler_p clu_handler_malloc(size_t size, char const format[], ...);
+handler_p clu_handler_calloc(size_t amt, size_t size, char const format[], ...);
+handler_p clu_handler_realloc(handler_p h, size_t size, char const format[], ...);
+void clu_handler_free(handler_p h, char const format[], ...);
 
-void clu_handler_register(handler_p h, char format[], ...);
-void clu_handler_unregister(handler_p h, char format[], ...);
-void clu_handler_register_static(handler_p h, char format[], ...);
+void clu_handler_register(handler_p h, char const format[], ...);
+void clu_handler_unregister(handler_p h, char const format[], ...);
+void clu_handler_register_static(handler_p h, char const format[], ...);
 
-void clu_handler_is_safe(handler_p h, char format[], ...);
+void clu_handler_is_safe(handler_p h, char const format[], ...);
 
-void clu_mem_report(char tag[]);
-void clu_mem_report_full(char tag[]);
+void clu_mem_report(char const tag[]);
+void clu_mem_report_full(char const tag[]);
 bool clu_mem_is_empty();
 
 bool clu_handler_is_allocated(handler_p h);

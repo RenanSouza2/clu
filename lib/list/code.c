@@ -230,3 +230,12 @@ bool clu_list_contains(list_p l, handler_p h)
 
     return false;
 }
+
+tag_t clu_list_get_tag(list_p l, handler_p h) // TODO test
+{
+    for(; l; l = l->next)
+        if(clu_trie_contains(l->t, h))
+            return l->tag;
+
+    assert(false)
+}

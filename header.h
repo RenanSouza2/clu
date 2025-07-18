@@ -18,6 +18,7 @@ void clu_handler_free(handler_p h, char format[], ...);
 
 void clu_handler_register(handler_p h, char format[], ...);
 void clu_handler_unregister(handler_p h, char format[], ...);
+void clu_handler_register_static(handler_p h, char format[], ...);
 
 void clu_handler_is_safe(handler_p h, char format[], ...);
 
@@ -42,14 +43,16 @@ void clu_log_enable(bool _log_allocations);
 #define free(HANDLER) clu_handler_free(HANDLER, CLU_DEFAULT_TAG)
 
 #define CLU_HANDLER_IS_SAFE(HANDLER) clu_handler_is_safe(HANDLER, CLU_DEFAULT_TAG);
-#define CLU_HANDLER_REGISTER(HANDLER) clu_handler_register(HANDLER, CLU_DEFAULT_TAG)
-#define CLU_HANDLER_UNREGISTER(HANDLER) clu_handler_unregister(HANDLER, CLU_DEFAULT_TAG)
+#define CLU_HANDLER_REGISTER(HANDLER) clu_handler_register(HANDLER, CLU_DEFAULT_TAG);
+#define CLU_HANDLER_UNREGISTER(HANDLER) clu_handler_unregister(HANDLER, CLU_DEFAULT_TAG);
+#define CLU_HANDLER_REGISTER_STATIC(HANDLER) clu_handler_register_static(HANDLER, CLU_DEFAULT_TAG);
 
 #else
 
 #define CLU_HANDLER_IS_SAFE(HANDLER)
 #define CLU_HANDLER_REGISTER(HANDLER)
 #define CLU_HANDLER_UNREGISTER(HANDLER)
+#define CLU_HANDLER_REGISTER_STATIC(HANDLER)
 
 #endif // DEBUG
 

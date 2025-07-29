@@ -245,9 +245,12 @@ void test_trie_remove(bool show)
         TEST_CASE_OPEN(TAG)                                         \
         {                                                           \
             trie_p t = clu_trie_create_immed_tree(ARG_OPEN T_BEF);  \
-            bool res = clu_trie_remove(&t, HANDLER);                \
+            uint64_t size;                                          \
+            bool res = clu_trie_remove(&t, HANDLER, &size);         \
             assert(res == RES);                                     \
             assert(clu_trie_immed_tree(t, ARG_OPEN T_AFT));         \
+            if(RES)                                                 \
+                assert(clu_uint64(size, 1));                        \
         }                                                           \
         TEST_CASE_CLOSE                                             \
     }
@@ -322,7 +325,7 @@ void test_trie_remove(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_trie_remove(NULL, HD(1));
+            clu_trie_remove(NULL, HD(1), NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -333,7 +336,7 @@ void test_trie_remove(bool show)
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_trie_remove(&t, HD(1));
+            clu_trie_remove(&t, HD(1), NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -344,7 +347,7 @@ void test_trie_remove(bool show)
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_trie_remove(&t, NULL);
+            clu_trie_remove(&t, NULL, NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -554,7 +557,7 @@ void test_trie()
 {
     TEST_LIB
 
-    bool show = true;
+    bool show = false;
 
     test_offset(show);
     test_get(show);

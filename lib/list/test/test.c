@@ -275,9 +275,12 @@ void test_list_remove(bool show)
         TEST_CASE_OPEN(TAG)                                     \
         {                                                       \
             list_p l = clu_list_create_immed(ARG_OPEN L_BEF);   \
-            bool res = clu_list_remove(&l, HANDLER);            \
+            uint64_t size;                                      \
+            bool res = clu_list_remove(&l, HANDLER, &size);     \
             assert(res == RES);                                 \
             assert(clu_list_immed(l, ARG_OPEN L_AFT));          \
+            if(RES)                                             \
+                assert(clu_uint64(size, 1));                    \
         }                                                       \
         TEST_CASE_CLOSE                                         \
     }
@@ -372,7 +375,7 @@ void test_list_remove(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_remove(NULL, HD(1));
+            clu_list_remove(NULL, HD(1), NULL);
         }
         TEST_REVERT_CLOSE
     }
@@ -383,7 +386,7 @@ void test_list_remove(bool show)
         list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_remove(&l, NULL);
+            clu_list_remove(&l, NULL, NULL);
         }
         TEST_REVERT_CLOSE
     }

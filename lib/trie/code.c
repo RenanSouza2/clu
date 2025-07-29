@@ -65,7 +65,9 @@ trie_p clu_trie_create_variadic_list(uint64_t n, va_list *args)
     for(uint64_t i=0; i<n_remove; i++)
     {
         handler_p h = va_arg(*args, handler_p);
-        assert(clu_trie_remove(&t, h));
+        uint64_t size;
+        assert(clu_trie_remove(&t, h, &size));
+        assert(size == 1);
     }
     return t;
 }
@@ -301,7 +303,7 @@ bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint64_t in
     return clu_trie_insert_rec(&t->arr[key], h, size, index + 1);
 }
 
-bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index)
+bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index, uint64_p size)
 {
     trie_p t = *t_root;
     if(t == NULL)
@@ -312,12 +314,15 @@ bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index)
         if(t->h != h)
             return false;
 
+        if(size)
+            *size = t->size;
+
         FREE(t, trie);
         *t_root = NULL;
         return true;
     }
 
-    if(!clu_trie_remove_rec(&t->arr[GET(h, index)], h, index + 1))
+    if(!clu_trie_remove_rec(&t->arr[GET(h, index)], h, index + 1, size))
         return false;
 
     for(uint64_t i=0; i<SIZE; i++)
@@ -339,13 +344,13 @@ bool clu_trie_insert(trie_p *t_root, handler_p h, uint64_t size)
     return clu_trie_insert_rec(t_root, h, size, 0);
 }
 
-bool clu_trie_remove(trie_p *t_root, handler_p h)
+bool clu_trie_remove(trie_p *t_root, handler_p h, uint64_p size)
 {
     assert(t_root);
     assert(*t_root);
     assert(h);
 
-    return clu_trie_remove_rec(t_root, h, 0);
+    return clu_trie_remove_rec(t_root, h, 0, size);
 }
 
 

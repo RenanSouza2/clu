@@ -183,7 +183,7 @@ bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h, uint64_t size)
     return true;
 }
 
-bool clu_list_remove(list_p *l_root, handler_p h)
+bool clu_list_remove(list_p *l_root, handler_p h, uint64_p size)
 {
     assert(l_root);
     assert(h);
@@ -192,8 +192,8 @@ bool clu_list_remove(list_p *l_root, handler_p h)
     if(l == NULL)
         return false;
 
-    if(!clu_trie_remove(&l->t, h))
-        return clu_list_remove(&l->next, h);
+    if(!clu_trie_remove(&l->t, h, size))
+        return clu_list_remove(&l->next, h, size);
 
     if(l->t == NULL)
         *l_root = clu_list_pop(l);

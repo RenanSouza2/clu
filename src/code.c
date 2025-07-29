@@ -134,7 +134,7 @@ void clu_handler_allocate(
     }
 
     if(clu_t_root_freed)
-        clu_trie_remove(&clu_t_root_freed, h);
+        clu_trie_remove(&clu_t_root_freed, h, NULL);
 
     if(!clu_list_insert(&clu_l_root_allocated, &tag, h, size))
     {
@@ -220,8 +220,8 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         exit(EXIT_FAILURE);
     }
 
-    uint64_t res = clu_list_remove(&clu_l_root_allocated, h);
-    if(clu_l_root_allocated == NULL || res == UINT64_MAX)
+    uint64_t size;
+    if(clu_l_root_allocated == NULL || clu_list_remove(&clu_l_root_allocated, h, &size))
     {
         printf("\n");
         printf("\n");
@@ -239,7 +239,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
     if(clu_log_allocations)
         printf("\n\t%s | %s | %p\t", fn, tag.str, h);
 
-    clu_occupancy -= res;
+    clu_occupancy -= size;
 
     clu_mut_nested_unlock(&clu_mut);
 }
@@ -354,7 +354,7 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
         exit(EXIT_FAILURE);
     }
 
-    clu_list_remove(&clu_l_root_static, h);
+    clu_list_remove(&clu_l_root_static, h, NULL);
     clu_list_insert(&clu_l_root_static, &tag, h, 0);
 
     if(clu_log_allocations)

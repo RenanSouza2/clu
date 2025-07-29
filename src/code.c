@@ -11,6 +11,8 @@
 list_p clu_l_root_allocated = NULL;
 list_p clu_l_root_static = NULL;
 trie_p clu_t_root_freed = NULL;
+uint64_t clu_max_occupancy = 0;
+uint64_t clu_occupancy = 0;
 bool clu_log_allocations = false;
 
 
@@ -69,11 +71,17 @@ void clu_mut_nested_unlock(clu_mutex_nested_p mut)
 
 
 
-void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
+void clu_handler_allocate(
+    handler_p h,
+    tag_t tag,
+    size_t size,
+    bool can_be_zero,
+    char fn[]
+)
 {
     clu_mut_nested_lock(&clu_mut);
 
-    if(size == 0)
+    if((can_be_zero == false) && (size == 0))
     {
         printf("\n");
         printf("\n");
@@ -128,7 +136,7 @@ void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
     if(clu_t_root_freed)
         clu_trie_remove(&clu_t_root_freed, h);
 
-    if(!clu_list_insert(&clu_l_root_allocated, &tag, h))
+    if(!clu_list_insert(&clu_l_root_allocated, &tag, h, size))
     {
         tag_t tag_prev = clu_list_get_tag(clu_l_root_allocated, h);
 
@@ -151,6 +159,10 @@ void clu_handler_allocate(handler_p h, tag_t tag, size_t size, char fn[])
 
     if(clu_log_allocations)
         printf("\n%s | %s | %p | %lu\t", fn, tag.str, h, size);
+
+    clu_occupancy += size;
+    if(clu_occupancy > clu_max_occupancy)
+        clu_max_occupancy = clu_occupancy;
 
     clu_mut_nested_unlock(&clu_mut);
 }
@@ -193,7 +205,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         exit(EXIT_FAILURE);
     }
 
-    if(!clu_trie_insert(&clu_t_root_freed, h))
+    if(!clu_trie_insert(&clu_t_root_freed, h, 0))
     {
         printf("\n");
         printf("\n");
@@ -208,7 +220,8 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         exit(EXIT_FAILURE);
     }
 
-    if(clu_l_root_allocated == NULL || !clu_list_remove(&clu_l_root_allocated, h))
+    uint64_t res = clu_list_remove(&clu_l_root_allocated, h);
+    if(clu_l_root_allocated == NULL || res == UINT64_MAX)
     {
         printf("\n");
         printf("\n");
@@ -226,6 +239,8 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
     if(clu_log_allocations)
         printf("\n\t%s | %s | %p\t", fn, tag.str, h);
 
+    clu_occupancy -= res;
+
     clu_mut_nested_unlock(&clu_mut);
 }
 
@@ -240,7 +255,7 @@ handler_p clu_handler_malloc(size_t size, char const format[], ...)
     va_list args;
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
-    clu_handler_allocate(h, tag, size, "malloc");
+    clu_handler_allocate(h, tag, size, false, "malloc");
 
     clu_mut_nested_unlock(&clu_mut);
     return h;
@@ -255,7 +270,7 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char const format[], ...)
     va_list args;
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
-    clu_handler_allocate(h, tag, amt * size, "calloc");
+    clu_handler_allocate(h, tag, amt * size, false, "calloc");
 
     clu_mut_nested_unlock(&clu_mut);
     return h;
@@ -272,7 +287,7 @@ handler_p clu_handler_realloc(handler_p h, size_t size, char const format[], ...
         clu_handler_deallocate(h, tag, "realloc");
 
     h = realloc(h, size);
-    clu_handler_allocate(h, tag, size, "realloc");
+    clu_handler_allocate(h, tag, size, false, "realloc");
 
     clu_mut_nested_unlock(&clu_mut);
     return h;
@@ -300,7 +315,7 @@ void clu_handler_register(handler_p h, char const format[], ...)
     va_list args;
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
-    clu_handler_allocate(h, tag, 1, "custom");
+    clu_handler_allocate(h, tag, 0, true, "custom");
 
     clu_mut_nested_unlock(&clu_mut);
 }
@@ -340,7 +355,7 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
     }
 
     clu_list_remove(&clu_l_root_static, h);
-    clu_list_insert(&clu_l_root_static, &tag, h);
+    clu_list_insert(&clu_l_root_static, &tag, h, 0);
 
     if(clu_log_allocations)
         printf("\nstatic | %s | %p\t", tag.str, h);
@@ -514,4 +529,22 @@ void clu_log_enable(bool _clu_log_allocations)
     clu_mut_nested_lock(&clu_mut);
     clu_log_allocations = _clu_log_allocations;
     clu_mut_nested_unlock(&clu_mut);
+}
+
+
+
+uint64_t clu_get_occupancy()
+{
+    clu_mut_nested_lock(&clu_mut);
+    uint64_t res = clu_occupancy;
+    clu_mut_nested_unlock(&clu_mut);
+    return res;
+}
+
+uint64_t clu_get_max_occupancy()
+{
+    clu_mut_nested_lock(&clu_mut);
+    uint64_t res = clu_max_occupancy;
+    clu_mut_nested_unlock(&clu_mut);
+    return res;
 }

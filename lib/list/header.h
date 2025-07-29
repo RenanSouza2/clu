@@ -13,7 +13,7 @@ PLACEHOLDER(list)
 void clu_list_report(list_p l, char const tag[], bool full);
 
 void clu_list_free(list_p l_root);
-bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h);
+bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h, uint64_t size);
 bool clu_list_remove(list_p *l_root, handler_p h);
 
 uint64_t clu_list_count(list_p l);

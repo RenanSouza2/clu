@@ -24,6 +24,6 @@ bool clu_trie_immed_list(trie_p t, uint64_t n, ...);
 
 #endif
 
-trie_p clu_trie_create(handler_p h);
+trie_p clu_trie_create(handler_p h, uint64_t size);
 
 #endif

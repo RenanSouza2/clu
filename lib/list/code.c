@@ -5,7 +5,7 @@
 #include "../mem/header.h"
 
 #include "../../mods/macros/assert.h"
-#include "../../mods/macros/U64.h"
+#include "../../mods/macros/uint.h"
 
 
 #ifdef DEBUG
@@ -159,7 +159,7 @@ void clu_list_free(list_p l_root)
         clu_trie_free(l->t);
 }
 
-bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h)
+bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h, uint64_t size)
 {
     assert(l_root);
     assert(tag);
@@ -173,12 +173,12 @@ bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h)
         if(!clu_tag_eq(&l->tag, tag))
             continue;
 
-        assert(clu_trie_insert(&l->t, h));
+        assert(clu_trie_insert(&l->t, h, size));
         return true;
     }
 
     list_p l = clu_list_create(tag, *l_root);
-    assert(clu_trie_insert(&l->t, h));
+    assert(clu_trie_insert(&l->t, h, size));
     *l_root = l;
     return true;
 }

@@ -5,7 +5,7 @@
 
 #include <stdbool.h>
 
-#include "../../mods/macros/U64.h"
+#include "../../mods/macros/uint.h"
 
 extern uint64_t list_alive;
 extern uint64_t trie_alive;

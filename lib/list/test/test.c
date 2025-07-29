@@ -147,7 +147,7 @@ void test_list_insert(bool show)
         TEST_CASE_OPEN(TAG)                                         \
         {                                                           \
             list_p l = clu_list_create_immed(ARG_OPEN L_BEF);       \
-            bool res = clu_list_insert(&l, &LTAG, HANDLER);         \
+            bool res = clu_list_insert(&l, &LTAG, HANDLER, 1);      \
             assert(res == RES);                                     \
             assert(clu_list_immed(l, ARG_OPEN L_AFT));              \
         }                                                           \
@@ -159,25 +159,25 @@ void test_list_insert(bool show)
         tag_1, HD(1),
         true,
         (1,  tag_1, 1, HD(1), 0)
-    );
+    )
     TEST_LIST_INSERT(2,
         (1,  tag_1, 1, HD(1), 0),
         tag_1, HD(1),
         false,
         (1,  tag_1, 1, HD(1), 0)
-    );
+    )
     TEST_LIST_INSERT(3,
         (1,  tag_1, 1, HD(1), 0),
         tag_2, HD(1),
         false,
         (1,  tag_1, 1, HD(1), 0)
-    );
+    )
     TEST_LIST_INSERT(4,
         (1,  tag_1, 1, HD(1), 0),
         tag_1, HD(2),
         true,
         (1,  tag_1, 2, HD(1), HD(2), 0)
-    );
+    )
     TEST_LIST_INSERT(5,
         (1,  tag_1, 2, HD(1), HD(2), 0),
         tag_2, HD(3),
@@ -186,7 +186,7 @@ void test_list_insert(bool show)
             2,  tag_2, 1, HD(3), 0,
                 tag_1, 2, HD(1), HD(2), 0
         )
-    );
+    )
     TEST_LIST_INSERT(6,
         (
             2,  tag_1, 2, HD(1), HD(2), 0,
@@ -198,7 +198,7 @@ void test_list_insert(bool show)
             2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
                 tag_2, 1, HD(3), 0
         )
-    );
+    )
     TEST_LIST_INSERT(7,
         (
             2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
@@ -210,7 +210,7 @@ void test_list_insert(bool show)
             2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
                 tag_2, 2, HD(3), HD(5), 0
         )
-    );
+    )
     TEST_LIST_INSERT(8,
         (
             2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
@@ -222,7 +222,7 @@ void test_list_insert(bool show)
             2,  tag_1, 3, HD(1), HD(2), HD(4), 0,
                 tag_2, 2, HD(3), HD(5), 0
         )
-    );
+    )
 
     #undef TEST_LIST_INSERT
 
@@ -230,7 +230,7 @@ void test_list_insert(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_insert(NULL, &tag_1, HD(1));
+            clu_list_insert(NULL, &tag_1, HD(1), 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -241,7 +241,7 @@ void test_list_insert(bool show)
         list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_insert(&l, NULL, HD(1));
+            clu_list_insert(&l, NULL, HD(1), 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -252,7 +252,7 @@ void test_list_insert(bool show)
         list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_insert(&l, &tag_1, NULL);
+            clu_list_insert(&l, &tag_1, NULL, 1);
         }
         TEST_REVERT_CLOSE
     }

@@ -2,7 +2,7 @@
 #include "../../../testrc.h"
 #include "../../../mods/macros/test.h"
 
-#include "../../../mods/macros/U64.h"
+#include "../../../mods/macros/uint.h"
 
 
 
@@ -75,21 +75,24 @@ void test_trie_create(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_TRIE_CREATE(TAG, HANDLER)          \
-    {                                               \
-        TEST_CASE_OPEN(TAG)                         \
-        {                                           \
-            trie_p t = clu_trie_create(HANDLER);    \
-            assert(t->h == HANDLER);                \
-            for(uint64_t i=0; i<16; i++)            \
-            assert(t->arr[i] == NULL);              \
-            FREE(t, trie);                          \
-        }                                           \
-        TEST_CASE_CLOSE                             \
+    #define TEST_TRIE_CREATE(TAG, HANDLER, SIZE)        \
+    {                                                   \
+        TEST_CASE_OPEN(TAG)                             \
+        {                                               \
+            trie_p t = clu_trie_create(HANDLER, SIZE);  \
+            assert(t->h == HANDLER);                    \
+            assert(clu_uint64(t->size, SIZE));          \
+            for(uint64_t i=0; i<16; i++)                \
+                assert(t->arr[i] == NULL);              \
+            FREE(t, trie);                              \
+        }                                               \
+        TEST_CASE_CLOSE                                 \
     }
 
-    TEST_TRIE_CREATE(1, NULL);
-    TEST_TRIE_CREATE(2, HD(1));
+    TEST_TRIE_CREATE(1, NULL, 0);
+    TEST_TRIE_CREATE(2, HD(1), 0);
+    TEST_TRIE_CREATE(3, NULL, 1);
+    TEST_TRIE_CREATE(4, HD(1), 1);
 
     #undef TEST_TRIE_CREATE
 
@@ -164,7 +167,7 @@ void test_trie_insert(bool show)
         TEST_CASE_OPEN(TAG)                                         \
         {                                                           \
             trie_p t = clu_trie_create_immed_tree(ARG_OPEN T_BEF);  \
-            bool res = clu_trie_insert(&t, HANDLER);                \
+            bool res = clu_trie_insert(&t, HANDLER, 1);             \
             assert(res == RES);                                     \
             assert(clu_trie_immed_tree(t, ARG_OPEN T_AFT));         \
         }                                                           \
@@ -176,13 +179,13 @@ void test_trie_insert(bool show)
         HD(1),
         true,
         (true, HD(1))
-    );
+    )
     TEST_TRIE_INSERT(2,
         (true, HD(1)),
         HD(1),
         false,
         (true, HD(1))
-    );
+    )
     TEST_TRIE_INSERT(3,
         (true, HD(1)),
         HD(2),
@@ -192,7 +195,7 @@ void test_trie_insert(bool show)
                 1, HD(1),
                 2, HD(2)
         )
-    );
+    )
     TEST_TRIE_INSERT(4,
         (true, HD(0x111)),
         HD(0x211),
@@ -204,7 +207,7 @@ void test_trie_insert(bool show)
                         1, HD(0x111),
                         2, HD(0x211)
         )
-    );
+    )
 
     #undef TEST_TRIE_INSERT
 
@@ -212,7 +215,7 @@ void test_trie_insert(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_trie_insert(NULL, HD(1));
+            clu_trie_insert(NULL, HD(1), 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -224,7 +227,7 @@ void test_trie_insert(bool show)
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_trie_insert(&t, NULL);
+            clu_trie_insert(&t, NULL, 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -551,7 +554,7 @@ void test_trie()
 {
     TEST_LIB
 
-    bool show = false;
+    bool show = true;
 
     test_offset(show);
     test_get(show);

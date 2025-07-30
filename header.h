@@ -36,6 +36,9 @@ handler_p clu_get_handler(uint64_t i, uint64_t j);
 
 void clu_log_enable(bool _log_allocations);
 
+uint64_t clu_get_occupancy();
+uint64_t clu_get_max_occupancy();
+
 #define CLU_DEFAULT_TAG "f|%s|l|%d", __func__, __LINE__
 
 #define malloc(SIZE) clu_handler_malloc(SIZE, CLU_DEFAULT_TAG)

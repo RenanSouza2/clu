@@ -221,7 +221,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
     }
 
     uint64_t size;
-    if(clu_l_root_allocated == NULL || clu_list_remove(&clu_l_root_allocated, h, &size))
+    if(clu_l_root_allocated == NULL || !clu_list_remove(&clu_l_root_allocated, h, &size))
     {
         printf("\n");
         printf("\n");

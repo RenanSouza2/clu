@@ -8,12 +8,12 @@
 #include "../lib/tag/struct.h"
 #include "../lib/trie/header.h"
 
-list_p clu_l_root_allocated = NULL;
-list_p clu_l_root_static = NULL;
-trie_p clu_t_root_freed = NULL;
-uint64_t clu_max_occupancy = 0;
-uint64_t clu_occupancy = 0;
-bool clu_log_allocations = false;
+
+
+#undef malloc
+#undef calloc
+#undef realloc
+#undef free
 
 
 
@@ -30,6 +30,16 @@ clu_mutex_nested_t clu_mut = (clu_mutex_nested_t)
     .thread_id = 0,
     .depth = 0
 };
+
+list_p clu_l_root_allocated = NULL;
+list_p clu_l_root_static = NULL;
+trie_p clu_t_root_freed = NULL;
+bool clu_log_allocations = false;
+uint64_t clu_max_occupancy = 0;
+uint64_t clu_occupancy = 0;
+uint64_t clu_register_count = 0;
+
+
 
 void clu_mut_nested_lock(clu_mutex_nested_p mut)
 {
@@ -61,13 +71,6 @@ void clu_mut_nested_unlock(clu_mutex_nested_p mut)
     mut->thread_id = 0;
     TREAT(pthread_mutex_unlock(&mut->mut));
 }
-
-
-
-#undef malloc
-#undef calloc
-#undef realloc
-#undef free
 
 
 
@@ -163,6 +166,8 @@ void clu_handler_allocate(
     clu_occupancy += size;
     if(clu_occupancy > clu_max_occupancy)
         clu_max_occupancy = clu_occupancy;
+
+    clu_register_count++;
 
     clu_mut_nested_unlock(&clu_mut);
 }
@@ -545,6 +550,21 @@ uint64_t clu_get_max_occupancy()
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_max_occupancy;
+    clu_mut_nested_unlock(&clu_mut);
+    return res;
+}
+
+void clu_clean_max_occupancy()
+{
+    clu_mut_nested_lock(&clu_mut);
+    clu_max_occupancy = 0;
+    clu_mut_nested_unlock(&clu_mut);
+}
+
+uint64_t clu_get_register_count()
+{
+    clu_mut_nested_lock(&clu_mut);
+    uint64_t res = clu_register_count;
     clu_mut_nested_unlock(&clu_mut);
     return res;
 }

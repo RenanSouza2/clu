@@ -38,6 +38,8 @@ void clu_log_enable(bool _log_allocations);
 
 uint64_t clu_get_occupancy();
 uint64_t clu_get_max_occupancy();
+void clu_clean_max_occupancy();
+uint64_t clu_get_register_count();
 
 #define CLU_DEFAULT_TAG "f|%s|l|%d", __func__, __LINE__
 

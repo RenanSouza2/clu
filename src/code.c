@@ -34,7 +34,7 @@ clu_mutex_nested_t clu_mut = (clu_mutex_nested_t)
 list_p clu_l_root_allocated = NULL;
 list_p clu_l_root_static = NULL;
 trie_p clu_t_root_freed = NULL;
-bool clu_log_allocations = false;
+uint64_t clu_log_level = 0;
 uint64_t clu_max_occupancy = 0;
 uint64_t clu_occupancy = 0;
 uint64_t clu_register_count = 0;
@@ -160,7 +160,7 @@ void clu_handler_allocate(
         exit(EXIT_FAILURE);
     }
 
-    if(clu_log_allocations)
+    if(clu_log_level >= 1)
         printf("\n%s | %s | %p | %lu\t", fn, tag.str, h, size);
 
     clu_occupancy += size;
@@ -241,7 +241,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         exit(EXIT_FAILURE);
     }
 
-    if(clu_log_allocations)
+    if(clu_log_level >= 1)
         printf("\n\t%s | %s | %p\t", fn, tag.str, h);
 
     clu_occupancy -= size;
@@ -362,7 +362,7 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
     clu_list_remove(&clu_l_root_static, h, NULL);
     clu_list_insert(&clu_l_root_static, &tag, h, 0);
 
-    if(clu_log_allocations)
+    if(clu_log_level >= 2)
         printf("\nstatic | %s | %p\t", tag.str, h);
 
     clu_mut_nested_unlock(&clu_mut);
@@ -460,7 +460,7 @@ bool clu_mem_is_empty()
 
     if(clu_l_root_allocated)
     {
-        clu_mem_report_opts("ASSERT FAIL | MEMORY NOT EMPTY", clu_log_allocations);
+        clu_mem_report_opts("ASSERT FAIL | MEMORY NOT EMPTY", clu_log_level >= 1);
         clu_mut_nested_unlock(&clu_mut);
         return false;
     }
@@ -529,10 +529,10 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
 
 
 
-void clu_log_enable(bool _clu_log_allocations)
+void clu_log_level_set(uint64_t _clu_log_level)
 {
     clu_mut_nested_lock(&clu_mut);
-    clu_log_allocations = _clu_log_allocations;
+    clu_log_level = _clu_log_level;
     clu_mut_nested_unlock(&clu_mut);
 }
 

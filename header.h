@@ -34,7 +34,10 @@ uint64_t clu_get_max_i();
 uint64_t clu_get_max_j(uint64_t i);
 handler_p clu_get_handler(uint64_t i, uint64_t j);
 
-void clu_log_enable(bool _log_allocations);
+#define CLU_LOG_DISABLED 0
+#define CLU_LOG_DYNAMIC 1
+#define CLU_LOG_ALL 2
+void clu_log_level_set(uint64_t _clu_log_level);
 
 uint64_t clu_get_occupancy();
 uint64_t clu_get_max_occupancy();

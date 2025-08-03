@@ -96,7 +96,7 @@ void clu_handler_allocate(
         printf("\n\tfn  : %s", fn);
         printf("\n");
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     if(h == NULL)
@@ -112,7 +112,7 @@ void clu_handler_allocate(
         printf("\n\tfn   : %s", fn);
         printf("\n");
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     if(clu_list_contains(clu_l_root_static, h))
@@ -133,7 +133,7 @@ void clu_handler_allocate(
         printf("\n\tpreviously registered at: %s", tag_prev.str);
         printf("\n");
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     if(clu_t_root_freed)
@@ -157,7 +157,7 @@ void clu_handler_allocate(
         printf("\n\tpreviously registered at: %s", tag_prev.str);
         printf("\n");
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     if(clu_log_level >= 1)
@@ -187,7 +187,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         printf("\n\ttag : %s", tag.str);
         printf("\n\tfn  : %s", fn);
         printf("\n");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
     
     if(clu_list_contains(clu_l_root_static, h))
@@ -207,7 +207,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         printf("\n\tpreviously registered at: %s", tag_prev.str);
         printf("\n");
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     if(!clu_trie_insert(&clu_t_root_freed, h, 0))
@@ -222,7 +222,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         printf("\n\ttag : %s", tag.str);
         printf("\n\tfn  : %s", fn);
         printf("\n");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     uint64_t size;
@@ -238,7 +238,7 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
         printf("\n\ttag : %s", tag.str);
         printf("\n\tfn  : %s", fn);
         printf("\n");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     if(clu_log_level >= 1)
@@ -356,7 +356,7 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
         printf("\n\ttag  : %s", tag.str);
         printf("\n");
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     clu_list_remove(&clu_l_root_static, h, NULL);
@@ -400,7 +400,7 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
         printf("\n\th   : %p", h);
         printf("\n\ttag : %s", tag.str);
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     if(!clu_handler_is_allocated(h))
@@ -417,7 +417,7 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
         printf("\n\th   : %p", h);
         printf("\n\ttag : %s", tag.str);
         printf("\n\t");
-        exit(EXIT_FAILURE);
+        assert(false);
     }
 
     clu_mut_nested_unlock(&clu_mut);

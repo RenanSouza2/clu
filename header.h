@@ -25,12 +25,12 @@ bool clu_handler_is_static(handler_p h);
 
 void clu_mem_report(char const tag[]);
 void clu_mem_report_full(char const tag[]);
-bool clu_mem_is_empty();
+bool clu_mem_is_empty(void);
 
 bool clu_handler_is_allocated(handler_p h);
 bool clu_handler_is_freed(handler_p h);
 
-uint64_t clu_get_max_i();
+uint64_t clu_get_max_i(void);
 uint64_t clu_get_max_j(uint64_t i);
 handler_p clu_get_handler(uint64_t i, uint64_t j);
 
@@ -39,10 +39,10 @@ handler_p clu_get_handler(uint64_t i, uint64_t j);
 #define CLU_LOG_ALL 2
 void clu_log_level_set(uint64_t _clu_log_level);
 
-uint64_t clu_get_occupancy();
-uint64_t clu_get_max_occupancy();
-void clu_clean_max_occupancy();
-uint64_t clu_get_register_count();
+uint64_t clu_get_occupancy(void);
+uint64_t clu_get_max_occupancy(void);
+void clu_clean_max_occupancy(void);
+uint64_t clu_get_register_count(void);
 
 #define CLU_DEFAULT_TAG "f|%s|l|%d", __func__, __LINE__
 

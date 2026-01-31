@@ -553,7 +553,7 @@ void test_trie_contains(bool show)
 
 
 
-void test_trie()
+void test_trie(void)
 {
     TEST_LIB
 
@@ -578,7 +578,7 @@ void test_trie()
 
 
 
-int main()
+int main(void)
 {
     setbuf(stdout, NULL);
     test_trie();

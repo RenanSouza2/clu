@@ -89,7 +89,7 @@ void test_tag_eq(bool show)
 
 
 
-void test_tag()
+void test_tag(void)
 {
     TEST_LIB
 
@@ -103,7 +103,7 @@ void test_tag()
 
 
 
-int main()
+int main(void)
 {
     setbuf(stdout, NULL);
     test_tag();

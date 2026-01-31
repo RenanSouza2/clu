@@ -1,4 +1,3 @@
-#include "../debug.h"
 #include "../../../testrc.h"
 #include "../../../mods/macros/test.h"
 
@@ -16,7 +15,7 @@ void test_mem_fn(bool show)
 
 
 
-void test_list()
+void test_list(void)
 {
     TEST_LIB
 
@@ -29,7 +28,7 @@ void test_list()
 
 
 
-int main()
+int main(void)
 {
     setbuf(stdout, NULL);
     test_list();

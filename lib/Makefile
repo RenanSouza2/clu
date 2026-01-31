@@ -37,7 +37,7 @@ clean c:
 	$(MAKE) _clean -s
 
 _clean:
-	echo "cleaning num $(DIR)"
+	echo "cleaning clu $(DIR)"
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
 		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \

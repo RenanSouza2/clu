@@ -554,7 +554,7 @@ void test_list_get_trie(bool show)
 
 
 
-void test_list()
+void test_list(void)
 {
     TEST_LIB
 
@@ -576,7 +576,7 @@ void test_list()
 
 
 
-int main()
+int main(void)
 {
     setbuf(stdout, NULL);
     test_list();

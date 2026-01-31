@@ -7,7 +7,7 @@ build: bin.o
 
 bin.o: $(LIB) $(SRC)
 	echo " linking clu"
-	ld -r -o $@ $^
+	gcc -r -o $@ $^
 
 .PHONY: $(SRC)
 $(SRC):

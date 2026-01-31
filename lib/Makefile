@@ -3,7 +3,7 @@ DIRS := $(wildcard */.)
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
-DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
+DIR = $(shell basename $(CURDIR))
 
 
 

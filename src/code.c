@@ -24,8 +24,7 @@ STRUCT(clu_mutex_nested)
     uint64_t depth;
 };
 
-clu_mutex_nested_t clu_mut = (clu_mutex_nested_t)
-{
+clu_mutex_nested_t clu_mut = {
     .mut = PTHREAD_MUTEX_INITIALIZER,
     .thread_id = 0,
     .depth = 0

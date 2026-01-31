@@ -10,14 +10,14 @@ void test_offset(bool show)
 {
     TEST_FN_OPEN
 
-    #define TEST_OFFSET(TAG, IN, RES)   \
-    {                                   \
-        TEST_CASE_OPEN(TAG)             \
-        {                               \
-            uint64_t res = OFFSET(IN);  \
+    #define TEST_OFFSET(TAG, IN, RES)       \
+    {                                       \
+        TEST_CASE_OPEN(TAG)                 \
+        {                                   \
+            uint64_t res = OFFSET(IN);      \
             assert(clu_uint64(res, RES));   \
-        }                               \
-        TEST_CASE_CLOSE;                \
+        }                                   \
+        TEST_CASE_CLOSE;                    \
     }
 
     TEST_OFFSET(1, 15, 60);

@@ -3,7 +3,7 @@ FLAGS_PRD = -O2 -march=native -fstack-protector-strong -fstack-clash-protection
 FLAGS_DBG = -D DEBUG -O0 -g3 -ggdb -fno-omit-frame-pointer -fsanitize=address,undefined,leak
 
 LIB_ROOT = $(shell git rev-parse --show-toplevel 2>/dev/null)/lib
-DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
+DIR = $(shell basename $(CURDIR))
 
 
 

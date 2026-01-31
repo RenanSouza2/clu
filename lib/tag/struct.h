@@ -1,7 +1,7 @@
 #ifndef __TAG_STRUCT_H__
 #define __TAG_STRUCT_H__
 
-#include "header.h"
+#include "../../mods/macros/struct.h"
 
 #include <stdarg.h>
 

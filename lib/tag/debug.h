@@ -1,7 +1,7 @@
 #ifndef __TAG_DEBUG_H__
 #define __TAG_DEBUG_H__
 
-#include "struct.h"
+#include "header.h"
 
 #ifdef DEBUG
 

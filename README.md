@@ -36,4 +36,4 @@ You can get leaked pointer to inspect their content with these functions
 
 
 Logs
-- `clu_set_log(bool)`: set it to true so every handler registered or unregistered is logged
+- `clu_log_enable(bool)`: set it to true so every handler registered or unregistered is logged

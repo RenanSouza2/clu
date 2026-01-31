@@ -3,7 +3,7 @@
 #include "debug.h"
 #include "../mem/header.h"
 #include "../../mods/macros/assert.h"
-#include "../../mods/macros/U64.h"
+#include "../../mods/macros/uint.h"
 
 
 
@@ -15,7 +15,7 @@
 trie_p clu_trie_create_variadic_tree_rec(va_list *args)
 {
     handler_p h = va_arg(*args, handler_p);
-    trie_p t = clu_trie_create(h);
+    trie_p t = clu_trie_create(h, h ? 1 : 0);
     if(h)
         return t;
 
@@ -57,7 +57,7 @@ trie_p clu_trie_create_variadic_list(uint64_t n, va_list *args)
     for(uint64_t i=0; i<n; i++)
     {
         handler_p h = va_arg(*args, handler_p);
-        assert(clu_trie_insert(&t, h));
+        assert(clu_trie_insert(&t, h, 1));
     }
 
     uint64_t n_remove = va_arg(*args, uint64_t);
@@ -65,7 +65,9 @@ trie_p clu_trie_create_variadic_list(uint64_t n, va_list *args)
     for(uint64_t i=0; i<n_remove; i++)
     {
         handler_p h = va_arg(*args, handler_p);
-        assert(clu_trie_remove(&t, h));
+        uint64_t size;
+        assert(clu_trie_remove(&t, h, &size));
+        assert(size == 1);
     }
     return t;
 }
@@ -154,21 +156,37 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 
     if(t_1->h != NULL)
     {
+        if(t_1->size == 0)
+        {
+            printf("\n\n\tTRIE ASSERT ERROR\t| HANDLER IS NOT ZERO BUT SIZE IS ZERO");
+            return false;
+        }
+
         for(uint64_t i=0; i<index; i++)
+        {
             if(!clu_uint64(GET(t_1->h, i), GET(h, i)))
             {
                 printf("\n\tTRIE ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", t_1->h, h, index);
                 return false;
             }
+        }
 
         for(uint64_t i=0; i<16; i++)
+        {
             if(t_1->arr[i])
             {
                 printf("\n\n\tTRIE ASSERT ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
                 return false;
             }
+        }
 
         return true;
+    }
+
+    if(!clu_uint64(t_1->size, 0))
+    {
+        printf("\n\n\tTRIE ASSERT ERROR\t| HANDLER IS ZERO BUT SIZE IS NOT");
+        return false;
     }
 
     for(uint64_t i=0; i<16; i++)
@@ -237,12 +255,13 @@ void clu_trie_display(trie_p t)
 
 
 
-trie_p clu_trie_create(handler_p h)
+trie_p clu_trie_create(handler_p h, uint64_t size)
 {
     trie_p t;
     CALLOC(t, trie);
 
     t->h = h;
+    t->size = size;
     return t;
 }
 
@@ -260,14 +279,14 @@ void clu_trie_free(trie_p t)
 
 
 
-bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t index)
+bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint64_t index)
 {
     trie_p t = *t_root;
     uint64_t key = GET(h, index);
 
     if(t == NULL)
     {
-        *t_root = clu_trie_create(h);
+        *t_root = clu_trie_create(h, size);
         return true;
     }
 
@@ -276,14 +295,15 @@ bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t index)
         if(t->h == h)
             return false;
 
-        assert(clu_trie_insert_rec(&t->arr[GET(t->h, index)], t->h, index + 1));
+        assert(clu_trie_insert_rec(&t->arr[GET(t->h, index)], t->h, t->size, index + 1));
         t->h = NULL;
+        t->size = 0;
     }
 
-    return clu_trie_insert_rec(&t->arr[key], h, index + 1);
+    return clu_trie_insert_rec(&t->arr[key], h, size, index + 1);
 }
 
-bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index)
+bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index, uint64_p size)
 {
     trie_p t = *t_root;
     if(t == NULL)
@@ -294,12 +314,15 @@ bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index)
         if(t->h != h)
             return false;
 
+        if(size)
+            *size = t->size;
+
         FREE(t, trie);
         *t_root = NULL;
         return true;
     }
 
-    if(!clu_trie_remove_rec(&t->arr[GET(h, index)], h, index + 1))
+    if(!clu_trie_remove_rec(&t->arr[GET(h, index)], h, index + 1, size))
         return false;
 
     for(uint64_t i=0; i<SIZE; i++)
@@ -313,21 +336,21 @@ bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index)
 
 
 
-bool clu_trie_insert(trie_p *t_root, handler_p h)
+bool clu_trie_insert(trie_p *t_root, handler_p h, uint64_t size)
 {
     assert(t_root);
     assert(h);
 
-    return clu_trie_insert_rec(t_root, h, 0);
+    return clu_trie_insert_rec(t_root, h, size, 0);
 }
 
-bool clu_trie_remove(trie_p *t_root, handler_p h)
+bool clu_trie_remove(trie_p *t_root, handler_p h, uint64_p size)
 {
     assert(t_root);
     assert(*t_root);
     assert(h);
 
-    return clu_trie_remove_rec(t_root, h, 0);
+    return clu_trie_remove_rec(t_root, h, 0, size);
 }
 
 

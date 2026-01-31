@@ -3,19 +3,23 @@ DIRS := $(wildcard */.)
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
-DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
+DIR = $(shell basename $(CURDIR))
+
+
 
 build: lib.o
+
+dbg: debug.o
 
 
 
 lib.o: $(LIB_FILES)
-	echo " linking clu object $(DIR)"
-	ld -r -o $@ $^
+	echo " linking num object $(DIR)"
+	gcc -r -o $@ $^ -flto
 
 debug.o: $(DGB_FILES)
-	echo " linking debug $(DIR)"
-	ld -r -o $@ $^
+	echo " linking num debug $(DIR)"
+	gcc -r -o $@ $^ -fsanitize=address,undefined,leak
 
 
 
@@ -25,7 +29,7 @@ $(LIB_FILES):
 
 .PHONY: $(DGB_FILES)
 $(DGB_FILES):
-	$(MAKE) debug.o --directory=$(dir $@)
+	$(MAKE) dbg --directory=$(dir $@)
 
 
 
@@ -43,7 +47,7 @@ _clean:
 
 .PHONY: test
 test t:
-	$(MAKE) debug.o
+	$(MAKE) dbg -s
 	$(MAKE) _test -s
 
 _test:

@@ -5,7 +5,7 @@
 #include "../mem/header.h"
 
 #include "../../mods/macros/assert.h"
-#include "../../mods/macros/U64.h"
+#include "../../mods/macros/uint.h"
 
 
 #ifdef DEBUG
@@ -18,7 +18,7 @@ list_p clu_list_create_variadic_item(va_list *args)
     tag_t tag = va_arg(*args, tag_t);
     list_p l = clu_list_create(&tag, NULL);
     int n = va_arg(*args, int);
-    l->t = clu_trie_create_variadic_list(n, args);
+    l->t = clu_trie_create_variadic_list((uint64_t)n, args);
     assert(l->t);
     return l;
 }
@@ -106,7 +106,7 @@ bool clu_list_immed(list_p l, uint64_t n, ...)
 
 
 
-void clu_list_report(list_p l, char tag[], bool full)
+void clu_list_report(list_p l, char const tag[], bool full)
 {
     printf("\n\tCLU REPORT: %s", tag);
     if(l == NULL)
@@ -159,7 +159,7 @@ void clu_list_free(list_p l_root)
         clu_trie_free(l->t);
 }
 
-bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h)
+bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h, uint64_t size)
 {
     assert(l_root);
     assert(tag);
@@ -173,17 +173,17 @@ bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h)
         if(!clu_tag_eq(&l->tag, tag))
             continue;
 
-        assert(clu_trie_insert(&l->t, h));
+        assert(clu_trie_insert(&l->t, h, size));
         return true;
     }
 
     list_p l = clu_list_create(tag, *l_root);
-    assert(clu_trie_insert(&l->t, h));
+    assert(clu_trie_insert(&l->t, h, size));
     *l_root = l;
     return true;
 }
 
-bool clu_list_remove(list_p *l_root, handler_p h)
+bool clu_list_remove(list_p *l_root, handler_p h, uint64_p size)
 {
     assert(l_root);
     assert(h);
@@ -192,8 +192,8 @@ bool clu_list_remove(list_p *l_root, handler_p h)
     if(l == NULL)
         return false;
 
-    if(!clu_trie_remove(&l->t, h))
-        return clu_list_remove(&l->next, h);
+    if(!clu_trie_remove(&l->t, h, size))
+        return clu_list_remove(&l->next, h, size);
 
     if(l->t == NULL)
         *l_root = clu_list_pop(l);
@@ -229,4 +229,13 @@ bool clu_list_contains(list_p l, handler_p h)
             return true;
 
     return false;
+}
+
+tag_t clu_list_get_tag(list_p l, handler_p h) // TODO test
+{
+    for(; l; l = l->next)
+        if(clu_trie_contains(l->t, h))
+            return l->tag;
+
+    assert(false)
 }

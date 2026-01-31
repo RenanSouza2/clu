@@ -14,6 +14,7 @@
 STRUCT(trie)
 {
     handler_p h;
+    uint64_t size;
     trie_p arr[SIZE];
 };
 

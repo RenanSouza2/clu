@@ -18,7 +18,7 @@ list_p clu_list_create_variadic_item(va_list *args)
     tag_t tag = va_arg(*args, tag_t);
     list_p l = clu_list_create(&tag, NULL);
     int n = va_arg(*args, int);
-    l->t = clu_trie_create_variadic_list(n, args);
+    l->t = clu_trie_create_variadic_list((uint64_t)n, args);
     assert(l->t);
     return l;
 }

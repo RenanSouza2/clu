@@ -10,8 +10,8 @@
 extern uint64_t list_alive;
 extern uint64_t trie_alive;
 
-void clu_mem_internal_display();
-bool clu_mem_internal_empty();
+void clu_mem_internal_display(void);
+bool clu_mem_internal_empty(void);
 
 #define CLU_MEM_INTERNAL_LOG_STATUS false
 
@@ -27,14 +27,14 @@ bool clu_mem_internal_empty();
 
 #define INC(HANDLER, NAME)                                  \
     {                                                       \
-        CLU_MEM_INTERNAL_LOG("allocating: %p", HANDLER);    \
+        CLU_MEM_INTERNAL_LOG("allocating: %p", (handler_p)HANDLER);    \
         NAME##_alive++;                                     \
     }
 
 #define DEC(HANDLER, NAME)                              \
     {                                                   \
         assert(NAME##_alive);                           \
-        CLU_MEM_INTERNAL_LOG("\tfreeing: %p", HANDLER); \
+        CLU_MEM_INTERNAL_LOG("\tfreeing: %p", (handler_p)HANDLER); \
         NAME##_alive--;                                 \
     }
 

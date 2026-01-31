@@ -7,8 +7,9 @@ DIR = $(shell basename $(CURDIR))
 build b: code.o
 
 code.o: code.c
-	echo "building clu object $(DIR)"
+	echo "building clu $(DIR)"
 	gcc -o $@ $^ $(FLAGS) -c -D DEBUG
 
 clean c:
+	echo "cleaning clu $(DIR)"
 	rm -rf *.o

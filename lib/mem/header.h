@@ -51,7 +51,7 @@ bool clu_mem_internal_empty();
         free(HANDLER);      \
     }
 
-#else
+#else // ifdef DEBUG
 
 #define FREE(HANDLER, NAME) free(HANDLER)
 
@@ -61,6 +61,6 @@ bool clu_mem_internal_empty();
         assert(VAR);                        \
     }
 
-#endif
+#endif // ifdef DEBUG
 
-#endif
+#endif // ifndef __MEM_DEBUG_H__

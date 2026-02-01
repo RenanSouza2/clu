@@ -20,9 +20,9 @@ bool clu_mem_internal_empty(void);
     {                                           \
         if(CLU_MEM_INTERNAL_LOG_STATUS)         \
         {                                       \
-            printf("\nclu internal log\t| ");   \
-            printf(__VA_ARGS__);                \
-            printf("\t\t");                     \
+            fprintf(stderr, "\nclu internal log\t| ");   \
+            fprintf(stderr, __VA_ARGS__);                \
+            fprintf(stderr, "\t\t");                     \
         }                                       \
     }
 

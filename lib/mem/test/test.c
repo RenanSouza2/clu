@@ -32,6 +32,6 @@ int main(void)
 {
     setbuf(stdout, NULL);
     test_list();
-    printf("\n\n\tTest successful\n\n");
+    fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;
 }

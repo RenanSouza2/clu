@@ -8,7 +8,7 @@ bool clu_tag(tag_p tag_1, tag_p tag_2)
 {
     if(!clu_tag_eq(tag_1, tag_2))
     {
-        printf("\n\n\tTAG ASSERT ERROR\t| (%s) (%s)", tag_1->str, tag_2->str);
+        fprintf(stderr, "\n\n\tTAG ASSERT ERROR\t| (%s) (%s)", tag_1->str, tag_2->str);
         return false;
     }
 

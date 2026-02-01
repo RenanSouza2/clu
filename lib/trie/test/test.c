@@ -223,7 +223,7 @@ void test_trie_insert(bool show)
 
     TEST_CASE_OPEN(5)
     {
-        if(show) printf("\n\t\t%s 5\t\t", __func__);
+        if(show) fprintf(stderr, "\n\t\t%s 5\t\t", __func__);
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
@@ -582,6 +582,6 @@ int main(void)
 {
     setbuf(stdout, NULL);
     test_trie();
-    printf("\n\n\tTest successful\n\n");
+    fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;
 }

@@ -85,54 +85,54 @@ void clu_handler_allocate(
 
     if((can_be_zero == false) && (size == 0))
     {
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tallocation failure");
-        printf("\n\tsize is ZERO");
-        printf("\n");
-        printf("\n\ttag : %s", tag.str);
-        printf("\n\tfn  : %s", fn);
-        printf("\n");
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tallocation failure");
+        fprintf(stderr, "\n\tsize is ZERO");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\ttag : %s", tag.str);
+        fprintf(stderr, "\n\tfn  : %s", fn);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     if(h == NULL)
     {
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tallocation failure");
-        printf("\n\tattempt to register NULL");
-        printf("\n");
-        printf("\n\tsize : %lu", size);
-        printf("\n\ttag  : %s", tag.str);
-        printf("\n\tfn   : %s", fn);
-        printf("\n");
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tallocation failure");
+        fprintf(stderr, "\n\tattempt to register NULL");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\tsize : %lu", size);
+        fprintf(stderr, "\n\ttag  : %s", tag.str);
+        fprintf(stderr, "\n\tfn   : %s", fn);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     if(clu_list_contains(clu_l_root_static, h))
     {
         tag_t tag_prev = clu_list_get_tag(clu_l_root_static, h);
 
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tallocation failure");
-        printf("\n\thandler alredy registered as static");
-        printf("\n");
-        printf("\n\th    : %p", h);
-        printf("\n\tsize : %lu", size);
-        printf("\n\ttag  : %s", tag.str);
-        printf("\n\tfn   : %s", fn);
-        printf("\n");
-        printf("\n\tpreviously registered at: %s", tag_prev.str);
-        printf("\n");
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tallocation failure");
+        fprintf(stderr, "\n\thandler alredy registered as static");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\th    : %p", h);
+        fprintf(stderr, "\n\tsize : %lu", size);
+        fprintf(stderr, "\n\ttag  : %s", tag.str);
+        fprintf(stderr, "\n\tfn   : %s", fn);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\tpreviously registered at: %s", tag_prev.str);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     if(clu_t_root_freed)
@@ -142,25 +142,25 @@ void clu_handler_allocate(
     {
         tag_t tag_prev = clu_list_get_tag(clu_l_root_allocated, h);
 
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tallocation failure");
-        printf("\n\thandler alredy registered");
-        printf("\n");
-        printf("\n\th    : %p", h);
-        printf("\n\tsize : %lu", size);
-        printf("\n\ttag  : %s", tag.str);
-        printf("\n\tfn   : %s", fn);
-        printf("\n");
-        printf("\n\tpreviously registered at: %s", tag_prev.str);
-        printf("\n");
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tallocation failure");
+        fprintf(stderr, "\n\thandler alredy registered");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\th    : %p", h);
+        fprintf(stderr, "\n\tsize : %lu", size);
+        fprintf(stderr, "\n\ttag  : %s", tag.str);
+        fprintf(stderr, "\n\tfn   : %s", fn);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\tpreviously registered at: %s", tag_prev.str);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     if(clu_log_level >= 1)
-        printf("\n%s | %s | %p | %lu\t", fn, tag.str, h, size);
+        fprintf(stderr, "\n%s | %s | %p | %lu\t", fn, tag.str, h, size);
 
     clu_occupancy += size;
     if(clu_occupancy > clu_max_occupancy)
@@ -177,71 +177,71 @@ void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
 
     if(h == NULL)
     {
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tfree faillure");
-        printf("\n");
-        printf("\n\tfree NULL pointer\t");
-        printf("\n\ttag : %s", tag.str);
-        printf("\n\tfn  : %s", fn);
-        printf("\n");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tfree faillure");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\tfree NULL pointer\t");
+        fprintf(stderr, "\n\ttag : %s", tag.str);
+        fprintf(stderr, "\n\tfn  : %s", fn);
+        fprintf(stderr, "\n");
+        exit(EXIT_FAILURE);
     }
     
     if(clu_list_contains(clu_l_root_static, h))
     {
         tag_t tag_prev = clu_list_get_tag(clu_l_root_static, h);
 
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tfree faillure");
-        printf("\n\tfree static pointer");
-        printf("\n");
-        printf("\n\th    : %p", h);
-        printf("\n\ttag  : %s", tag.str);
-        printf("\n\tfn   : %s", fn);
-        printf("\n");
-        printf("\n\tpreviously registered at: %s", tag_prev.str);
-        printf("\n");
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tfree faillure");
+        fprintf(stderr, "\n\tfree static pointer");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\th    : %p", h);
+        fprintf(stderr, "\n\ttag  : %s", tag.str);
+        fprintf(stderr, "\n\tfn   : %s", fn);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\tpreviously registered at: %s", tag_prev.str);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     if(!clu_trie_insert(&clu_t_root_freed, h, 0))
     {
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tfree faillure");
-        printf("\n\tdouble free");
-        printf("\n");
-        printf("\n\th   : %p", h);
-        printf("\n\ttag : %s", tag.str);
-        printf("\n\tfn  : %s", fn);
-        printf("\n");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tfree faillure");
+        fprintf(stderr, "\n\tdouble free");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\th   : %p", h);
+        fprintf(stderr, "\n\ttag : %s", tag.str);
+        fprintf(stderr, "\n\tfn  : %s", fn);
+        fprintf(stderr, "\n");
+        exit(EXIT_FAILURE);
     }
 
     uint64_t size;
     if(clu_l_root_allocated == NULL || !clu_list_remove(&clu_l_root_allocated, h, &size))
     {
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tfree faillure");
-        printf("\n\tfree not allocated pointer: %s\t", tag.str);
-        printf("\n");
-        printf("\n\th   : %p", h);
-        printf("\n\ttag : %s", tag.str);
-        printf("\n\tfn  : %s", fn);
-        printf("\n");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tfree faillure");
+        fprintf(stderr, "\n\tfree not allocated pointer: %s\t", tag.str);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\th   : %p", h);
+        fprintf(stderr, "\n\ttag : %s", tag.str);
+        fprintf(stderr, "\n\tfn  : %s", fn);
+        fprintf(stderr, "\n");
+        exit(EXIT_FAILURE);
     }
 
     if(clu_log_level >= 1)
-        printf("\n\t%s | %s | %p\t", fn, tag.str, h);
+        fprintf(stderr, "\n\t%s | %s | %p\t", fn, tag.str, h);
 
     clu_occupancy -= size;
 
@@ -346,23 +346,23 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
 
     if(h == NULL)
     {
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\tstatic register fallure");
-        printf("\n\tattempt to register NULL");
-        printf("\n");
-        printf("\n\ttag  : %s", tag.str);
-        printf("\n");
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tstatic register fallure");
+        fprintf(stderr, "\n\tattempt to register NULL");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\ttag  : %s", tag.str);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     clu_list_remove(&clu_l_root_static, h, NULL);
     clu_list_insert(&clu_l_root_static, &tag, h, 0);
 
     if(clu_log_level >= 2)
-        printf("\nstatic | %s | %p\t", tag.str, h);
+        fprintf(stderr, "\nstatic | %s | %p\t", tag.str, h);
 
     clu_mut_nested_unlock(&clu_mut);
 }
@@ -390,16 +390,16 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
         va_list args;
         va_start(args, format);
         tag_t tag = clu_tag_format_variadic(format, args);
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\thandler not safe");
-        printf("\n\thandler already freed");
-        printf("\n");
-        printf("\n\th   : %p", h);
-        printf("\n\ttag : %s", tag.str);
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\thandler not safe");
+        fprintf(stderr, "\n\thandler already freed");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\th   : %p", h);
+        fprintf(stderr, "\n\ttag : %s", tag.str);
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     if(!clu_handler_is_allocated(h))
@@ -407,16 +407,16 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
         va_list args;
         va_start(args, format);
         tag_t tag = clu_tag_format_variadic(format, args);
-        printf("\n");
-        printf("\n");
-        printf("\n\t---------------");
-        printf("\n\thandler not safe");
-        printf("\n\thandler not allocated");
-        printf("\n");
-        printf("\n\th   : %p", h);
-        printf("\n\ttag : %s", tag.str);
-        printf("\n\t");
-        assert(false);
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\thandler not safe");
+        fprintf(stderr, "\n\thandler not allocated");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\th   : %p", h);
+        fprintf(stderr, "\n\ttag : %s", tag.str);
+        fprintf(stderr, "\n\t");
+        exit(EXIT_FAILURE);
     }
 
     clu_mut_nested_unlock(&clu_mut);
@@ -428,11 +428,11 @@ void clu_mem_report_opts(char const tag[], bool full)
 {
     clu_mut_nested_lock(&clu_mut);
 
-    printf("\n");
-    printf("\n----------------------");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "\n----------------------");
     clu_list_report(clu_l_root_allocated, tag, full);
-    printf("\n----------------------");
-    printf("\n");
+    fprintf(stderr, "\n----------------------");
+    fprintf(stderr, "\n");
 
     clu_mut_nested_unlock(&clu_mut);
 }

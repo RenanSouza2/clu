@@ -453,7 +453,7 @@ void clu_mem_report_full(char const tag[])
 
 
 
-bool clu_mem_is_empty()
+bool clu_mem_is_empty(void)
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -500,7 +500,7 @@ bool clu_handler_is_freed(handler_p h)
 
 
 
-uint64_t clu_get_max_i()
+uint64_t clu_get_max_i(void)
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_list_count(clu_l_root_allocated);
@@ -537,7 +537,7 @@ void clu_log_level_set(uint64_t _clu_log_level)
 
 
 
-uint64_t clu_get_occupancy()
+uint64_t clu_get_occupancy(void)
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_occupancy;
@@ -545,7 +545,7 @@ uint64_t clu_get_occupancy()
     return res;
 }
 
-uint64_t clu_get_max_occupancy()
+uint64_t clu_get_max_occupancy(void)
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_max_occupancy;
@@ -553,14 +553,14 @@ uint64_t clu_get_max_occupancy()
     return res;
 }
 
-void clu_clean_max_occupancy()
+void clu_clean_max_occupancy(void)
 {
     clu_mut_nested_lock(&clu_mut);
     clu_max_occupancy = 0;
     clu_mut_nested_unlock(&clu_mut);
 }
 
-uint64_t clu_get_register_count()
+uint64_t clu_get_register_count(void)
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_register_count;

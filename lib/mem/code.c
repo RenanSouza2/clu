@@ -7,7 +7,7 @@
 uint64_t list_alive;
 uint64_t trie_alive;
 
-void clu_mem_internal_display()
+void clu_mem_internal_display(void)
 {
     printf("\n");
     printf("\n\tlist_alive: " U64P() "", list_alive);
@@ -15,7 +15,7 @@ void clu_mem_internal_display()
     printf("\n");
 }
 
-bool clu_mem_internal_empty()
+bool clu_mem_internal_empty(void)
 {
     if(list_alive != 0 || trie_alive != 0)
     {

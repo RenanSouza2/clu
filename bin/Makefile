@@ -14,16 +14,12 @@ build: clu.o
 
 clu.o: $(LIB) $(SRC)
 	echo " linking clu"
-	gcc -r -o $@ $^ -flto -nostdlib
+	gcc -r $(FLAGS) $(FLAGS_PRD) -o $@ $^ -flto -nostdlib
 
 
 
-.PHONY: $(SRC)
-$(SRC):
-	$(MAKE) --directory=$(dir $@)
-
-.PHONY: $(LIB)
-$(LIB):
+.PHONY: $(SRC) $(LIB)
+$(SRC) $(LIB):
 	$(MAKE) --directory=$(dir $@)
 
 clean _clean:

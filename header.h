@@ -56,7 +56,7 @@ uint64_t clu_get_register_count(void);
 #define CLU_HANDLER_UNREGISTER(HANDLER) clu_handler_unregister(HANDLER, CLU_DEFAULT_TAG);
 #define CLU_HANDLER_REGISTER_STATIC(HANDLER) clu_handler_register_static(HANDLER, CLU_DEFAULT_TAG);
 
-#else
+#else // DEBUG
 
 #define CLU_HANDLER_IS_SAFE(HANDLER)
 #define CLU_HANDLER_REGISTER(HANDLER)

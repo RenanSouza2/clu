@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "../../mods/macros/uint.h"
+#include "../../mods/macros/assert.h"
 
 extern uint64_t list_alive;
 extern uint64_t trie_alive;

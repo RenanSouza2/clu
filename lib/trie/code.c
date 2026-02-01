@@ -87,18 +87,18 @@ void clu_trie_display_dbg_rec(trie_p t, uint64_t index)
 
     if(t->h)
     {
-        if(index) printf("\t");
-        printf("h: %p", t->h);
+        if(index) fprintf(stderr, "\t");
+        fprintf(stderr, "h: %p", t->h);
         return;
     }
 
     for(uint64_t i=0; i<SIZE; i++)
         if(t->arr[i])
         {
-            printf("\n");
+            fprintf(stderr, "\n");
             for(uint64_t k=0; k<index; k++)
-                printf("\t");
-            printf("i: " U64P() "", i);
+                fprintf(stderr, "\t");
+            fprintf(stderr, "i: " U64P() "", i);
             clu_trie_display_dbg_rec(t->arr[i], index + 1);
         }
 }
@@ -107,13 +107,13 @@ void clu_trie_display_dbg(trie_p t)
 {
     if(t == NULL)
     {
-        printf("\nEMPTY LIST");
+        fprintf(stderr, "\nEMPTY LIST");
         return;
     }
 
-    printf("\n");
+    fprintf(stderr, "\n");
     clu_trie_display_dbg_rec(t, 0);
-    printf("\n");
+    fprintf(stderr, "\n");
 }
 
 
@@ -122,7 +122,7 @@ bool clu_uint64(uint64_t i1, uint64_t i2)
 {
     if(i1 != i2)
     {
-        printf("\n\n\tUINT64 ASSERT ERROR\t| " U64P() " " U64P() "", i1, i2);
+        fprintf(stderr, "\n\n\tUINT64 ASSERT ERROR\t| " U64P() " " U64P() "", i1, i2);
         return false;
     }
 
@@ -135,7 +135,7 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
     {
         if(t_2 != NULL)
         {
-            printf("\n\n\tTRIE ASSERT ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
+            fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
             return false;
         }
 
@@ -144,13 +144,13 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 
     if(t_2 == NULL)
     {
-        printf("\n\n\tTRIE ASSERT ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
+        fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
         return false;
     }
 
     if(t_1->h != t_2->h)
     {
-        printf("\n\n\tTRIE ASSERT ERROR\t| H MISMATCH 1 | %p %p | H %p | I " U64P() "", t_1->h, t_2->h, h, index);
+        fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| H MISMATCH 1 | %p %p | H %p | I " U64P() "", t_1->h, t_2->h, h, index);
         return false;
     }
 
@@ -158,7 +158,7 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
     {
         if(t_1->size == 0)
         {
-            printf("\n\n\tTRIE ASSERT ERROR\t| HANDLER IS NOT ZERO BUT SIZE IS ZERO");
+            fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| HANDLER IS NOT ZERO BUT SIZE IS ZERO");
             return false;
         }
 
@@ -166,7 +166,7 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
         {
             if(!clu_uint64(GET(t_1->h, i), GET(h, i)))
             {
-                printf("\n\tTRIE ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", t_1->h, h, index);
+                fprintf(stderr, "\n\tTRIE ASSERT ERROR\t| H MISMATCH 2 | %p | H  %p | I " U64P() "", t_1->h, h, index);
                 return false;
             }
         }
@@ -175,7 +175,7 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
         {
             if(t_1->arr[i])
             {
-                printf("\n\n\tTRIE ASSERT ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
+                fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| L1 HAS H AND BRANCH | %p " U64P() " " U64P() "", h, i, index);
                 return false;
             }
         }
@@ -185,7 +185,7 @@ bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 
     if(!clu_uint64(t_1->size, 0))
     {
-        printf("\n\n\tTRIE ASSERT ERROR\t| HANDLER IS ZERO BUT SIZE IS NOT");
+        fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| HANDLER IS ZERO BUT SIZE IS NOT");
         return false;
     }
 
@@ -245,7 +245,7 @@ void clu_trie_display(trie_p t)
 
     if(t->h)
     {
-        printf("\n\t%p\t", t->h);
+        fprintf(stderr, "\n\t%p\t", t->h);
         return;
     }
 

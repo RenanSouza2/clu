@@ -51,13 +51,13 @@ bool clu_list_inner(list_p l_1, list_p l_2)
     {
         if(!clu_tag(&l_1->tag, &l_2->tag))
         {
-            printf("\n\tLIST ASSERT ERROR\t| TAG MISMATCH | INDEX " U64P() "", i);
+            fprintf(stderr, "\n\tLIST ASSERT ERROR\t| TAG MISMATCH | INDEX " U64P() "", i);
             return false;
         }
 
         if(!clu_trie_inner(l_1->t, l_2->t))
         {
-            printf("\n\tLIST ASSERT ERROR\t| TRIE MISMATCH | " U64P() "", i);
+            fprintf(stderr, "\n\tLIST ASSERT ERROR\t| TRIE MISMATCH | " U64P() "", i);
             return false;
         }
 
@@ -67,13 +67,13 @@ bool clu_list_inner(list_p l_1, list_p l_2)
 
     if(l_2)
     {
-        printf("\n\tLIST ASSERT ERROR\t| LIST SHORTER");
+        fprintf(stderr, "\n\tLIST ASSERT ERROR\t| LIST SHORTER");
         return false;
     }
 
     if(l_1)
     {
-        printf("\n\tLIST ASSERT ERROR\t| LIST LONGER");
+        fprintf(stderr, "\n\tLIST ASSERT ERROR\t| LIST LONGER");
         return false;
     }
 
@@ -108,10 +108,10 @@ bool clu_list_immed(list_p l, uint64_t n, ...)
 
 void clu_list_report(list_p l, char const tag[], bool full)
 {
-    printf("\n\tCLU REPORT: %s", tag);
+    fprintf(stderr, "\n\tCLU REPORT: %s", tag);
     if(l == NULL)
     {
-        printf("\n\nEMPTY LIST");
+        fprintf(stderr, "\n\nEMPTY LIST");
         return;
     }
 
@@ -119,13 +119,13 @@ void clu_list_report(list_p l, char const tag[], bool full)
     {
         if(full)
         {
-            printf("\n%s", l->tag.str);
+            fprintf(stderr, "\n%s", l->tag.str);
             clu_trie_display(l->t);
         }
         else
         {
             uint64_t count = clu_trie_count(l->t);
-            printf("\n%s: " U64P() "", l->tag.str, count);
+            fprintf(stderr, "\n%s: " U64P() "", l->tag.str, count);
         }
     }
 }
@@ -237,5 +237,5 @@ tag_t clu_list_get_tag(list_p l, handler_p h) // TODO test
         if(clu_trie_contains(l->t, h))
             return l->tag;
 
-    assert(false)
+    exit(EXIT_FAILURE);
 }

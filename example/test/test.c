@@ -19,6 +19,6 @@ int main()
 {
     setbuf(stdout, NULL);
     test_example();
-    printf("\n\n\tTest successful\n\n");
+    fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;
 }

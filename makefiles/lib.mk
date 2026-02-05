@@ -1,13 +1,12 @@
-include $(shell git rev-parse --show-toplevel)/makefiles/flags.mk
-
-LIB_ROOT = $(shell git rev-parse --show-toplevel)/lib
-DIR = $(shell basename $(CURDIR))
-
+ROOT = $(shell git rev-parse --show-toplevel)
+include $(ROOT)/makefiles/flags.mk
+include $(ROOT)/makefiles/vars.mk
 
 
-build: lib.o
 
-dbg: debug.o
+build b: lib.o
+
+dbg d: debug.o
 
 
 

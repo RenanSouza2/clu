@@ -1,24 +1,27 @@
-include $(shell git rev-parse --show-toplevel)/makefiles/flags.mk
+ROOT = $(shell git rev-parse --show-toplevel)
+include $(ROOT)/makefiles/flags.mk
+include $(ROOT)/makefiles/vars.mk
 
-LIB = ../lib/lib.o
+
+
 SRC = ../src/code.o
 
 
 
 build: clu.o
 
-clu.o: $(LIB) $(SRC)
+clu.o: $(SRC) $(LIB_FILE)
 	echo " linking clu"
 	gcc -r $(FLAGS) $(FLAGS_PRD) -o $@ $^ -flto -nostdlib
 
 
 
-.PHONY: $(SRC) $(LIB)
-$(SRC) $(LIB):
+.PHONY: $(SRC) $(LIB_FILE)
+$(SRC) $(LIB_FILE):
 	$(MAKE) --directory=$(dir $@)
 
 clean _clean:
 	echo "cleaning clu"
 	rm -rf *.o
-	$(MAKE) clean --directory=$(dir $(LIB))
+	$(MAKE) clean --directory=$(dir $(LIB_FILE))
 	$(MAKE) clean --directory=$(dir $(SRC))

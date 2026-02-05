@@ -1,10 +1,8 @@
-DEBUG_FILE = $(LIB_ROOT)/debug.o
-
 test: runner
 	echo "running test $(DIR)"
 	./runner
 
-runner: test.c $(DEBUG_FILE)
+runner: test.c $(DBG_FILE)
 	echo "building test $(DIR)"
 	gcc -o $@ $^ $(FLAGS) $(FLAGS_DBG)
 

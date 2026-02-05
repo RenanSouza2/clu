@@ -78,7 +78,7 @@ void clu_handler_allocate(
     tag_t tag,
     size_t size,
     bool can_be_zero,
-    char fn[]
+    const char fn[]
 )
 {
     clu_mut_nested_lock(&clu_mut);
@@ -171,7 +171,7 @@ void clu_handler_allocate(
     clu_mut_nested_unlock(&clu_mut);
 }
 
-void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
+void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 {
     clu_mut_nested_lock(&clu_mut);
 

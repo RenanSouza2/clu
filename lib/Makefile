@@ -1,4 +1,6 @@
-include $(shell git rev-parse --show-toplevel)/makefiles/flags.mk
+ROOT = $(shell git rev-parse --show-toplevel)
+include $(ROOT)/makefiles/flags.mk
+include $(ROOT)/makefiles/vars.mk
 
 
 
@@ -6,8 +8,6 @@ DIRS := $(wildcard */.)
 
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
-
-DIR = $(shell basename $(CURDIR))
 
 
 

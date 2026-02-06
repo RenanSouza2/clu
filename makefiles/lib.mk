@@ -11,11 +11,11 @@ dbg d: debug.o
 
 
 lib.o: code.c
-	echo "building clu object $(DIR)"
+	echo "building $(PROJECT) object $(DIR)"
 	gcc -o $@ $^ $(FLAGS) $(FLAGS_PRD) -c
 
 debug.o: code.c
-	echo "building clu debug $(DIR)"
+	echo "building $(PROJECT) debug $(DIR)"
 	gcc -o $@ $^ $(FLAGS) $(FLAGS_DBG) -c
 
 
@@ -24,7 +24,7 @@ clean c:
 	$(MAKE) clean --directory=$(LIB_ROOT) -s
 
 _clean:
-	echo "cleaning clu $(DIR)"
+	echo "cleaning $(PROJECT) $(DIR)"
 	rm -f *.o
 	$(MAKE) clean --directory=test
 

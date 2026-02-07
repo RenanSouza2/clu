@@ -11,19 +11,19 @@ DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
 
 
-build: lib.o
+build: $(LIB_FILE)
 
-dbg: debug.o
+dbg: $(DBG_FILE)
 
 
 
-lib.o: $(LIB_FILES)
+$(LIB_FILE): $(LIB_FILES)
 	echo " linking clu object $(DIR)"
-	gcc -r $(FLAGS) $(FLAGS_PRD) -o $@ $^ -flto -nostdlib
+	gcc -r $(FLAGS) $(FLAGS_PRD) -o $@ $^ -nostdlib
 
-debug.o: $(DGB_FILES)
+$(DBG_FILE): $(DGB_FILES)
 	echo " linking clu debug $(DIR)"
-	gcc -r $(FLAGS) $(FLAGS_DBG)  -o $@ $^ -flto -nostdlib
+	gcc -r $(FLAGS) $(FLAGS_DBG)  -o $@ $^ -nostdlib
 
 
 

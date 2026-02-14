@@ -19,11 +19,11 @@ dbg: $(DBG_FILE)
 
 $(LIB_FILE): $(LIB_FILES)
 	echo " linking clu object $(DIR)"
-	gcc -r $(FLAGS) $(FLAGS_PRD) -o $@ $^ -nostdlib
+	gcc $(FLAGS) $(FLAGS_PRD) $(FLAGS_LNK) -o $@ $^
 
 $(DBG_FILE): $(DGB_FILES)
 	echo " linking clu debug $(DIR)"
-	gcc -r $(FLAGS) $(FLAGS_DBG)  -o $@ $^ -nostdlib
+	gcc $(FLAGS) $(FLAGS_DBG) $(FLAGS_LNK) -o $@ $^
 
 
 

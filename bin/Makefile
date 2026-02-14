@@ -12,7 +12,7 @@ build: clu.o
 
 clu.o: $(SRC) $(LIB_FILE)
 	echo " linking clu"
-	gcc -r $(FLAGS) $(FLAGS_PRD) -o $@ $^ -nostdlib
+	gcc $(FLAGS) $(FLAGS_PRD) $(FLAGS_LNK) -o $@ $^
 
 
 

@@ -16,3 +16,9 @@ ifeq ($(shell uname -s),Linux)
 	FLAGS_CMP += -fPIE
 	FLAGS_EXE += -pie -Wl,-z,relro -Wl,-z,now -Wl,-z,defs
 endif
+
+ifeq ($(shell uname -s),Darwin)
+    FLAGS += -Wunreachable-code -Wunreachable-code-break -Wconditional-uninitialized -Wmissing-variable-declarations
+
+    FLAGS_EXE += -Wl,-fatal_warnings -Wl,-dead_strip
+endif

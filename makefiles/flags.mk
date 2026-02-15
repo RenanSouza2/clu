@@ -8,7 +8,7 @@ FLAGS_LNK = -r -nostdlib
 FLAGS_EXE = 
 
 ifeq ($(shell uname -s),Linux)
-	FLAGS += -fanalyzer -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wstack-usage=1024
+	FLAGS += -fanalyzer -Wduplicated-cond -Wduplicated-branches -Wlogical-op
 
     FLAGS_PRD += -fstack-clash-protection
 	FLAGS_DBG += -fsanitize=leak

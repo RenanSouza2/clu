@@ -24,19 +24,19 @@ STRUCT(clu_mutex_nested)
     uint64_t depth;
 };
 
-clu_mutex_nested_t clu_mut = {
+static clu_mutex_nested_t clu_mut = {
     .mut = PTHREAD_MUTEX_INITIALIZER,
     .thread_id = 0,
     .depth = 0
 };
 
-list_p clu_l_root_allocated = NULL;
-list_p clu_l_root_static = NULL;
-trie_p clu_t_root_freed = NULL;
-uint64_t clu_log_level = 0;
-uint64_t clu_max_occupancy = 0;
-uint64_t clu_occupancy = 0;
-uint64_t clu_register_count = 0;
+static list_p clu_l_root_allocated = NULL;
+static list_p clu_l_root_static = NULL;
+static trie_p clu_t_root_freed = NULL;
+static uint64_t clu_log_level = 0;
+static uint64_t clu_max_occupancy = 0;
+static uint64_t clu_occupancy = 0;
+static uint64_t clu_register_count = 0;
 
 
 
@@ -78,7 +78,7 @@ void clu_handler_allocate(
     tag_t tag,
     size_t size,
     bool can_be_zero,
-    char fn[]
+    const char fn[]
 )
 {
     clu_mut_nested_lock(&clu_mut);
@@ -171,7 +171,7 @@ void clu_handler_allocate(
     clu_mut_nested_unlock(&clu_mut);
 }
 
-void clu_handler_deallocate(handler_p h, tag_t tag, char fn[])
+void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 {
     clu_mut_nested_lock(&clu_mut);
 

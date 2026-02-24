@@ -1,6 +1,6 @@
-include $(shell git rev-parse --show-toplevel)/makefiles/flags.mk
-
-DIR = $(shell basename $(CURDIR))
+ROOT = $(shell git rev-parse --show-toplevel)
+include $(ROOT)/makefiles/flags.mk
+include $(ROOT)/makefiles/vars.mk
 
 
 

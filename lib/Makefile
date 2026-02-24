@@ -1,4 +1,6 @@
-include $(shell git rev-parse --show-toplevel)/makefiles/flags.mk
+ROOT = $(shell git rev-parse --show-toplevel)
+include $(ROOT)/makefiles/flags.mk
+include $(ROOT)/makefiles/vars.mk
 
 
 
@@ -7,23 +9,21 @@ DIRS := $(wildcard */.)
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
-DIR = $(shell basename $(CURDIR))
+
+
+build: $(LIB_FILE)
+
+dbg: $(DBG_FILE)
 
 
 
-build: lib.o
-
-dbg: debug.o
-
-
-
-lib.o: $(LIB_FILES)
+$(LIB_FILE): $(LIB_FILES)
 	echo " linking clu object $(DIR)"
-	gcc -r $(FLAGS) $(FLAGS_PRD) -o $@ $^ -flto -nostdlib
+	gcc $(FLAGS) $(FLAGS_PRD) $(FLAGS_LNK) -o $@ $^
 
-debug.o: $(DGB_FILES)
+$(DBG_FILE): $(DGB_FILES)
 	echo " linking clu debug $(DIR)"
-	gcc -r $(FLAGS) $(FLAGS_DBG)  -o $@ $^ -flto -nostdlib
+	gcc $(FLAGS) $(FLAGS_DBG) $(FLAGS_LNK) -o $@ $^
 
 
 

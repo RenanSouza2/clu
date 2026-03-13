@@ -136,7 +136,9 @@ void clu_handler_allocate(
     }
 
     if(clu_t_root_freed)
+    {
         clu_trie_remove(&clu_t_root_freed, h, NULL);
+    }
 
     if(!clu_list_insert(&clu_l_root_allocated, &tag, h, size))
     {
@@ -160,11 +162,15 @@ void clu_handler_allocate(
     }
 
     if(clu_log_level >= 1)
-        fprintf(stderr, "\n%s | %s | %p | %lu\t", fn, tag.str, h, size);
+    {
+        fprintf(stderr, "\n\t%s | %s | %p | %lu\t", fn, tag.str, h, size);
+    }
 
     clu_occupancy += size;
     if(clu_occupancy > clu_max_occupancy)
+    {   
         clu_max_occupancy = clu_occupancy;
+    }
 
     clu_register_count++;
 
@@ -241,7 +247,9 @@ void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
     }
 
     if(clu_log_level >= 1)
-        fprintf(stderr, "\n\t%s | %s | %p\t", fn, tag.str, h);
+    {
+        fprintf(stderr, "\n\t\t%s | %s | %p\t", fn, tag.str, h);
+    }
 
     clu_occupancy -= size;
 
@@ -362,7 +370,9 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
     clu_list_insert(&clu_l_root_static, &tag, h, 0);
 
     if(clu_log_level >= 2)
-        fprintf(stderr, "\nstatic | %s | %p\t", tag.str, h);
+    {
+        fprintf(stderr, "\n\tstatic | %s | %p\t", tag.str, h);
+    }
 
     clu_mut_nested_unlock(&clu_mut);
 }

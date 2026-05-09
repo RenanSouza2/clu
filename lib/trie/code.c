@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-trie_p clu_trie_create_variadic_tree_rec(va_list *args)
+static trie_p clu_trie_create_variadic_tree_rec(va_list *args)
 {
     handler_p h = va_arg(*args, handler_p);
     trie_p t = clu_trie_create(h, h ? 1 : 0);
@@ -32,7 +32,7 @@ trie_p clu_trie_create_variadic_tree_rec(va_list *args)
     return t;
 }
 
-trie_p clu_trie_create_variadic_tree(bool content, va_list *args)
+static trie_p clu_trie_create_variadic_tree(bool content, va_list *args)
 {
     if(!content)
         return NULL;
@@ -81,7 +81,7 @@ trie_p clu_trie_create_immed_list(uint64_t n, ...)
 
 
 
-void clu_trie_display_dbg_rec(trie_p t, uint64_t index)
+static void clu_trie_display_dbg_rec(trie_p t, uint64_t index)
 {
     assert(t);
 
@@ -129,7 +129,7 @@ bool clu_uint64(uint64_t i1, uint64_t i2)
     return true;
 }
 
-bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
+static bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 {
     if(t_1 == NULL)
     {
@@ -208,7 +208,7 @@ bool clu_trie_inner(trie_p t_1, trie_p t_2)
     return true;
 }
 
-bool clu_trie(trie_p t_1, trie_p t_2)
+static bool clu_trie(trie_p t_1, trie_p t_2)
 {
     if(!clu_trie_inner(t_1, t_2))
         return false;
@@ -279,7 +279,7 @@ void clu_trie_free(trie_p t)
 
 
 
-bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint64_t index)
+static bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint64_t index)
 {
     trie_p t = *t_root;
     uint64_t key = GET(h, index);
@@ -303,7 +303,7 @@ bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint64_t in
     return clu_trie_insert_rec(&t->arr[key], h, size, index + 1);
 }
 
-bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index, uint64_p size)
+static bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index, uint64_p size)
 {
     trie_p t = *t_root;
     if(t == NULL)
@@ -390,7 +390,7 @@ handler_p clu_trie_get_handler(trie_p t, uint64_t j)
     exit(EXIT_FAILURE);
 }
 
-bool clu_trie_contains_rec(trie_p t, handler_p h, uint64_t index)
+static bool clu_trie_contains_rec(trie_p t, handler_p h, uint64_t index)
 {
     if(t == NULL)
         return false;

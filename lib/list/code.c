@@ -13,7 +13,7 @@
 #include "../trie/debug.h"
 #include "../tag/debug.h"
 
-list_p clu_list_create_variadic_item(va_list *args)
+static list_p clu_list_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
     list_p l = clu_list_create(&tag, NULL);
@@ -23,7 +23,7 @@ list_p clu_list_create_variadic_item(va_list *args)
     return l;
 }
 
-list_p clu_list_create_variadic(uint64_t n, va_list *args)
+static list_p clu_list_create_variadic(uint64_t n, va_list *args)
 {
     if(n == 0)
         return NULL;
@@ -45,7 +45,7 @@ list_p clu_list_create_immed(uint64_t n, ...)
 
 
 
-bool clu_list_inner(list_p l_1, list_p l_2)
+static bool clu_list_inner(list_p l_1, list_p l_2)
 {
     for(uint64_t i=0; l_1 && l_2; i++)
     {
@@ -86,6 +86,8 @@ bool clu_list(list_p l_1, list_p l_2)
     {
         clu_list_report(l_1, "l_1", true);
         clu_list_report(l_2, "l_2", true);
+        clu_list_free(l_1);
+        clu_list_free(l_2);
         return false;
     }
 

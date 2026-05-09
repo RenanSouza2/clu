@@ -40,7 +40,7 @@ static uint64_t clu_register_count = 0;
 
 
 
-void clu_mut_nested_lock(clu_mutex_nested_p mut)
+static void clu_mut_nested_lock(clu_mutex_nested_p mut)
 {
     if(pthread_mutex_trylock(&mut->mut) != 0)
     {
@@ -60,7 +60,7 @@ void clu_mut_nested_lock(clu_mutex_nested_p mut)
     mut->depth++;
 }
 
-void clu_mut_nested_unlock(clu_mutex_nested_p mut)
+static void clu_mut_nested_unlock(clu_mutex_nested_p mut)
 {
     assert(mut->depth);
     mut->depth--;
@@ -73,7 +73,7 @@ void clu_mut_nested_unlock(clu_mutex_nested_p mut)
 
 
 
-void clu_handler_allocate(
+static void clu_handler_allocate(
     handler_p h,
     tag_t tag,
     size_t size,
@@ -177,7 +177,7 @@ void clu_handler_allocate(
     clu_mut_nested_unlock(&clu_mut);
 }
 
-void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
+static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -434,7 +434,7 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
 
 
 
-void clu_mem_report_opts(char const tag[], bool full)
+static void clu_mem_report_opts(char const tag[], bool full)
 {
     clu_mut_nested_lock(&clu_mut);
 

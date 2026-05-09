@@ -3,7 +3,7 @@
 
 
 
-void test_mem_fn(bool show)
+static void test_mem_fn(bool show)
 {
     TEST_FN_OPEN
 
@@ -15,7 +15,7 @@ void test_mem_fn(bool show)
 
 
 
-void test_list(void)
+static void test_list(void)
 {
     TEST_LIB
 

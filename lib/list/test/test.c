@@ -7,7 +7,7 @@
 
 
 
-void test_list_create(bool show)
+static void test_list_create(bool show)
 {
     TEST_FN_OPEN
 
@@ -36,7 +36,7 @@ void test_list_create(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_pop(bool show)
+static void test_list_pop(bool show)
 {
     TEST_FN_OPEN
 
@@ -75,7 +75,7 @@ void test_list_pop(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_create_variadic(bool show)
+static void test_list_create_variadic(bool show)
 {
     TEST_FN_OPEN
 
@@ -135,7 +135,7 @@ void test_list_create_variadic(bool show)
 
 
 
-void test_list_insert(bool show)
+static void test_list_insert(bool show)
 {
     TEST_FN_OPEN
 
@@ -261,7 +261,7 @@ void test_list_insert(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_remove(bool show)
+static void test_list_remove(bool show)
 {
     TEST_FN_OPEN
 
@@ -397,7 +397,7 @@ void test_list_remove(bool show)
 
 
 
-void test_list_count(bool show)
+static void test_list_count(bool show)
 {
     TEST_FN_OPEN
 
@@ -432,7 +432,7 @@ void test_list_count(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_contains(bool show)
+static void test_list_contains(bool show)
 {
     TEST_FN_OPEN
 
@@ -478,7 +478,7 @@ void test_list_contains(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_get_trie(bool show)
+static void test_list_get_trie(bool show)
 {
     TEST_FN_OPEN
 
@@ -554,7 +554,7 @@ void test_list_get_trie(bool show)
 
 
 
-void test_list(void)
+static void test_list(void)
 {
     TEST_LIB
 

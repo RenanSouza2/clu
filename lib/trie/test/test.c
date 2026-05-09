@@ -6,7 +6,7 @@
 
 
 
-void test_offset(bool show)
+static void test_offset(bool show)
 {
     TEST_FN_OPEN
 
@@ -29,7 +29,7 @@ void test_offset(bool show)
     TEST_FN_CLOSE
 }
 
-void test_get(bool show)
+static void test_get(bool show)
 {
     TEST_FN_OPEN
 
@@ -48,7 +48,7 @@ void test_get(bool show)
     TEST_FN_CLOSE
 }
 
-void test_set(bool show)
+static void test_set(bool show)
 {
     TEST_FN_OPEN
 
@@ -71,7 +71,7 @@ void test_set(bool show)
     TEST_FN_CLOSE
 }
 
-void test_trie_create(bool show)
+static void test_trie_create(bool show)
 {
     TEST_FN_OPEN
 
@@ -99,7 +99,7 @@ void test_trie_create(bool show)
     TEST_FN_CLOSE
 }
 
-void test_trie_create_immed_tree(bool show)
+static void test_trie_create_immed_tree(bool show)
 {
     TEST_FN_OPEN
 
@@ -158,7 +158,7 @@ void test_trie_create_immed_tree(bool show)
 
 
 
-void test_trie_insert(bool show)
+static void test_trie_insert(bool show)
 {
     TEST_FN_OPEN
 
@@ -236,7 +236,7 @@ void test_trie_insert(bool show)
     TEST_FN_CLOSE
 }
 
-void test_trie_remove(bool show)
+static void test_trie_remove(bool show)
 {
     TEST_FN_OPEN
 
@@ -358,7 +358,7 @@ void test_trie_remove(bool show)
 
 
 
-void test_trie_count(bool show)
+static void test_trie_count(bool show)
 {
     TEST_FN_OPEN
 
@@ -395,7 +395,7 @@ void test_trie_count(bool show)
     TEST_FN_CLOSE
 }
 
-void test_trie_get_handler(bool show)
+static void test_trie_get_handler(bool show)
 {
     TEST_FN_OPEN
 
@@ -485,7 +485,7 @@ void test_trie_get_handler(bool show)
     TEST_FN_CLOSE
 }
 
-void test_trie_contains(bool show)
+static void test_trie_contains(bool show)
 {
     TEST_FN_OPEN
 
@@ -553,7 +553,7 @@ void test_trie_contains(bool show)
 
 
 
-void test_trie(void)
+static void test_trie(void)
 {
     TEST_LIB
 

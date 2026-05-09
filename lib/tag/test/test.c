@@ -6,7 +6,7 @@
 
 
 
-void test_tag_format(bool show)
+static void test_tag_format(bool show)
 {
     TEST_FN_OPEN
 
@@ -48,7 +48,7 @@ void test_tag_format(bool show)
     TEST_FN_CLOSE
 }
 
-void test_tag_eq(bool show)
+static void test_tag_eq(bool show)
 {
     TEST_FN_OPEN
 
@@ -89,7 +89,7 @@ void test_tag_eq(bool show)
 
 
 
-void test_tag(void)
+static void test_tag(void)
 {
     TEST_LIB
 

@@ -3,8 +3,6 @@
 
 #ifdef DEBUG
 
-#include <stdbool.h>
-
 #include "../../mods/macros/uint.h"
 #include "../../mods/macros/assert.h"
 

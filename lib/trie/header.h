@@ -1,8 +1,6 @@
 #ifndef __TRIE_H__
 #define __TRIE_H__
 
-#include <stdbool.h>
-
 #include "../../mods/macros/struct.h"
 #include "../../mods/macros/uint.h"
 

@@ -168,7 +168,7 @@ static void clu_handler_allocate(
 
     clu_occupancy += size;
     if(clu_occupancy > clu_max_occupancy)
-    {   
+    {
         clu_max_occupancy = clu_occupancy;
     }
 
@@ -194,7 +194,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
         fprintf(stderr, "\n");
         assert(false);
     }
-    
+
     if(clu_list_contains(clu_l_root_static, h))
     {
         tag_t tag_prev = clu_list_get_tag(clu_l_root_static, h);

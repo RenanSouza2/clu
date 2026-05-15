@@ -6,7 +6,6 @@
 #ifdef DEBUG
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdint.h>
 
 typedef void * handler_p;

@@ -5,7 +5,7 @@ FLAGS_DBG = -D DEBUG -O0 -g3 -ggdb -fno-omit-frame-pointer -fsanitize=address,un
 
 FLAGS_CMP = -c
 FLAGS_LNK = -r -nostdlib
-FLAGS_EXE = 
+FLAGS_EXE =
 
 ifeq ($(shell uname -s),Linux)
 	FLAGS += -fanalyzer -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wcast-align=strict -Walloc-zero -Wtrailing-whitespace -Wleading-whitespace=spaces

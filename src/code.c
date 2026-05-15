@@ -521,6 +521,20 @@ uint64_t clu_get_max_i(void)
 uint64_t clu_get_max_j(uint64_t i)
 {
     clu_mut_nested_lock(&clu_mut);
+    uint64_t max_i = clu_list_count(clu_l_root_allocated);
+    if(i >= max_i)
+    {
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tget max j failure");
+        fprintf(stderr, "\n\tindex i out of bounds");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\ti     : %lu", i);
+        fprintf(stderr, "\n\tmax_i : %lu", max_i);
+        fprintf(stderr, "\n");
+        assert(false);
+    }
     trie_p t = clu_list_get_trie(clu_l_root_allocated, i);
     uint64_t res = clu_trie_count(t);
     clu_mut_nested_unlock(&clu_mut);
@@ -530,7 +544,35 @@ uint64_t clu_get_max_j(uint64_t i)
 handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
     clu_mut_nested_lock(&clu_mut);
+    uint64_t max_i = clu_list_count(clu_l_root_allocated);
+    if(i >= max_i)
+    {
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tget handler failure");
+        fprintf(stderr, "\n\tindex i out of bounds");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\ti     : %lu", i);
+        fprintf(stderr, "\n\tmax_i : %lu", max_i);
+        fprintf(stderr, "\n");
+        assert(false);
+    }
     trie_p t = clu_list_get_trie(clu_l_root_allocated, i);
+    uint64_t max_j = clu_trie_count(t);
+    if(j >= max_j)
+    {
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\t---------------");
+        fprintf(stderr, "\n\tget handler failure");
+        fprintf(stderr, "\n\tindex j out of bounds");
+        fprintf(stderr, "\n");
+        fprintf(stderr, "\n\tj     : %lu", j);
+        fprintf(stderr, "\n\tmax_j : %lu", max_j);
+        fprintf(stderr, "\n");
+        assert(false);
+    }
     handler_p res = clu_trie_get_handler(t, j);
     clu_mut_nested_unlock(&clu_mut);
     return res;

@@ -530,8 +530,8 @@ uint64_t clu_get_max_j(uint64_t i)
         fprintf(stderr, "\n\tget max j failure");
         fprintf(stderr, "\n\tindex i out of bounds");
         fprintf(stderr, "\n");
-        fprintf(stderr, "\n\ti     : %lu", i);
-        fprintf(stderr, "\n\tmax_i : %lu", max_i);
+        fprintf(stderr, "\n\ti     : " U64P() "", i);
+        fprintf(stderr, "\n\tmax_i : " U64P() "", max_i);
         fprintf(stderr, "\n");
         assert(false);
     }
@@ -553,8 +553,8 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
         fprintf(stderr, "\n\tget handler failure");
         fprintf(stderr, "\n\tindex i out of bounds");
         fprintf(stderr, "\n");
-        fprintf(stderr, "\n\ti     : %lu", i);
-        fprintf(stderr, "\n\tmax_i : %lu", max_i);
+        fprintf(stderr, "\n\ti     : " U64P() "", i);
+        fprintf(stderr, "\n\tmax_i : " U64P() "", max_i);
         fprintf(stderr, "\n");
         assert(false);
     }
@@ -568,8 +568,8 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
         fprintf(stderr, "\n\tget handler failure");
         fprintf(stderr, "\n\tindex j out of bounds");
         fprintf(stderr, "\n");
-        fprintf(stderr, "\n\tj     : %lu", j);
-        fprintf(stderr, "\n\tmax_j : %lu", max_j);
+        fprintf(stderr, "\n\tj     : " U64P() "", j);
+        fprintf(stderr, "\n\tmax_j : " U64P() "", max_j);
         fprintf(stderr, "\n");
         assert(false);
     }

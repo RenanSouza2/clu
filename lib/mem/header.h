@@ -9,8 +9,8 @@
 extern uint64_t list_alive;
 extern uint64_t trie_alive;
 
-void clu_mem_internal_display(void);
-bool clu_mem_internal_empty(void);
+void clu_mem_internal_display();
+bool clu_mem_internal_empty();
 
 #define CLU_MEM_INTERNAL_LOG_STATUS false
 

@@ -83,15 +83,15 @@ static void test_trie_create(bool show)
             assert(t->h == HANDLER);                    \
             assert(clu_uint64(t->size, SIZE));          \
             for(uint64_t i=0; i<16; i++)                \
-                assert(t->arr[i] == NULL);              \
+                assert(t->arr[i] == nullptr);              \
             FREE(t, trie);                              \
         }                                               \
         TEST_CASE_CLOSE                                 \
     }
 
-    TEST_TRIE_CREATE(1, NULL, 0);
+    TEST_TRIE_CREATE(1, nullptr, 0);
     TEST_TRIE_CREATE(2, HD(1), 0);
-    TEST_TRIE_CREATE(3, NULL, 1);
+    TEST_TRIE_CREATE(3, nullptr, 1);
     TEST_TRIE_CREATE(4, HD(1), 1);
 
     #undef TEST_TRIE_CREATE
@@ -106,14 +106,14 @@ static void test_trie_create_immed_tree(bool show)
     TEST_CASE_OPEN(1)
     {
         trie_p t = clu_trie_create_immed_tree(false);
-        assert(t == NULL);
+        assert(t == nullptr);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(2)
     {
         trie_p t = clu_trie_create_immed_tree(true, HD(1));
-        assert(t != NULL);
+        assert(t != nullptr);
         assert(t->h == HD(1));
         clu_trie_free(t);
     }
@@ -121,15 +121,15 @@ static void test_trie_create_immed_tree(bool show)
 
     TEST_CASE_OPEN(3)
     {
-        trie_p t = clu_trie_create_immed_tree(true, NULL, 2,
+        trie_p t = clu_trie_create_immed_tree(true, nullptr, 2,
             1, HD(1),
             2, HD(2)
         );
-        assert(t != NULL);
-        assert(t->h == NULL);
-        assert(t->arr[1] != NULL);
+        assert(t != nullptr);
+        assert(t->h == nullptr);
+        assert(t->arr[1] != nullptr);
         assert(t->arr[1]->h == HD(1));
-        assert(t->arr[2] != NULL);
+        assert(t->arr[2] != nullptr);
         assert(t->arr[2]->h == HD(2));
         clu_trie_free(t);
     }
@@ -137,17 +137,17 @@ static void test_trie_create_immed_tree(bool show)
 
     TEST_CASE_OPEN(3)
     {
-        trie_p t = clu_trie_create_immed_tree(true, NULL, 1,
-            0, NULL, 2,
+        trie_p t = clu_trie_create_immed_tree(true, nullptr, 1,
+            0, nullptr, 2,
                 1, HD(0x10),
                 2, HD(0x20)
         );
-        assert(t != NULL);
-        assert(t->h == NULL);
-        assert(t->arr[0] != NULL);
-        assert(t->arr[0]->arr[1] != NULL);
+        assert(t != nullptr);
+        assert(t->h == nullptr);
+        assert(t->arr[0] != nullptr);
+        assert(t->arr[0]->arr[1] != nullptr);
         assert(t->arr[0]->arr[1]->h == HD(0x10));
-        assert(t->arr[0]->arr[2] != NULL);
+        assert(t->arr[0]->arr[2] != nullptr);
         assert(t->arr[0]->arr[2]->h == HD(0x20));
         clu_trie_free(t);
     }
@@ -191,7 +191,7 @@ static void test_trie_insert(bool show)
         HD(2),
         true,
         (
-            true, NULL, 2,
+            true, nullptr, 2,
                 1, HD(1),
                 2, HD(2)
         )
@@ -201,9 +201,9 @@ static void test_trie_insert(bool show)
         HD(0x211),
         true,
         (
-            true, NULL, 1,
-                1, NULL, 1,
-                    1, NULL, 2,
+            true, nullptr, 1,
+                1, nullptr, 1,
+                    1, nullptr, 2,
                         1, HD(0x111),
                         2, HD(0x211)
         )
@@ -215,7 +215,7 @@ static void test_trie_insert(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_trie_insert(NULL, HD(1), 1);
+            clu_trie_insert(nullptr, HD(1), 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -227,7 +227,7 @@ static void test_trie_insert(bool show)
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_trie_insert(&t, NULL, 1);
+            clu_trie_insert(&t, nullptr, 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -269,20 +269,20 @@ static void test_trie_remove(bool show)
     );
     TEST_TRIE_REMOVE(3,
         (
-            true, NULL, 2,
+            true, nullptr, 2,
                 1, HD(1),
                 2, HD(2)
         ),
         HD(2),
         true,
         (
-            true, NULL, 1,
+            true, nullptr, 1,
                 1, HD(1)
         )
     );
     TEST_TRIE_REMOVE(4,
         (
-            true, NULL, 1,
+            true, nullptr, 1,
                 1, HD(1)
         ),
         HD(1),
@@ -291,30 +291,30 @@ static void test_trie_remove(bool show)
     );
     TEST_TRIE_REMOVE(5,
         (
-            true, NULL, 1,
-                1, NULL, 2,
+            true, nullptr, 1,
+                1, nullptr, 2,
                     1, HD(0x11),
                     2, HD(0x21)
         ),
         HD(0x11),
         true,
         (
-            true, NULL, 1,
-                1, NULL, 1,
+            true, nullptr, 1,
+                1, nullptr, 1,
                     2, HD(0x21)
         )
     );
     TEST_TRIE_REMOVE(6,
         (
-            true, NULL, 1,
-                1, NULL, 1,
+            true, nullptr, 1,
+                1, nullptr, 1,
                     2, HD(0x21)
         ),
         HD(1),
         false,
         (
-            true, NULL, 1,
-                1, NULL, 1,
+            true, nullptr, 1,
+                1, nullptr, 1,
                     2, HD(0x21)
         )
     );
@@ -325,7 +325,7 @@ static void test_trie_remove(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_trie_remove(NULL, HD(1), NULL);
+            clu_trie_remove(nullptr, HD(1), nullptr);
         }
         TEST_REVERT_CLOSE
     }
@@ -336,7 +336,7 @@ static void test_trie_remove(bool show)
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_trie_remove(&t, HD(1), NULL);
+            clu_trie_remove(&t, HD(1), nullptr);
         }
         TEST_REVERT_CLOSE
     }
@@ -347,7 +347,7 @@ static void test_trie_remove(bool show)
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
-            clu_trie_remove(&t, NULL, NULL);
+            clu_trie_remove(&t, nullptr, nullptr);
         }
         TEST_REVERT_CLOSE
     }
@@ -381,11 +381,11 @@ static void test_trie_count(bool show)
         true, HD(1)
     );
     TEST_TRIE_COUNT(3, 1,
-        true, NULL, 1,
+        true, nullptr, 1,
             1, HD(1)
     );
     TEST_TRIE_COUNT(4, 2,
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
@@ -415,16 +415,16 @@ static void test_trie_get_handler(bool show)
         true, HD(1)
     );
     TEST_TRIE_GET_HANDLER(2, 0, HD(1),
-        true, NULL, 1,
+        true, nullptr, 1,
             1, HD(1)
     );
     TEST_TRIE_GET_HANDLER(3, 0, HD(1),
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
     TEST_TRIE_GET_HANDLER(4, 1, HD(2),
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
@@ -452,20 +452,20 @@ static void test_trie_get_handler(bool show)
         true, HD(1)
     );
     TEST_TRIE_GET_HANDLER(7, 1,
-        true, NULL, 1,
+        true, nullptr, 1,
             1, HD(1)
     );
     TEST_TRIE_GET_HANDLER(8, 2,
-        true, NULL, 1,
+        true, nullptr, 1,
             1, HD(1)
     );
     TEST_TRIE_GET_HANDLER(9, 2,
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
     TEST_TRIE_GET_HANDLER(10, 3,
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
@@ -476,7 +476,7 @@ static void test_trie_get_handler(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_trie_get_handler(NULL, 0);
+            clu_trie_get_handler(nullptr, 0);
         }
         TEST_REVERT_CLOSE
     }
@@ -508,17 +508,17 @@ static void test_trie_contains(bool show)
         true, HD(1)
     );
     TEST_TRIE_CONTANS(3, HD(1), true,
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
     TEST_TRIE_CONTANS(4, HD(2), true,
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
     TEST_TRIE_CONTANS(5, HD(3), false,
-        true, NULL, 2,
+        true, nullptr, 2,
             1, HD(1),
             2, HD(2)
     );
@@ -542,7 +542,7 @@ static void test_trie_contains(bool show)
     TEST_TRIE_CONTANS(6, HD(1),
         false
     );
-    TEST_TRIE_CONTANS(7, NULL,
+    TEST_TRIE_CONTANS(7, nullptr,
         true, HD(1)
     );
 
@@ -553,7 +553,7 @@ static void test_trie_contains(bool show)
 
 
 
-static void test_trie(void)
+static void test_trie()
 {
     TEST_LIB
 
@@ -578,9 +578,9 @@ static void test_trie(void)
 
 
 
-int main(void)
+int main()
 {
-    setbuf(stdout, NULL);
+    setbuf(stdout, nullptr);
     test_trie();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

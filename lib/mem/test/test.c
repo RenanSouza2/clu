@@ -15,7 +15,7 @@ static void test_mem_fn(bool show)
 
 
 
-static void test_list(void)
+static void test_list()
 {
     TEST_LIB
 
@@ -28,9 +28,9 @@ static void test_list(void)
 
 
 
-int main(void)
+int main()
 {
-    setbuf(stdout, NULL);
+    setbuf(stdout, nullptr);
     test_list();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

@@ -18,7 +18,7 @@ bool clu_tag(tag_p tag_1, tag_p tag_2)
 #endif
 
 
-__attribute__((format(printf, 1, 0)))
+[[gnu::format(printf, 1, 0)]]
 tag_t clu_tag_format_variadic(char const format[], va_list args)
 {
     tag_t tag;
@@ -27,7 +27,7 @@ tag_t clu_tag_format_variadic(char const format[], va_list args)
     return tag;
 }
 
-__attribute__((format(printf, 1, 2)))
+[[gnu::format(printf, 1, 2)]]
 tag_t clu_tag_format(char const format[], ...)
 {
     va_list args;

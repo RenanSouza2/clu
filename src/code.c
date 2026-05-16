@@ -30,9 +30,9 @@ static clu_mutex_nested_t clu_mut = {
     .depth = 0
 };
 
-static list_p clu_l_root_allocated = NULL;
-static list_p clu_l_root_static = NULL;
-static trie_p clu_t_root_freed = NULL;
+static list_p clu_l_root_allocated = nullptr;
+static list_p clu_l_root_static = nullptr;
+static trie_p clu_t_root_freed = nullptr;
 static uint64_t clu_log_level = 0;
 static uint64_t clu_max_occupancy = 0;
 static uint64_t clu_occupancy = 0;
@@ -98,13 +98,13 @@ static void clu_handler_allocate(
         assert(false);
     }
 
-    if(h == NULL)
+    if(h == nullptr)
     {
         fprintf(stderr, "\n");
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t---------------");
         fprintf(stderr, "\n\tallocation failure");
-        fprintf(stderr, "\n\tattempt to register NULL");
+        fprintf(stderr, "\n\tattempt to register nullptr");
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\tsize : %lu", size);
         fprintf(stderr, "\n\ttag  : %s", tag.str);
@@ -137,7 +137,7 @@ static void clu_handler_allocate(
 
     if(clu_t_root_freed)
     {
-        clu_trie_remove(&clu_t_root_freed, h, NULL);
+        clu_trie_remove(&clu_t_root_freed, h, nullptr);
     }
 
     if(!clu_list_insert(&clu_l_root_allocated, &tag, h, size))
@@ -181,14 +181,14 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 {
     clu_mut_nested_lock(&clu_mut);
 
-    if(h == NULL)
+    if(h == nullptr)
     {
         fprintf(stderr, "\n");
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t---------------");
         fprintf(stderr, "\n\tfree faillure");
         fprintf(stderr, "\n");
-        fprintf(stderr, "\n\tfree NULL pointer\t");
+        fprintf(stderr, "\n\tfree nullptr pointer\t");
         fprintf(stderr, "\n\ttag : %s", tag.str);
         fprintf(stderr, "\n\tfn  : %s", fn);
         fprintf(stderr, "\n");
@@ -231,7 +231,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
     }
 
     uint64_t size;
-    if(clu_l_root_allocated == NULL || !clu_list_remove(&clu_l_root_allocated, h, &size))
+    if(clu_l_root_allocated == nullptr || !clu_list_remove(&clu_l_root_allocated, h, &size))
     {
         fprintf(stderr, "\n");
         fprintf(stderr, "\n");
@@ -352,13 +352,13 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
 
-    if(h == NULL)
+    if(h == nullptr)
     {
         fprintf(stderr, "\n");
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t---------------");
         fprintf(stderr, "\n\tstatic register fallure");
-        fprintf(stderr, "\n\tattempt to register NULL");
+        fprintf(stderr, "\n\tattempt to register nullptr");
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\ttag  : %s", tag.str);
         fprintf(stderr, "\n");
@@ -366,7 +366,7 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
         assert(false);
     }
 
-    clu_list_remove(&clu_l_root_static, h, NULL);
+    clu_list_remove(&clu_l_root_static, h, nullptr);
     clu_list_insert(&clu_l_root_static, &tag, h, 0);
 
     if(clu_log_level >= 2)
@@ -383,7 +383,7 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
 {
     clu_mut_nested_lock(&clu_mut);
 
-    if(h == NULL)
+    if(h == nullptr)
     {
         clu_mut_nested_unlock(&clu_mut);
         return;
@@ -463,7 +463,7 @@ void clu_mem_report_full(char const tag[])
 
 
 
-bool clu_mem_is_empty(void)
+bool clu_mem_is_empty()
 {
     clu_mut_nested_lock(&clu_mut);
 
@@ -476,8 +476,8 @@ bool clu_mem_is_empty(void)
 
     clu_list_free(clu_l_root_static);
     clu_trie_free(clu_t_root_freed);
-    clu_l_root_static = NULL;
-    clu_t_root_freed = NULL;
+    clu_l_root_static = nullptr;
+    clu_t_root_freed = nullptr;
 
     clu_mut_nested_unlock(&clu_mut);
     return true;
@@ -510,7 +510,7 @@ bool clu_handler_is_freed(handler_p h)
 
 
 
-uint64_t clu_get_max_i(void)
+uint64_t clu_get_max_i()
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_list_count(clu_l_root_allocated);
@@ -589,7 +589,7 @@ void clu_log_level_set(uint64_t _clu_log_level)
 
 
 
-uint64_t clu_get_occupancy(void)
+uint64_t clu_get_occupancy()
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_occupancy;
@@ -597,7 +597,7 @@ uint64_t clu_get_occupancy(void)
     return res;
 }
 
-uint64_t clu_get_max_occupancy(void)
+uint64_t clu_get_max_occupancy()
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_max_occupancy;
@@ -605,14 +605,14 @@ uint64_t clu_get_max_occupancy(void)
     return res;
 }
 
-void clu_clean_max_occupancy(void)
+void clu_clean_max_occupancy()
 {
     clu_mut_nested_lock(&clu_mut);
     clu_max_occupancy = 0;
     clu_mut_nested_unlock(&clu_mut);
 }
 
-uint64_t clu_get_register_count(void)
+uint64_t clu_get_register_count()
 {
     clu_mut_nested_lock(&clu_mut);
     uint64_t res = clu_register_count;

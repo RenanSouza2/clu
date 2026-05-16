@@ -89,7 +89,7 @@ static void test_tag_eq(bool show)
 
 
 
-static void test_tag(void)
+static void test_tag()
 {
     TEST_LIB
 
@@ -103,9 +103,9 @@ static void test_tag(void)
 
 
 
-int main(void)
+int main()
 {
-    setbuf(stdout, NULL);
+    setbuf(stdout, nullptr);
     test_tag();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

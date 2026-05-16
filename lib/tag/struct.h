@@ -2,10 +2,11 @@
 #define __TAG_STRUCT_H__
 
 #include "../../mods/macros/struct.h"
+#include "../../mods/macros/uint.h"
 
 #include <stdarg.h>
 
-#define CLU_TAG_SIZE 100
+constexpr uint64_t CLU_TAG_SIZE = 100;
 
 STRUCT(tag)
 {

@@ -16,7 +16,7 @@
 static list_p clu_list_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
-    list_p l = clu_list_create(&tag, NULL);
+    list_p l = clu_list_create(&tag, nullptr);
     int n = va_arg(*args, int);
     l->t = clu_trie_create_variadic_list((uint64_t)n, args);
     assert(l->t);
@@ -26,7 +26,7 @@ static list_p clu_list_create_variadic_item(va_list *args)
 static list_p clu_list_create_variadic(uint64_t n, va_list *args)
 {
     if(n == 0)
-        return NULL;
+        return nullptr;
 
     list_p l, l_first;
     l = l_first = clu_list_create_variadic_item(args);
@@ -111,7 +111,7 @@ bool clu_list_immed(list_p l, uint64_t n, ...)
 void clu_list_report(list_p l, char const tag[], bool full)
 {
     fprintf(stderr, "\n\tCLU REPORT: %s", tag);
-    if(l == NULL)
+    if(l == nullptr)
     {
         fprintf(stderr, "\n\nEMPTY LIST");
         return;
@@ -191,13 +191,13 @@ bool clu_list_remove(list_p *l_root, handler_p h, uint64_p size)
     assert(h);
 
     list_p l = *l_root;
-    if(l == NULL)
+    if(l == nullptr)
         return false;
 
     if(!clu_trie_remove(&l->t, h, size))
         return clu_list_remove(&l->next, h, size);
 
-    if(l->t == NULL)
+    if(l->t == nullptr)
         *l_root = clu_list_pop(l);
 
     return true;

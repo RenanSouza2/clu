@@ -26,7 +26,7 @@ static trie_p clu_trie_create_variadic_tree_rec(va_list *args)
     {
         uint64_t k = va_arg(*args, uint64_t);
         assert(k < SIZE);
-        assert(t->arr[k] == NULL);
+        assert(t->arr[k] == nullptr);
         t->arr[k] = clu_trie_create_variadic_tree_rec(args);
     }
     return t;
@@ -35,7 +35,7 @@ static trie_p clu_trie_create_variadic_tree_rec(va_list *args)
 static trie_p clu_trie_create_variadic_tree(bool content, va_list *args)
 {
     if(!content)
-        return NULL;
+        return nullptr;
 
     return clu_trie_create_variadic_tree_rec(args);
 }
@@ -53,7 +53,7 @@ trie_p clu_trie_create_variadic_list(uint64_t n, va_list *args)
 {
     assert(n > 0);
 
-    trie_p t = NULL;
+    trie_p t = nullptr;
     for(uint64_t i=0; i<n; i++)
     {
         handler_p h = va_arg(*args, handler_p);
@@ -105,7 +105,7 @@ static void clu_trie_display_dbg_rec(trie_p t, uint64_t index)
 
 void clu_trie_display_dbg(trie_p t)
 {
-    if(t == NULL)
+    if(t == nullptr)
     {
         fprintf(stderr, "\nEMPTY LIST");
         return;
@@ -131,9 +131,9 @@ bool clu_uint64(uint64_t i1, uint64_t i2)
 
 static bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 {
-    if(t_1 == NULL)
+    if(t_1 == nullptr)
     {
-        if(t_2 != NULL)
+        if(t_2 != nullptr)
         {
             fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| L1 EMPTY L2 NOT | H %p | I " U64P() "", h, index);
             return false;
@@ -142,7 +142,7 @@ static bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
         return true;
     }
 
-    if(t_2 == NULL)
+    if(t_2 == nullptr)
     {
         fprintf(stderr, "\n\n\tTRIE ASSERT ERROR\t| L1 NOT EMPTY L2 IS | H %p | I " U64P() "", h, index);
         return false;
@@ -154,7 +154,7 @@ static bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
         return false;
     }
 
-    if(t_1->h != NULL)
+    if(t_1->h != nullptr)
     {
         if(t_1->size == 0)
         {
@@ -198,7 +198,7 @@ static bool clu_trie_rec(trie_p t_1, trie_p t_2, handler_p h, uint64_t index)
 
 bool clu_trie_inner(trie_p t_1, trie_p t_2)
 {
-    if(!clu_trie_rec(t_1, t_2, NULL, 0))
+    if(!clu_trie_rec(t_1, t_2, nullptr, 0))
     {
         clu_trie_display_dbg(t_1);
         clu_trie_display_dbg(t_2);
@@ -240,7 +240,7 @@ bool clu_trie_immed_list(trie_p t, uint64_t n, ...)
 
 void clu_trie_display(trie_p t)
 {
-    if(t == NULL)
+    if(t == nullptr)
         return;
 
     if(t->h)
@@ -267,10 +267,10 @@ trie_p clu_trie_create(handler_p h, uint64_t size)
 
 void clu_trie_free(trie_p t)
 {
-    if(t == NULL)
+    if(t == nullptr)
         return;
 
-    if(t->h == NULL)
+    if(t->h == nullptr)
         for(uint64_t i=0; i<SIZE; i++)
             clu_trie_free(t->arr[i]);
 
@@ -284,7 +284,7 @@ static bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint
     trie_p t = *t_root;
     uint64_t key = GET(h, index);
 
-    if(t == NULL)
+    if(t == nullptr)
     {
         *t_root = clu_trie_create(h, size);
         return true;
@@ -296,7 +296,7 @@ static bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint
             return false;
 
         assert(clu_trie_insert_rec(&t->arr[GET(t->h, index)], t->h, t->size, index + 1));
-        t->h = NULL;
+        t->h = nullptr;
         t->size = 0;
     }
 
@@ -306,7 +306,7 @@ static bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint
 static bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index, uint64_p size)
 {
     trie_p t = *t_root;
-    if(t == NULL)
+    if(t == nullptr)
         return false;
 
     if(t->h)
@@ -318,7 +318,7 @@ static bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index, uin
             *size = t->size;
 
         FREE(t, trie);
-        *t_root = NULL;
+        *t_root = nullptr;
         return true;
     }
 
@@ -330,7 +330,7 @@ static bool clu_trie_remove_rec(trie_p *t_root, handler_p h, uint64_t index, uin
             return true;
 
     FREE(t, trie);
-    *t_root = NULL;
+    *t_root = nullptr;
     return true;
 }
 
@@ -357,7 +357,7 @@ bool clu_trie_remove(trie_p *t_root, handler_p h, uint64_p size)
 
 uint64_t clu_trie_count(trie_p t)
 {
-    if(t == NULL)
+    if(t == nullptr)
         return 0;
 
     if(t->h)
@@ -392,7 +392,7 @@ handler_p clu_trie_get_handler(trie_p t, uint64_t j)
 
 static bool clu_trie_contains_rec(trie_p t, handler_p h, uint64_t index)
 {
-    if(t == NULL)
+    if(t == nullptr)
         return false;
 
     if(t->h)

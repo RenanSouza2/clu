@@ -21,7 +21,7 @@ debug.o: code.c
 
 
 clean c:
-	$(MAKE) clean --directory=$(LIB_DIR) -s
+	$(MAKE) clean --directory=$(LIB_ROOT) -s
 
 _clean:
 	echo "cleaning $(PRJ_NAME) $(DIR)"
@@ -32,7 +32,7 @@ _clean:
 
 .PHONY: test
 test t:
-	$(MAKE) dbg --directory=$(LIB_DIR) -s
+	$(MAKE) dbg --directory=$(LIB_ROOT) -s
 	$(MAKE) _test -s
 
 _test:

@@ -10,9 +10,9 @@
 
 typedef void * handler_p;
 
-[[nodiscard, gnu::malloc, gnu::alloc_size(1)]] handler_p clu_handler_malloc(size_t size, char const format[], ...);
-[[nodiscard, gnu::malloc, gnu::alloc_size(1, 2)]] handler_p clu_handler_calloc(size_t amt, size_t size, char const format[], ...);
-[[nodiscard, gnu::alloc_size(2)]] handler_p clu_handler_realloc(handler_p h, size_t size, char const format[], ...);
+[[gnu::malloc, gnu::alloc_size(1)]] handler_p clu_handler_malloc(size_t size, char const format[], ...);
+[[gnu::malloc, gnu::alloc_size(1, 2)]] handler_p clu_handler_calloc(size_t amt, size_t size, char const format[], ...);
+[[gnu::alloc_size(2)]] handler_p clu_handler_realloc(handler_p h, size_t size, char const format[], ...);
 void clu_handler_free(handler_p h, char const format[], ...);
 
 void clu_handler_register(handler_p h, char const format[], ...);
@@ -20,28 +20,28 @@ void clu_handler_unregister(handler_p h, char const format[], ...);
 void clu_handler_register_static(handler_p h, char const format[], ...);
 
 void clu_handler_is_safe(handler_p h, char const format[], ...);
-[[nodiscard]] bool clu_handler_is_static(handler_p h);
+bool clu_handler_is_static(handler_p h);
 
 void clu_mem_report(char const tag[]);
 void clu_mem_report_full(char const tag[]);
-[[nodiscard]] bool clu_mem_is_empty();
+bool clu_mem_is_empty();
 
-[[nodiscard]] bool clu_handler_is_allocated(handler_p h);
-[[nodiscard]] bool clu_handler_is_freed(handler_p h);
+bool clu_handler_is_allocated(handler_p h);
+bool clu_handler_is_freed(handler_p h);
 
-[[nodiscard]] uint64_t clu_get_max_i();
-[[nodiscard]] uint64_t clu_get_max_j(uint64_t i);
-[[nodiscard]] handler_p clu_get_handler(uint64_t i, uint64_t j);
+uint64_t clu_get_max_i();
+uint64_t clu_get_max_j(uint64_t i);
+handler_p clu_get_handler(uint64_t i, uint64_t j);
 
 constexpr int CLU_LOG_DISABLED = 0;
 constexpr int CLU_LOG_DYNAMIC = 1;
 constexpr int CLU_LOG_ALL = 2;
 void clu_log_level_set(uint64_t _clu_log_level);
 
-[[nodiscard]] uint64_t clu_get_occupancy();
-[[nodiscard]] uint64_t clu_get_max_occupancy();
+uint64_t clu_get_occupancy();
+uint64_t clu_get_max_occupancy();
 void clu_clean_max_occupancy();
-[[nodiscard]] uint64_t clu_get_register_count();
+uint64_t clu_get_register_count();
 
 #define CLU_DEFAULT_TAG "f|%s|l|%d", __func__, __LINE__
 

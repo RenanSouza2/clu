@@ -30,7 +30,7 @@ static void test_list()
 
 int main()
 {
-    setbuf(stdout, nullptr);
+    setvbuf(stdout, nullptr, _IONBF, 0);
     test_list();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

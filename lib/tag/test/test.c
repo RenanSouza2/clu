@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../debug.h"
+#include "../debug.h" // IWYU pragma: keep
 #include "../../../testrc.h"
 #include "../../../mods/macros/test.h"
 
@@ -105,7 +105,7 @@ static void test_tag()
 
 int main()
 {
-    setbuf(stdout, nullptr);
+    setvbuf(stdout, nullptr, _IONBF, 0);
     test_tag();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

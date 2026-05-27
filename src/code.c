@@ -1,6 +1,5 @@
 #include <stdlib.h>
 
-#include "../mods/macros/assert.h"
 #include "../mods/macros/threads.h"
 
 #include "../header.h"
@@ -17,18 +16,8 @@
 
 
 
-STRUCT(clu_mutex_nested)
-{
-    pthread_mutex_t mut;
-    pthread_t thread_id;
-    uint64_t depth;
-};
-
-static clu_mutex_nested_t clu_mut = {
-    .mut = PTHREAD_MUTEX_INITIALIZER,
-    .thread_id = 0,
-    .depth = 0
-};
+static pthread_mutex_t clu_mut;
+static bool clu_mut_initialized = false;
 
 static list_p clu_l_root_allocated = nullptr;
 static list_p clu_l_root_static = nullptr;
@@ -38,37 +27,34 @@ static uint64_t clu_max_occupancy = 0;
 static uint64_t clu_occupancy = 0;
 static uint64_t clu_register_count = 0;
 
-
-
-static void clu_mut_nested_lock(clu_mutex_nested_p mut)
+static void clu_mut_init()
 {
-    if(pthread_mutex_trylock(&mut->mut) != 0)
+    if (clu_mut_initialized)
     {
-        if(mut->thread_id == pthread_self())
-        {
-            mut->depth++;
-            return;
-        }
-
-        TREAT(pthread_mutex_lock(&mut->mut));
+        return;
     }
 
-    assert(mut->thread_id == 0);
-    assert(mut->depth == 0);
-
-    mut->thread_id = pthread_self();
-    mut->depth++;
+    pthread_mutexattr_t attr;
+    TREAT(pthread_mutexattr_init(&attr));
+    TREAT(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
+    TREAT(pthread_mutex_init(&clu_mut, &attr));
+    TREAT(pthread_mutexattr_destroy(&attr));
+    clu_mut_initialized = true;
 }
 
-static void clu_mut_nested_unlock(clu_mutex_nested_p mut)
+static void clu_mut_nested_lock()
 {
-    assert(mut->depth);
-    mut->depth--;
-    if(mut->depth)
-        return;
+    if (!clu_mut_initialized)
+    {
+        clu_mut_init();
+    }
 
-    mut->thread_id = 0;
-    TREAT(pthread_mutex_unlock(&mut->mut));
+    TREAT(pthread_mutex_lock(&clu_mut));
+}
+
+static void clu_mut_nested_unlock()
+{
+    TREAT(pthread_mutex_unlock(&clu_mut));
 }
 
 
@@ -81,9 +67,9 @@ static void clu_handler_allocate(
     const char fn[]
 )
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
-    if((can_be_zero == false) && (size == 0))
+    if((!can_be_zero) && (size == 0))
     {
         fprintf(stderr, "\n");
         fprintf(stderr, "\n");
@@ -174,12 +160,12 @@ static void clu_handler_allocate(
 
     clu_register_count++;
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     if(h == nullptr)
     {
@@ -253,14 +239,14 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 
     clu_occupancy -= size;
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 
 
 handler_p clu_handler_malloc(size_t size, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     handler_p h = malloc(size);
 
@@ -269,13 +255,13 @@ handler_p clu_handler_malloc(size_t size, char const format[], ...)
     tag_t tag = clu_tag_format_variadic(format, args);
     clu_handler_allocate(h, tag, size, false, "malloc");
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return h;
 }
 
 handler_p clu_handler_calloc(size_t amt, size_t size, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     handler_p h = calloc(amt, size);
 
@@ -284,30 +270,32 @@ handler_p clu_handler_calloc(size_t amt, size_t size, char const format[], ...)
     tag_t tag = clu_tag_format_variadic(format, args);
     clu_handler_allocate(h, tag, amt * size, false, "calloc");
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return h;
 }
 
 handler_p clu_handler_realloc(handler_p h, size_t size, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     va_list args;
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
     if(h)
+    {
         clu_handler_deallocate(h, tag, "realloc");
+    }
 
-    h = realloc(h, size);
-    clu_handler_allocate(h, tag, size, false, "realloc");
+    handler_p h_new = realloc(h, size);
+    clu_handler_allocate(h_new, tag, size, false, "realloc");
 
-    clu_mut_nested_unlock(&clu_mut);
-    return h;
+    clu_mut_nested_unlock();
+    return h_new;
 }
 
 void clu_handler_free(handler_p h, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     va_list args;
     va_start(args, format);
@@ -315,38 +303,38 @@ void clu_handler_free(handler_p h, char const format[], ...)
     clu_handler_deallocate(h, tag, "free");
     free(h);
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 
 
 void clu_handler_register(handler_p h, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     va_list args;
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
     clu_handler_allocate(h, tag, 0, true, "custom");
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 void clu_handler_unregister(handler_p h, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     va_list args;
     va_start(args, format);
     tag_t tag = clu_tag_format_variadic(format, args);
     clu_handler_deallocate(h, tag, "custom");
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 void clu_handler_register_static(handler_p h, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     va_list args;
     va_start(args, format);
@@ -374,24 +362,24 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
         fprintf(stderr, "\n\tstatic | %s | %p\t", tag.str, h);
     }
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 
 
 void clu_handler_is_safe(handler_p h, char const format[], ...)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     if(h == nullptr)
     {
-        clu_mut_nested_unlock(&clu_mut);
+        clu_mut_nested_unlock();
         return;
     }
 
     if(clu_list_contains(clu_l_root_static, h))
     {
-        clu_mut_nested_unlock(&clu_mut);
+        clu_mut_nested_unlock();
         return;
     }
 
@@ -429,14 +417,14 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
         assert(false);
     }
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 
 
 static void clu_mem_report_opts(char const tag[], bool full)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     fprintf(stderr, "\n");
     fprintf(stderr, "\n----------------------");
@@ -444,33 +432,33 @@ static void clu_mem_report_opts(char const tag[], bool full)
     fprintf(stderr, "\n----------------------");
     fprintf(stderr, "\n");
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 void clu_mem_report(char const tag[])
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     clu_mem_report_opts(tag, false);
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 void clu_mem_report_full(char const tag[])
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     clu_mem_report_opts(tag, true);
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 
 
 bool clu_mem_is_empty()
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
 
     if(clu_l_root_allocated)
     {
         clu_mem_report_opts("ASSERT FAIL | MEMORY NOT EMPTY", clu_log_level >= 1);
-        clu_mut_nested_unlock(&clu_mut);
+        clu_mut_nested_unlock();
         return false;
     }
 
@@ -479,32 +467,32 @@ bool clu_mem_is_empty()
     clu_l_root_static = nullptr;
     clu_t_root_freed = nullptr;
 
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return true;
 }
 
 bool clu_handler_is_allocated(handler_p h)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     bool res = clu_list_contains(clu_l_root_allocated, h);
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }
 
 bool clu_handler_is_static(handler_p h)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     bool res = clu_list_contains(clu_l_root_static, h);
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }
 
 bool clu_handler_is_freed(handler_p h)
 {
-    clu_mut_nested_lock(&clu_mut);
-    bool res = clu_t_root_freed ?
-        clu_trie_contains(clu_t_root_freed, h) : false;
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_lock();
+    // NOLINTNEXTLINE(readability-implicit-bool-conversion)
+    bool res = (clu_t_root_freed != nullptr) && clu_trie_contains(clu_t_root_freed, h);
+    clu_mut_nested_unlock();
     return res;
 }
 
@@ -512,15 +500,15 @@ bool clu_handler_is_freed(handler_p h)
 
 uint64_t clu_get_max_i()
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     uint64_t res = clu_list_count(clu_l_root_allocated);
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }
 
 uint64_t clu_get_max_j(uint64_t i)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     uint64_t max_i = clu_list_count(clu_l_root_allocated);
     if(i >= max_i)
     {
@@ -537,13 +525,14 @@ uint64_t clu_get_max_j(uint64_t i)
     }
     trie_p t = clu_list_get_trie(clu_l_root_allocated, i);
     uint64_t res = clu_trie_count(t);
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }
 
+// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     uint64_t max_i = clu_list_count(clu_l_root_allocated);
     if(i >= max_i)
     {
@@ -574,7 +563,7 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
         assert(false);
     }
     handler_p res = clu_trie_get_handler(t, j);
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }
 
@@ -582,40 +571,40 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
 
 void clu_log_level_set(uint64_t _clu_log_level)
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     clu_log_level = _clu_log_level;
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 
 
 uint64_t clu_get_occupancy()
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     uint64_t res = clu_occupancy;
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }
 
 uint64_t clu_get_max_occupancy()
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     uint64_t res = clu_max_occupancy;
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }
 
 void clu_clean_max_occupancy()
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     clu_max_occupancy = 0;
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
 }
 
 uint64_t clu_get_register_count()
 {
-    clu_mut_nested_lock(&clu_mut);
+    clu_mut_nested_lock();
     uint64_t res = clu_register_count;
-    clu_mut_nested_unlock(&clu_mut);
+    clu_mut_nested_unlock();
     return res;
 }

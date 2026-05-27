@@ -3,8 +3,7 @@
 
 #ifdef DEBUG
 
-#include "../../mods/macros/uint.h"
-#include "../../mods/macros/assert.h"
+#include "../../mods/macros/uint.h" // IWYU pragma: keep
 
 extern uint64_t list_alive;
 extern uint64_t trie_alive;
@@ -26,22 +25,22 @@ bool clu_mem_internal_empty();
 
 #define INC(HANDLER, NAME)                                  \
     {                                                       \
-        CLU_MEM_INTERNAL_LOG("allocating: %p", (handler_p)HANDLER);    \
+        CLU_MEM_INTERNAL_LOG("allocating: %p", (handler_p)(HANDLER));   \
         NAME##_alive++;                                     \
     }
 
 #define DEC(HANDLER, NAME)                              \
     {                                                   \
         assert(NAME##_alive);                           \
-        CLU_MEM_INTERNAL_LOG("\tfreeing: %p", (handler_p)HANDLER); \
+        CLU_MEM_INTERNAL_LOG("\tfreeing: %p", (handler_p)(HANDLER));    \
         NAME##_alive--;                                 \
     }
 
-#define CALLOC(VAR, NAME)                   \
-    {                                       \
-        VAR = calloc(1, sizeof(NAME##_t));  \
-        assert(VAR);                        \
-        INC(VAR, NAME);                     \
+#define CALLOC(VAR, NAME)                       \
+    {                                           \
+        (VAR) = calloc(1, sizeof(NAME##_t));    \
+        assert(VAR);                            \
+        INC(VAR, NAME);                         \
     }
 
 #define FREE(HANDLER, NAME) \

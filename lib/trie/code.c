@@ -2,7 +2,7 @@
 
 #include "debug.h"
 #include "../mem/header.h"
-#include "../../mods/macros/assert.h"
+#include "../../mods/macros/assert.h" // IWYU pragma: keep
 #include "../../mods/macros/uint.h"
 
 
@@ -44,7 +44,7 @@ trie_p clu_trie_create_immed_tree(int content, ...)
 {
     va_list args;
     va_start(args, content);
-    return  clu_trie_create_variadic_tree(content, &args);
+    return  clu_trie_create_variadic_tree((bool)content, &args);
 }
 
 
@@ -293,7 +293,9 @@ static bool clu_trie_insert_rec(trie_p *t_root, handler_p h, uint64_t size, uint
     if(t->h)
     {
         if(t->h == h)
+        {
             return false;
+        }
 
         assert(clu_trie_insert_rec(&t->arr[GET(t->h, index)], t->h, t->size, index + 1));
         t->h = nullptr;

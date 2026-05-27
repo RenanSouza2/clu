@@ -2,8 +2,6 @@
 #include "../../../testrc.h"
 #include "../../../mods/macros/test.h"
 
-#include "../../../mods/macros/uint.h"
-
 
 
 static void test_offset(bool show)
@@ -35,7 +33,7 @@ static void test_get(bool show)
 
     handler_p h = HD(0xfedcba9876543210);
 
-    for(uint64_t index=0; index<16; index++)
+    for(uint64_t index=0; index<SIZE; index++)
     {
         TEST_CASE_OPEN(index + 1)
         {
@@ -80,10 +78,10 @@ static void test_trie_create(bool show)
         TEST_CASE_OPEN(TAG)                             \
         {                                               \
             trie_p t = clu_trie_create(HANDLER, SIZE);  \
-            assert(t->h == HANDLER);                    \
+            assert(t->h == (HANDLER));                  \
             assert(clu_uint64(t->size, SIZE));          \
             for(uint64_t i=0; i<16; i++)                \
-                assert(t->arr[i] == nullptr);              \
+                assert(t->arr[i] == nullptr);           \
             FREE(t, trie);                              \
         }                                               \
         TEST_CASE_CLOSE                                 \
@@ -168,7 +166,7 @@ static void test_trie_insert(bool show)
         {                                                           \
             trie_p t = clu_trie_create_immed_tree(ARG_OPEN T_BEF);  \
             bool res = clu_trie_insert(&t, HANDLER, 1);             \
-            assert(res == RES);                                     \
+            assert(res == (RES));                                   \
             assert(clu_trie_immed_tree(t, ARG_OPEN T_AFT));         \
         }                                                           \
         TEST_CASE_CLOSE                                             \
@@ -223,7 +221,6 @@ static void test_trie_insert(bool show)
 
     TEST_CASE_OPEN(5)
     {
-        if(show) fprintf(stderr, "\n\t\t%s 5\t\t", __func__);
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN
         {
@@ -247,7 +244,7 @@ static void test_trie_remove(bool show)
             trie_p t = clu_trie_create_immed_tree(ARG_OPEN T_BEF);  \
             uint64_t size;                                          \
             bool res = clu_trie_remove(&t, HANDLER, &size);         \
-            assert(res == RES);                                     \
+            assert(res == (RES));                                   \
             assert(clu_trie_immed_tree(t, ARG_OPEN T_AFT));         \
             if(RES)                                                 \
                 assert(clu_uint64(size, 1));                        \
@@ -580,7 +577,7 @@ static void test_trie()
 
 int main()
 {
-    setbuf(stdout, nullptr);
+    setvbuf(stdout, nullptr, _IONBF, 0);
     test_trie();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

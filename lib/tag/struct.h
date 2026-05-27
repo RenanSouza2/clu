@@ -2,7 +2,7 @@
 #define __TAG_STRUCT_H__
 
 #include "../../mods/macros/struct.h"
-#include "../../mods/macros/uint.h"
+#include "../../mods/macros/uint.h" // IWYU pragma: keep
 
 #include <stdarg.h>
 

@@ -12,7 +12,6 @@ DBG_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
 
 build b: lib.o
-
 dbg d: debug.o
 
 
@@ -29,23 +28,24 @@ debug.o: $(DBG_FILES)
 
 .PHONY: $(LIB_FILES)
 $(LIB_FILES):
-	$(MAKE) --directory=$(dir $@)
+	$(MAKE) -C $(dir $@)
 
 .PHONY: $(DBG_FILES)
 $(DBG_FILES):
-	$(MAKE) dbg --directory=$(dir $@)
+	$(MAKE) dbg -C $(dir $@)
 
 
 
 clean c:
 	$(MAKE) _clean -s
 
-_clean:
+_clean:: $(addsuffix _clean,$(DIRS))
 	echo "cleaning $(PRJ_NAME) $(DIR)"
 	rm -f *.o
-	for DIR in $(DIRS) ; do \
-		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \
-	done
+
+.PHONY: $(addsuffix _clean,$(DIRS))
+$(addsuffix _clean,$(DIRS)):
+	$(MAKE) _clean -C $(dir $@)
 
 
 
@@ -54,7 +54,8 @@ test t:
 	$(MAKE) dbg -s
 	$(MAKE) _test -s
 
-_test:
-	for DIR in $(DIRS) ; do \
-		( $(MAKE) _test --directory=$$DIR ) || exit $$? ; \
-	done
+_test: $(addsuffix _test,$(DIRS))
+
+.PHONY: $(addsuffix _test,$(DIRS))
+$(addsuffix _test,$(DIRS)):
+	$(MAKE) _test -C $(dir $@)

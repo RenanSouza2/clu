@@ -17,38 +17,28 @@
 
 
 static pthread_mutex_t clu_mut;
-static bool clu_mut_initialized = false;
+static pthread_once_t clu_mut_once = PTHREAD_ONCE_INIT;
 
 static list_p clu_l_root_allocated = nullptr;
 static list_p clu_l_root_static = nullptr;
 static trie_p clu_t_root_freed = nullptr;
-static uint64_t clu_log_level = 0;
+static uint64_t clu_log_level = CLU_LOG_DISABLED;
 static uint64_t clu_max_occupancy = 0;
 static uint64_t clu_occupancy = 0;
 static uint64_t clu_register_count = 0;
 
 static void clu_mut_init()
 {
-    if (clu_mut_initialized)
-    {
-        return;
-    }
-
     pthread_mutexattr_t attr;
     TREAT(pthread_mutexattr_init(&attr));
     TREAT(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
     TREAT(pthread_mutex_init(&clu_mut, &attr));
     TREAT(pthread_mutexattr_destroy(&attr));
-    clu_mut_initialized = true;
 }
 
 static void clu_mut_nested_lock()
 {
-    if (!clu_mut_initialized)
-    {
-        clu_mut_init();
-    }
-
+    TREAT(pthread_once(&clu_mut_once, clu_mut_init));
     TREAT(pthread_mutex_lock(&clu_mut));
 }
 
@@ -147,7 +137,7 @@ static void clu_handler_allocate(
         assert(false);
     }
 
-    if(clu_log_level >= 1)
+    if(clu_log_level >= CLU_LOG_DYNAMIC)
     {
         fprintf(stderr, "\n\t%s | %s | %p | %lu\t", fn, tag.str, h, size);
     }
@@ -232,7 +222,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
         assert(false);
     }
 
-    if(clu_log_level >= 1)
+    if(clu_log_level >= CLU_LOG_DYNAMIC)
     {
         fprintf(stderr, "\n\t\t%s | %s | %p\t", fn, tag.str, h);
     }
@@ -357,7 +347,7 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
     clu_list_remove(&clu_l_root_static, h, nullptr);
     clu_list_insert(&clu_l_root_static, &tag, h, 0);
 
-    if(clu_log_level >= 2)
+    if(clu_log_level >= CLU_LOG_ALL)
     {
         fprintf(stderr, "\n\tstatic | %s | %p\t", tag.str, h);
     }
@@ -457,7 +447,7 @@ bool clu_mem_is_empty()
 
     if(clu_l_root_allocated)
     {
-        clu_mem_report_opts("ASSERT FAIL | MEMORY NOT EMPTY", clu_log_level >= 1);
+        clu_mem_report_opts("ASSERT FAIL | MEMORY NOT EMPTY", clu_log_level >= CLU_LOG_DYNAMIC);
         clu_mut_nested_unlock();
         return false;
     }

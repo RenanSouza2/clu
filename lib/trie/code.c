@@ -40,7 +40,7 @@ static trie_p clu_trie_create_variadic_tree(bool content, va_list *args)
     return clu_trie_create_variadic_tree_rec(args);
 }
 
-trie_p clu_trie_create_immed_tree(int content, ...)
+trie_p clu_trie_create_immed_tree(uint64_t content, ...)
 {
     va_list args;
     va_start(args, content);

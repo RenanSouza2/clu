@@ -53,6 +53,7 @@ uint64_t clu_get_register_count();
 #define realloc(HANDLER, SIZE) clu_handler_realloc(HANDLER, SIZE, CLU_DEFAULT_TAG)
 #define free(HANDLER) clu_handler_free(HANDLER, CLU_DEFAULT_TAG)
 
+#define malloc_tag(SIZE, ...) clu_handler_malloc(SIZE, __VA_ARGS__)
 #define calloc_tag(AMOUNT, SIZE, ...) clu_handler_calloc(AMOUNT, SIZE, __VA_ARGS__)
 
 #define CLU_HANDLER_IS_SAFE(HANDLER) clu_handler_is_safe(HANDLER, CLU_DEFAULT_TAG);
@@ -62,6 +63,7 @@ uint64_t clu_get_register_count();
 
 #else // DEBUG
 
+#define malloc_tag(SIZE, ...) malloc(SIZE)
 #define calloc_tag(AMOUNT, SIZE, ...) calloc(AMOUNT, SIZE)
 
 #define CLU_HANDLER_IS_SAFE(HANDLER)

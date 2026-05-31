@@ -33,8 +33,11 @@ uint64_t clu_get_max_i();
 uint64_t clu_get_max_j(uint64_t i);
 handler_p clu_get_handler(uint64_t i, uint64_t j);
 
+[[maybe_unused]]
 constexpr int CLU_LOG_DISABLED = 0;
+[[maybe_unused]]
 constexpr int CLU_LOG_DYNAMIC = 1;
+[[maybe_unused]]
 constexpr int CLU_LOG_ALL = 2;
 void clu_log_level_set(uint64_t _clu_log_level);
 
@@ -50,12 +53,16 @@ uint64_t clu_get_register_count();
 #define realloc(HANDLER, SIZE) clu_handler_realloc(HANDLER, SIZE, CLU_DEFAULT_TAG)
 #define free(HANDLER) clu_handler_free(HANDLER, CLU_DEFAULT_TAG)
 
+#define calloc_tag(AMOUNT, SIZE, ...) clu_handler_calloc(AMOUNT, SIZE, __VA_ARGS__)
+
 #define CLU_HANDLER_IS_SAFE(HANDLER) clu_handler_is_safe(HANDLER, CLU_DEFAULT_TAG);
 #define CLU_HANDLER_REGISTER(HANDLER) clu_handler_register(HANDLER, CLU_DEFAULT_TAG);
 #define CLU_HANDLER_UNREGISTER(HANDLER) clu_handler_unregister(HANDLER, CLU_DEFAULT_TAG);
 #define CLU_HANDLER_REGISTER_STATIC(HANDLER) clu_handler_register_static(HANDLER, CLU_DEFAULT_TAG);
 
 #else // DEBUG
+
+#define calloc_tag(AMOUNT, SIZE, ...) calloc(AMOUNT, SIZE)
 
 #define CLU_HANDLER_IS_SAFE(HANDLER)
 #define CLU_HANDLER_REGISTER(HANDLER)

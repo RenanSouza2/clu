@@ -519,7 +519,6 @@ uint64_t clu_get_max_j(uint64_t i)
     return res;
 }
 
-// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 handler_p clu_get_handler(uint64_t i, uint64_t j)
 {
     clu_mut_nested_lock();

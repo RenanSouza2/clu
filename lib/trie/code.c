@@ -438,7 +438,7 @@ handler_p clu_trie_get_handler(trie_p t, uint64_t j)
 
         j -= count;
     }
-    exit(EXIT_FAILURE);
+    assert(false);
 }
 
 static bool clu_trie_contains_rec(trie_p t, handler_p h, uint64_t index)

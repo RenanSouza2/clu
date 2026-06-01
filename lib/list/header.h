@@ -1,8 +1,6 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
-#include <stdbool.h>
-
 #include "../trie/header.h"
 #include "../tag/header.h"
 

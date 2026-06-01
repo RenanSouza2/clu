@@ -7,7 +7,7 @@
 
 
 
-void test_list_create(bool show)
+static void test_list_create(bool show)
 {
     TEST_FN_OPEN
 
@@ -15,10 +15,10 @@ void test_list_create(bool show)
 
     TEST_CASE_OPEN(1)
     {
-        list_p l = clu_list_create(&tag, NULL);
+        list_p l = clu_list_create(&tag, nullptr);
         assert(clu_tag(&l->tag, &tag));
-        assert(l->t == NULL);
-        assert(l->next == NULL);
+        assert(l->t == nullptr);
+        assert(l->next == nullptr);
         FREE(l, list);
     }
     TEST_CASE_CLOSE
@@ -27,7 +27,7 @@ void test_list_create(bool show)
     {
         list_p l = clu_list_create(&tag, L(1));
         assert(clu_tag(&l->tag, &tag));
-        assert(l->t == NULL);
+        assert(l->t == nullptr);
         assert(l->next == L(1));
         FREE(l, list);
     }
@@ -36,7 +36,7 @@ void test_list_create(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_pop(bool show)
+static void test_list_pop(bool show)
 {
     TEST_FN_OPEN
 
@@ -45,18 +45,18 @@ void test_list_pop(bool show)
 
     TEST_CASE_OPEN(1)
     {
-        list_p l = clu_list_create(&tag_1, NULL);
+        list_p l = clu_list_create(&tag_1, nullptr);
         l = clu_list_pop(l);
-        assert(l == NULL);
+        assert(l == nullptr);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(2)
     {
-        list_p l = clu_list_create(&tag_2, NULL);
+        list_p l = clu_list_create(&tag_2, nullptr);
         l = clu_list_create(&tag_1, l);
         l = clu_list_pop(l);
-        assert(l != NULL);
+        assert(l != nullptr);
         assert(clu_tag(&l->tag, &tag_2));
         FREE(l, list);
     }
@@ -66,7 +66,7 @@ void test_list_pop(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_pop(NULL);
+            clu_list_pop(nullptr);
         }
         TEST_REVERT_CLOSE
     }
@@ -75,7 +75,7 @@ void test_list_pop(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_create_variadic(bool show)
+static void test_list_create_variadic(bool show)
 {
     TEST_FN_OPEN
 
@@ -85,7 +85,7 @@ void test_list_create_variadic(bool show)
     TEST_CASE_OPEN(1)
     {
         list_p l = clu_list_create_immed(0);
-        assert(l == NULL);
+        assert(l == nullptr);
         clu_list_free(l);
     }
     TEST_CASE_CLOSE
@@ -95,9 +95,9 @@ void test_list_create_variadic(bool show)
         list_p l = clu_list_create_immed(1,
             tag_1, 1, HD(1), 0
         );
-        assert(l != NULL);
+        assert(l != nullptr);
         assert(clu_trie_immed_list(l->t, 1, HD(1), 0))
-        assert(l->next == NULL);
+        assert(l->next == nullptr);
         FREE(l, list);
     }
     TEST_CASE_CLOSE
@@ -107,9 +107,9 @@ void test_list_create_variadic(bool show)
         list_p l = clu_list_create_immed(1,
             tag_1, 2, HD(1), HD(2), 0
         );
-        assert(l != NULL);
+        assert(l != nullptr);
         assert(clu_trie_immed_list(l->t, 2, HD(1), HD(2), 0))
-        assert(l->next == NULL);
+        assert(l->next == nullptr);
         FREE(l, list);
     }
     TEST_CASE_CLOSE
@@ -120,11 +120,11 @@ void test_list_create_variadic(bool show)
             tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
         );
-        assert(l != NULL);
+        assert(l != nullptr);
         assert(clu_trie_immed_list(l->t, 1, HD(1), 0));
-        assert(l->next != NULL);
+        assert(l->next != nullptr);
         assert(clu_trie_immed_list(l->next->t, 1, HD(2), 0));
-        assert(l->next->next == NULL);
+        assert(l->next->next == nullptr);
         FREE(l->next, list);
         FREE(l, list);
     }
@@ -135,7 +135,7 @@ void test_list_create_variadic(bool show)
 
 
 
-void test_list_insert(bool show)
+static void test_list_insert(bool show)
 {
     TEST_FN_OPEN
 
@@ -147,8 +147,8 @@ void test_list_insert(bool show)
         TEST_CASE_OPEN(TAG)                                         \
         {                                                           \
             list_p l = clu_list_create_immed(ARG_OPEN L_BEF);       \
-            bool res = clu_list_insert(&l, &LTAG, HANDLER, 1);      \
-            assert(res == RES);                                     \
+            bool res = clu_list_insert(&l, &(LTAG), HANDLER, 1);    \
+            assert(res == (RES));                                   \
             assert(clu_list_immed(l, ARG_OPEN L_AFT));              \
         }                                                           \
         TEST_CASE_CLOSE                                             \
@@ -230,7 +230,7 @@ void test_list_insert(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_insert(NULL, &tag_1, HD(1), 1);
+            clu_list_insert(nullptr, &tag_1, HD(1), 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -241,7 +241,7 @@ void test_list_insert(bool show)
         list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_insert(&l, NULL, HD(1), 1);
+            clu_list_insert(&l, nullptr, HD(1), 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -252,7 +252,7 @@ void test_list_insert(bool show)
         list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_insert(&l, &tag_1, NULL, 1);
+            clu_list_insert(&l, &tag_1, nullptr, 1);
         }
         TEST_REVERT_CLOSE
     }
@@ -261,7 +261,7 @@ void test_list_insert(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_remove(bool show)
+static void test_list_remove(bool show)
 {
     TEST_FN_OPEN
 
@@ -277,7 +277,7 @@ void test_list_remove(bool show)
             list_p l = clu_list_create_immed(ARG_OPEN L_BEF);   \
             uint64_t size;                                      \
             bool res = clu_list_remove(&l, HANDLER, &size);     \
-            assert(res == RES);                                 \
+            assert(res == (RES));                               \
             assert(clu_list_immed(l, ARG_OPEN L_AFT));          \
             if(RES)                                             \
                 assert(clu_uint64(size, 1));                    \
@@ -375,7 +375,7 @@ void test_list_remove(bool show)
     {
         TEST_REVERT_OPEN
         {
-            clu_list_remove(NULL, HD(1), NULL);
+            clu_list_remove(nullptr, HD(1), nullptr);
         }
         TEST_REVERT_CLOSE
     }
@@ -386,7 +386,7 @@ void test_list_remove(bool show)
         list_p l = clu_list_create_immed(0);
         TEST_REVERT_OPEN
         {
-            clu_list_remove(&l, NULL, NULL);
+            clu_list_remove(&l, nullptr, nullptr);
         }
         TEST_REVERT_CLOSE
     }
@@ -397,7 +397,7 @@ void test_list_remove(bool show)
 
 
 
-void test_list_count(bool show)
+static void test_list_count(bool show)
 {
     TEST_FN_OPEN
 
@@ -432,7 +432,7 @@ void test_list_count(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_contains(bool show)
+static void test_list_contains(bool show)
 {
     TEST_FN_OPEN
 
@@ -478,7 +478,7 @@ void test_list_contains(bool show)
     TEST_FN_CLOSE
 }
 
-void test_list_get_trie(bool show)
+static void test_list_get_trie(bool show)
 {
     TEST_FN_OPEN
 
@@ -554,7 +554,7 @@ void test_list_get_trie(bool show)
 
 
 
-void test_list(void)
+static void test_list()
 {
     TEST_LIB
 
@@ -576,9 +576,9 @@ void test_list(void)
 
 
 
-int main(void)
+int main()
 {
-    setbuf(stdout, NULL);
+    setvbuf(stdout, nullptr, _IONBF, 0);
     test_list();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

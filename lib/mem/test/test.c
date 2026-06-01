@@ -3,7 +3,7 @@
 
 
 
-void test_mem_fn(bool show)
+static void test_mem_fn(bool show)
 {
     TEST_FN_OPEN
 
@@ -15,7 +15,7 @@ void test_mem_fn(bool show)
 
 
 
-void test_list(void)
+static void test_list()
 {
     TEST_LIB
 
@@ -28,9 +28,9 @@ void test_list(void)
 
 
 
-int main(void)
+int main()
 {
-    setbuf(stdout, NULL);
+    setvbuf(stdout, nullptr, _IONBF, 0);
     test_list();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

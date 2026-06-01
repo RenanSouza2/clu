@@ -1,10 +1,11 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "debug.h"
 #include "../trie/header.h"
 #include "../mem/header.h"
 
-#include "../../mods/macros/assert.h"
+#include "../../mods/macros/assert.h" // IWYU pragma: keep
 #include "../../mods/macros/uint.h"
 
 
@@ -13,25 +14,29 @@
 #include "../trie/debug.h"
 #include "../tag/debug.h"
 
-list_p clu_list_create_variadic_item(va_list *args)
+static list_p clu_list_create_variadic_item(va_list *args)
 {
     tag_t tag = va_arg(*args, tag_t);
-    list_p l = clu_list_create(&tag, NULL);
+    list_p l = clu_list_create(&tag, nullptr);
     int n = va_arg(*args, int);
     l->t = clu_trie_create_variadic_list((uint64_t)n, args);
     assert(l->t);
     return l;
 }
 
-list_p clu_list_create_variadic(uint64_t n, va_list *args)
+static list_p clu_list_create_variadic(uint64_t n, va_list *args)
 {
     if(n == 0)
-        return NULL;
+    {
+        return nullptr;
+    }
 
-    list_p l, l_first;
-    l = l_first = clu_list_create_variadic_item(args);
+    list_p l = clu_list_create_variadic_item(args);
+    list_p l_first = l;
     for(uint64_t i=1; i<n; i++)
+    {
         l = l->next = clu_list_create_variadic_item(args);
+    }
 
     return l_first;
 }
@@ -45,7 +50,7 @@ list_p clu_list_create_immed(uint64_t n, ...)
 
 
 
-bool clu_list_inner(list_p l_1, list_p l_2)
+static bool clu_list_inner(list_p l_1, list_p l_2)
 {
     for(uint64_t i=0; l_1 && l_2; i++)
     {
@@ -86,6 +91,8 @@ bool clu_list(list_p l_1, list_p l_2)
     {
         clu_list_report(l_1, "l_1", true);
         clu_list_report(l_2, "l_2", true);
+        clu_list_free(l_1);
+        clu_list_free(l_2);
         return false;
     }
 
@@ -109,7 +116,7 @@ bool clu_list_immed(list_p l, uint64_t n, ...)
 void clu_list_report(list_p l, char const tag[], bool full)
 {
     fprintf(stderr, "\n\tCLU REPORT: %s", tag);
-    if(l == NULL)
+    if(l == nullptr)
     {
         fprintf(stderr, "\n\nEMPTY LIST");
         return;
@@ -156,7 +163,9 @@ list_p clu_list_pop(list_p l)
 void clu_list_free(list_p l_root)
 {
     for(list_p l = l_root; l; l = clu_list_pop(l))
+    {
         clu_trie_free(l->t);
+    }
 }
 
 bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h, uint64_t size)
@@ -166,15 +175,17 @@ bool clu_list_insert(list_p *l_root, tag_p tag, handler_p h, uint64_t size)
     assert(h);
 
     if(clu_list_contains(*l_root, h))
+    {
         return false;
+    }
 
     for(list_p l = *l_root; l; l = l->next)
     {
-        if(!clu_tag_eq(&l->tag, tag))
-            continue;
-
-        assert(clu_trie_insert(&l->t, h, size));
-        return true;
+        if(clu_tag_eq(&l->tag, tag))
+        {
+            assert(clu_trie_insert(&l->t, h, size));
+            return true;
+        }
     }
 
     list_p l = clu_list_create(tag, *l_root);
@@ -189,14 +200,20 @@ bool clu_list_remove(list_p *l_root, handler_p h, uint64_p size)
     assert(h);
 
     list_p l = *l_root;
-    if(l == NULL)
+    if(l == nullptr)
+    {
         return false;
+    }
 
     if(!clu_trie_remove(&l->t, h, size))
+    {
         return clu_list_remove(&l->next, h, size);
+    }
 
-    if(l->t == NULL)
+    if(l->t == nullptr)
+    {
         *l_root = clu_list_pop(l);
+    }
 
     return true;
 }
@@ -207,7 +224,9 @@ uint64_t clu_list_count(list_p l)
 {
     uint64_t i = 0;
     for(; l; i++)
+    {
         l = l->next;
+    }
 
     return i;
 }
@@ -217,7 +236,9 @@ trie_p clu_list_get_trie(list_p l, uint64_t i)
     assert(l);
 
     if(i == 0)
+    {
         return l->t;
+    }
 
     return clu_list_get_trie(l->next, i-1);
 }
@@ -225,8 +246,12 @@ trie_p clu_list_get_trie(list_p l, uint64_t i)
 bool clu_list_contains(list_p l, handler_p h)
 {
     for(; l; l = l->next)
+    {
         if(clu_trie_contains(l->t, h))
+        {
             return true;
+        }
+    }
 
     return false;
 }
@@ -234,8 +259,12 @@ bool clu_list_contains(list_p l, handler_p h)
 tag_t clu_list_get_tag(list_p l, handler_p h) // TODO test
 {
     for(; l; l = l->next)
+    {
         if(clu_trie_contains(l->t, h))
+        {
             return l->tag;
+        }
+    }
 
-    exit(EXIT_FAILURE);
+    assert(false);
 }

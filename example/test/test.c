@@ -17,7 +17,7 @@ void test_example()
 
 int main()
 {
-    setbuf(stdout, NULL);
+    setvbuf(stdout, nullptr, _IONBF, 0);
     test_example();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

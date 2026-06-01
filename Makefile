@@ -1,13 +1,17 @@
 LIB = lib
 BIN = bin
+SRC = src
 
 
 
 build b:
-	$(MAKE) --directory=$(BIN) -s
+	$(MAKE) --directory=$(BIN) -s -j
 
-clean c:
-	$(MAKE) clean --directory=$(BIN) -s
+dbg d:
+	$(MAKE) dbg --directory=$(LIB) -s -j
+
+clean c _clean:
+	$(MAKE) clean --directory=$(BIN) -s -j
 
 test t:
-	$(MAKE) test --directory=$(LIB) -s
+	$(MAKE) test --directory=$(LIB) -s -j

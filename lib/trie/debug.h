@@ -12,7 +12,7 @@
 
 void clu_trie_display_dbg(trie_p t);
 
-trie_p clu_trie_create_immed_tree(int empty, ...);
+trie_p clu_trie_create_immed_tree(uint64_t content, ...);
 
 trie_p clu_trie_create_variadic_list(uint64_t n, va_list *args);
 trie_p clu_trie_create_immed_list(uint64_t n, ...);

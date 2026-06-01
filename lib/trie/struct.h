@@ -1,11 +1,14 @@
 #ifndef __TRIE_STRUCT_H__
 #define __TRIE_STRUCT_H__
 
-#define CHUNK 4
-#define SIZE 16
-#define INDEX_MAX 16
-#define MASK U64(0xf)
-#define SH 2
+#include "../../mods/macros/struct.h"
+#include "../../mods/macros/uint.h"
+
+[[maybe_unused]] constexpr uint64_t CHUNK = 4;
+[[maybe_unused]] constexpr uint64_t SIZE = 16;
+[[maybe_unused]] constexpr uint64_t INDEX_MAX = 16;
+[[maybe_unused]] constexpr uint64_t MASK = U64(0xf);
+[[maybe_unused]] constexpr uint64_t SH = 2;
 
 #define OFFSET(INDEX) (U64(INDEX) << SH)
 #define GET(HANDLER, INDEX) ((U64(HANDLER) >> OFFSET(INDEX)) & MASK)

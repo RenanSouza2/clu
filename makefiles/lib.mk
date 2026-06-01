@@ -1,6 +1,6 @@
-ROOT = $(shell git rev-parse --show-toplevel)
-include $(ROOT)/makefiles/flags.mk
-include $(ROOT)/makefiles/vars.mk
+PRJ_DIR = $(shell git rev-parse --show-toplevel)
+include $(PRJ_DIR)/makefiles/flags.mk
+include $(PRJ_DIR)/makefiles/vars.mk
 
 
 
@@ -11,11 +11,11 @@ dbg d: debug.o
 
 
 lib.o: code.c
-	echo "building $(PROJECT) object $(DIR)"
+	echo "building $(PRJ_NAME) object $(DIR)"
 	gcc -o $@ $^ $(FLAGS) $(FLAGS_PRD) $(FLAGS_CMP)
 
 debug.o: code.c
-	echo "building $(PROJECT) debug $(DIR)"
+	echo "building $(PRJ_NAME) debug $(DIR)"
 	gcc -o $@ $^ $(FLAGS) $(FLAGS_DBG) $(FLAGS_CMP)
 
 
@@ -24,7 +24,7 @@ clean c:
 	$(MAKE) clean --directory=$(LIB_ROOT) -s
 
 _clean:
-	echo "cleaning $(PROJECT) $(DIR)"
+	echo "cleaning $(PRJ_NAME) $(DIR)"
 	rm -f *.o
 	$(MAKE) clean --directory=test
 

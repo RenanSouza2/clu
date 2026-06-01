@@ -1,12 +1,12 @@
 #include <string.h>
 
-#include "../debug.h"
+#include "../debug.h" // IWYU pragma: keep
 #include "../../../testrc.h"
 #include "../../../mods/macros/test.h"
 
 
 
-void test_tag_format(bool show)
+static void test_tag_format(bool show)
 {
     TEST_FN_OPEN
 
@@ -48,7 +48,7 @@ void test_tag_format(bool show)
     TEST_FN_CLOSE
 }
 
-void test_tag_eq(bool show)
+static void test_tag_eq(bool show)
 {
     TEST_FN_OPEN
 
@@ -89,7 +89,7 @@ void test_tag_eq(bool show)
 
 
 
-void test_tag(void)
+static void test_tag()
 {
     TEST_LIB
 
@@ -103,9 +103,9 @@ void test_tag(void)
 
 
 
-int main(void)
+int main()
 {
-    setbuf(stdout, NULL);
+    setvbuf(stdout, nullptr, _IONBF, 0);
     test_tag();
     fprintf(stderr, "\n\n\tTest successful\n\n");
     return 0;

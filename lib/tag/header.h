@@ -1,8 +1,6 @@
 #ifndef __TAG_H__
 #define __TAG_H__
 
-#include <stdbool.h>
-
 #include "struct.h"
 
 PLACEHOLDER(tag)

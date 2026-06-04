@@ -480,7 +480,6 @@ bool clu_handler_is_static(handler_p h)
 bool clu_handler_is_freed(handler_p h)
 {
     clu_mut_nested_lock();
-    // NOLINTNEXTLINE(readability-implicit-bool-conversion)
     bool res = (clu_t_root_freed != nullptr) && clu_trie_contains(clu_t_root_freed, h);
     clu_mut_nested_unlock();
     return res;

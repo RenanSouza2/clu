@@ -73,6 +73,7 @@ uint64_t clu_get_register_count();
 
 #define CLU_PARAMS(...) __VA_OPT__(__VA_ARGS__,) char const func[], uint64_t line
 #define CLU_ARGS(...) __VA_OPT__(__VA_ARGS__,) __func__, __LINE__
+#define CLU_ARGS_RELAY(...) __VA_OPT__(__VA_ARGS__,) func, line
 
 #else // DEBUG
 
@@ -88,6 +89,7 @@ uint64_t clu_get_register_count();
 
 #define CLU_PARAMS(...) __VA_ARGS__
 #define CLU_ARGS(...) __VA_ARGS__
+#define CLU_ARGS_RELAY(...) __VA_ARGS__
 
 #endif // DEBUG
 

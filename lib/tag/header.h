@@ -1,5 +1,5 @@
-#ifndef __TAG_H__
-#define __TAG_H__
+#ifndef TAG_H
+#define TAG_H
 
 #include "struct.h"
 

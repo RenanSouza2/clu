@@ -1,5 +1,5 @@
-#ifndef __TRIE_DEBUG_H__
-#define __TRIE_DEBUG_H__
+#ifndef TRIE_DEBUG_H
+#define TRIE_DEBUG_H
 
 #include "header.h"
 #include "struct.h"

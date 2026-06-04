@@ -1,5 +1,5 @@
-#ifndef __EXAMPLE_H__
-#define __EXAMPLE_H__
+#ifndef EXAMPLE_H
+#define EXAMPLE_H
 
 #include "../../mods/macros/struct.h"
 

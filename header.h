@@ -1,5 +1,5 @@
-#ifndef __CLU_H__
-#define __CLU_H__
+#ifndef CLU_H
+#define CLU_H
 
 #include <stdlib.h>
 
@@ -52,7 +52,7 @@ uint64_t clu_get_max_occupancy();
 void clu_clean_max_occupancy();
 uint64_t clu_get_register_count();
 
-#define CLU_TAG(FUNC, LINE) "f|%s|l|" U64P() "", FUNC, (uint64_t)LINE
+#define CLU_TAG(FUNC, __LINE__) "f|%s|l|" U64P() "", FUNC, (uint64_t)__LINE__
 #define CLU_DEFAULT_TAG CLU_TAG(__func__, __LINE__)
 #define CLU_STACK_TAG CLU_TAG(func, line)
 

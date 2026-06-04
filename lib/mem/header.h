@@ -1,5 +1,5 @@
-#ifndef __MEM_DEBUG_H__
-#define __MEM_DEBUG_H__
+#ifndef MEM_DEBUG_H
+#define MEM_DEBUG_H
 
 #ifdef DEBUG
 
@@ -61,4 +61,4 @@ bool clu_mem_internal_empty();
 
 #endif // ifdef DEBUG
 
-#endif // ifndef __MEM_DEBUG_H__
+#endif // ifndef MEM_DEBUG_H

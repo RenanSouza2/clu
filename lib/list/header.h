@@ -1,5 +1,5 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef LIST_H
+#define LIST_H
 
 #include "../trie/header.h"
 #include "../tag/header.h"

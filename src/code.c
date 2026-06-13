@@ -224,7 +224,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 
     if(clu_log_level >= CLU_LOG_DYNAMIC)
     {
-        fprintf(stderr, "\n\t|\t| REMOVE | %s | %s | %p\t", fn, tag.str, h);
+        fprintf(stderr, "\n\t|\tREMOVE | %s | %s | %p\t", fn, tag.str, h);
     }
 
     clu_occupancy -= size;

@@ -468,7 +468,7 @@ static void test_list_contains(bool show)
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );
-    TEST_LIST_CONTAINS(5, HD(3), false,
+    TEST_LIST_CONTAINS(6, HD(3), false,
         2,  tag_1, 1, HD(1), 0,
             tag_2, 1, HD(2), 0
     );

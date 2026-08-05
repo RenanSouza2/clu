@@ -133,7 +133,7 @@ static void test_trie_create_immed_tree(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_CASE_OPEN(3)
+    TEST_CASE_OPEN(4)
     {
         trie_p t = clu_trie_create_immed_tree(true, nullptr, 1,
             0, nullptr, 2,
@@ -209,7 +209,7 @@ static void test_trie_insert(bool show)
 
     #undef TEST_TRIE_INSERT
 
-    TEST_CASE_OPEN(4)
+    TEST_CASE_OPEN(5)
     {
         TEST_REVERT_OPEN
         {
@@ -219,7 +219,7 @@ static void test_trie_insert(bool show)
     }
     TEST_CASE_CLOSE
 
-    TEST_CASE_OPEN(5)
+    TEST_CASE_OPEN(6)
     {
         trie_p t = clu_trie_create_immed_tree(false);
         TEST_REVERT_OPEN

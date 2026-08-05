@@ -1,5 +1,5 @@
-#ifndef __TAG_STRUCT_H__
-#define __TAG_STRUCT_H__
+#ifndef TAG_STRUCT_H
+#define TAG_STRUCT_H
 
 #include "../../mods/macros/struct.h"
 #include "../../mods/macros/uint.h" // IWYU pragma: keep

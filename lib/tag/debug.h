@@ -1,5 +1,5 @@
-#ifndef __TAG_DEBUG_H__
-#define __TAG_DEBUG_H__
+#ifndef TAG_DEBUG_H
+#define TAG_DEBUG_H
 
 #include "header.h"
 

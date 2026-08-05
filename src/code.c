@@ -139,7 +139,7 @@ static void clu_handler_allocate(
 
     if(clu_log_level >= CLU_LOG_DYNAMIC)
     {
-        fprintf(stderr, "\n\t%s | %s | %p | %lu\t", fn, tag.str, h, size);
+        fprintf(stderr, "\n\t| INCLUDE | %s | %s | %p | %lu\t", fn, tag.str, h, size);
     }
 
     clu_occupancy += size;
@@ -224,7 +224,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
 
     if(clu_log_level >= CLU_LOG_DYNAMIC)
     {
-        fprintf(stderr, "\n\t\t%s | %s | %p\t", fn, tag.str, h);
+        fprintf(stderr, "\n\t|\tREMOVE | %s | %s | %p\t", fn, tag.str, h);
     }
 
     clu_occupancy -= size;
@@ -480,7 +480,6 @@ bool clu_handler_is_static(handler_p h)
 bool clu_handler_is_freed(handler_p h)
 {
     clu_mut_nested_lock();
-    // NOLINTNEXTLINE(readability-implicit-bool-conversion)
     bool res = (clu_t_root_freed != nullptr) && clu_trie_contains(clu_t_root_freed, h);
     clu_mut_nested_unlock();
     return res;

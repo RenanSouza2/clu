@@ -1,5 +1,5 @@
-#ifndef __TRIE_STRUCT_H__
-#define __TRIE_STRUCT_H__
+#ifndef TRIE_STRUCT_H
+#define TRIE_STRUCT_H
 
 #include "../../mods/macros/struct.h"
 #include "../../mods/macros/uint.h"

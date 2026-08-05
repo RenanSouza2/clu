@@ -10,8 +10,11 @@ build b:
 dbg d:
 	$(MAKE) dbg --directory=$(LIB) -s -j
 
-clean c _clean:
+clean c:
 	$(MAKE) clean --directory=$(BIN) -s -j
 
 test t:
 	$(MAKE) test --directory=$(LIB) -s -j
+
+lint l:
+	python3 makefiles/lint_tests.py

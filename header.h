@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include "../../mods/macros/uint.h"
+#include "mods/macros/uint.h"
 
 typedef void * handler_p;
 [[gnu::malloc, gnu::alloc_size(1), gnu::format(printf, 2, 3)]]

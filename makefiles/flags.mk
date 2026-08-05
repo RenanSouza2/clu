@@ -1,11 +1,8 @@
 UNAME_S := $(shell uname -s)
 
-FLAGS = -std=c23 -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wshadow -Wpointer-arith -Wcast-qual -Wwrite-strings -Wundef -Wformat=2 -Wformat-signedness -Wnull-dereference -Wconversion -Wsign-conversion -D_POSIX_C_SOURCE=200809L -Wimplicit-fallthrough -Wfloat-equal -Wredundant-decls -Wdouble-promotion -Wmissing-include-dirs -Wswitch-enum -Wnested-externs -Wmissing-prototypes -Wdate-time -Wmissing-declarations -Walloca -Wvla
+FLAGS = -std=c23 -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wshadow -Wpointer-arith -Wcast-qual -Wwrite-strings -Wundef -Wformat=2 -Wformat-signedness -Wnull-dereference -Wconversion -Wsign-conversion -D_POSIX_C_SOURCE=200809L -Wimplicit-fallthrough -Wfloat-equal -Wredundant-decls -Wdouble-promotion -Wmissing-include-dirs -Wswitch-enum -Wnested-externs -Wmissing-prototypes -Wdate-time -Wmissing-declarations -Walloca -Wvla -march=native
 
-# Deliberately not pinhao's FLAGS_PRD: clu.o is partial-linked into pinhao's
-# *debug* binary, so it must stay real machine code. Adding -flto here would
-# hand LTO bytecode to a non-LTO final link.
-FLAGS_PRD = -O2 -march=native -fstack-protector-strong -D_FORTIFY_SOURCE=3 -ffunction-sections -fdata-sections
+FLAGS_PRD = -O2 -fstack-protector-strong -D_FORTIFY_SOURCE=3 -ffunction-sections -fdata-sections
 FLAGS_DBG = -D DEBUG -O0 -g3 -ggdb -fno-omit-frame-pointer -fsanitize=address,undefined -fno-optimize-sibling-calls
 
 FLAGS_CMP = -c -MMD -MP

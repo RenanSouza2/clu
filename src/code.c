@@ -71,7 +71,7 @@ static void clu_handler_allocate(
         fprintf(stderr, "\n\tfn  : %s", fn);
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     if(h == nullptr)
@@ -87,7 +87,7 @@ static void clu_handler_allocate(
         fprintf(stderr, "\n\tfn   : %s", fn);
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     if(clu_list_contains(clu_l_root_static, h))
@@ -108,7 +108,7 @@ static void clu_handler_allocate(
         fprintf(stderr, "\n\tpreviously registered at: %s", tag_prev.str);
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     if(clu_t_root_freed)
@@ -134,7 +134,7 @@ static void clu_handler_allocate(
         fprintf(stderr, "\n\tpreviously registered at: %s", tag_prev.str);
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     if(clu_log_level >= CLU_LOG_DYNAMIC)
@@ -168,7 +168,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
         fprintf(stderr, "\n\ttag : %s", tag.str);
         fprintf(stderr, "\n\tfn  : %s", fn);
         fprintf(stderr, "\n");
-        assert(false);
+        revert()
     }
 
     if(clu_list_contains(clu_l_root_static, h))
@@ -188,7 +188,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
         fprintf(stderr, "\n\tpreviously registered at: %s", tag_prev.str);
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     if(!clu_trie_insert(&clu_t_root_freed, h, 0))
@@ -203,7 +203,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
         fprintf(stderr, "\n\ttag : %s", tag.str);
         fprintf(stderr, "\n\tfn  : %s", fn);
         fprintf(stderr, "\n");
-        assert(false);
+        revert()
     }
 
     uint64_t size;
@@ -219,7 +219,7 @@ static void clu_handler_deallocate(handler_p h, tag_t tag, const char fn[])
         fprintf(stderr, "\n\ttag : %s", tag.str);
         fprintf(stderr, "\n\tfn  : %s", fn);
         fprintf(stderr, "\n");
-        assert(false);
+        revert()
     }
 
     if(clu_log_level >= CLU_LOG_DYNAMIC)
@@ -341,7 +341,7 @@ void clu_handler_register_static(handler_p h, char const format[], ...)
         fprintf(stderr, "\n\ttag  : %s", tag.str);
         fprintf(stderr, "\n");
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     clu_list_remove(&clu_l_root_static, h, nullptr);
@@ -387,7 +387,7 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
         fprintf(stderr, "\n\th   : %p", h);
         fprintf(stderr, "\n\ttag : %s", tag.str);
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     if(!clu_handler_is_allocated(h))
@@ -404,7 +404,7 @@ void clu_handler_is_safe(handler_p h, char const format[], ...)
         fprintf(stderr, "\n\th   : %p", h);
         fprintf(stderr, "\n\ttag : %s", tag.str);
         fprintf(stderr, "\n\t");
-        assert(false);
+        revert()
     }
 
     clu_mut_nested_unlock();
@@ -510,7 +510,7 @@ uint64_t clu_get_max_j(uint64_t i)
         fprintf(stderr, "\n\ti     : " U64P() "", i);
         fprintf(stderr, "\n\tmax_i : " U64P() "", max_i);
         fprintf(stderr, "\n");
-        assert(false);
+        revert()
     }
     trie_p t = clu_list_get_trie(clu_l_root_allocated, i);
     uint64_t res = clu_trie_count(t);
@@ -533,7 +533,7 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
         fprintf(stderr, "\n\ti     : " U64P() "", i);
         fprintf(stderr, "\n\tmax_i : " U64P() "", max_i);
         fprintf(stderr, "\n");
-        assert(false);
+        revert()
     }
     trie_p t = clu_list_get_trie(clu_l_root_allocated, i);
     uint64_t max_j = clu_trie_count(t);
@@ -548,7 +548,7 @@ handler_p clu_get_handler(uint64_t i, uint64_t j)
         fprintf(stderr, "\n\tj     : " U64P() "", j);
         fprintf(stderr, "\n\tmax_j : " U64P() "", max_j);
         fprintf(stderr, "\n");
-        assert(false);
+        revert()
     }
     handler_p res = clu_trie_get_handler(t, j);
     clu_mut_nested_unlock();

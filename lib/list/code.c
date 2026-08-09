@@ -266,5 +266,5 @@ tag_t clu_list_get_tag(list_p l, handler_p h) // TODO test
         }
     }
 
-    assert(false);
+    UNREACHABLE()
 }
